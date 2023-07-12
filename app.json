@@ -1,5 +1,6 @@
 {
   "expo": {
+    "scheme": "myapp",
     "name": "my-first-react-native-app",
     "slug": "my-first-react-native-app",
     "version": "1.0.0",
@@ -24,6 +25,7 @@
       }
     },
     "web": {
+      "bundler": "metro",
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
