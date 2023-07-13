@@ -9,12 +9,19 @@ import HomeScreen from './app/homescreen';
 export default function App() {
   let colorScheme = useColorScheme();
 
+  console.log(colorScheme)
   let containerTheme
-  // containerTheme = styles.darkContainer
   if (colorScheme === "dark") {
     containerTheme = styles.darkContainer
   } else {
     containerTheme = styles.lightContainer
+  }
+
+  let textTheme
+  if (colorScheme === "dark") {
+    textTheme = styles.darkThemeText
+  } else {
+    textTheme = styles.lightThemeText
   }
 
   // const [fontsLoaded] = useFonts({
@@ -25,8 +32,8 @@ export default function App() {
     <SafeAreaProvider>
       <SafeAreaView style={[styles.container, containerTheme]}>
         <View  style={styles.container}>
-          {/* <Text style={styles.text}>Open up App.js to start working on your app!</Text>
-          <Link href="/about">About</Link> */}
+          <Text style={textTheme}>Open up App.js to start working on your app!</Text>
+          {/* <Link href="/about">About</Link> */}
           <StatusBar style="auto" />
           <HomeScreen />
         </View>
