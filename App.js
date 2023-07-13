@@ -9,7 +9,6 @@ import HomeScreen from './app/homescreen';
 export default function App() {
   let colorScheme = useColorScheme();
 
-  console.log(colorScheme)
   let containerTheme
   if (colorScheme === "dark") {
     containerTheme = styles.darkContainer

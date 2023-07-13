@@ -16,7 +16,7 @@ export default function HomeScreen () {
                 </View>
             </View>
             <View style={{ width: "100%", height: "50%" }}>
-                <Text style={{ color: "#ff0000", fontSize: 30, fontWeight: "bold" }}>MEXIA'S TACOS</Text>
+                <Text style={{ color: "#ff0000", fontSize: 30, fontWeight: "bold" }}>MY APP</Text>
             </View>
         </View>
     );
