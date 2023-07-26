@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button, ImageBackground, StyleSheet, Text, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { t, tw } from "react-native-tailwindcss"
 
 const imageurl = { uri: "https://www.wcrf-uk.org/wp-content/uploads/2021/06/588595864r-LS.jpg" }
 
