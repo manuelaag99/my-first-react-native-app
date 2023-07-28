@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, ImageBackground, StyleSheet, Text, TextInput, View } from "react-native";
+import { Button, ImageBackground, StyleSheet, Text, TextInput, TouchableHighlight, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { t, tw } from "react-native-tailwindcss"
 
@@ -9,26 +9,41 @@ export default function HomeScreen () {
     const [order, setOrder] = useState()
     const [listOfOrders, setListOfOrders] = useState([]);
 
-    function changeHandle (e) {
-        setOrder(e.target.value)
-        console.log(e.target.value)
+    function changeHandle (event) {
+        console.log(event)
+        setOrder(event)
+        // console.log(e.target.value)
     }
 
-    function addButtonHandle (e) {
-        setListOfOrders(listOfOrders.push(order));
+    function addButtonHandle () {
+        setListOfOrders([...listOfOrders, order]);
+        setOrder("");
     }
 
     const insets = useSafeAreaInsets();
     return (
-        <View style={{ flex: 1, paddingTop: insets.top, alignSelf: "baseline" }}>
-            <ImageBackground source={imageurl} style={{ flex: 1, justifyContent: "center", width: "100%" }}>
-                <View>
-                    <Text style={{ backgroundColor: "#000000a0", color: "#fff", fontSize: 40 }}>yeahhhhhhh</Text>
-                    <TextInput onChangeText={changeHandle} value={order} />
-
-                    <Button onPress={addButtonHandle} title="ADD" />
-                </View>
-                <View>
+        <View style={[[ t.flex, t.justifyCenter], { paddingTop: insets.top}]}>
+            <ImageBackground source={imageurl} style={[ t.flex, t.justifyCenter, tw.wFull, tw.hFull ]}>
+                <View style={[ t.flex, t.flexCol, t.justifyCenter, tw.h4_5 ]}>
+                    <View style={[ t.flex, t.flexCol, t.justifyCenter, tw.h2_5 ]}>
+                        <Text style={[ tw.bgBlack, t.textWhite, tw.text3xl ]}>Write down the order below</Text>
+                        <View style={[ t.flex, t.flexRow ]}>
+                            <TextInput style={[ tw.w4_5, tw.bgWhite, tw.pX4 ]} onChangeText={changeHandle} value={order} />
+                            <TouchableHighlight style={[ tw.w1_5, tw.bgRed400, t.p3]} onPress={addButtonHandle} >
+                                <Text style={[tw.textCenter]}>ADD</Text>
+                            </TouchableHighlight>
+                        </View>
+                    </View>
+                    <View style={[ t.flex, t.flexCol, tw.wFull, tw.h3_5, t.overflowHidden ]}>
+                        <View style={[ t.flex, tw.wFull, t.justifyCenter, tw.bgWhite, tw.border2, tw.borderSolid, tw.mAuto ]}>
+                            <Text style={[ tw.mY3, t.textCenter, tw.wFull, tw.hAuto ]}>List of orders:</Text>
+                        </View>
+                        {listOfOrders && listOfOrders.map((order, index) => {
+                            return <View key={index} style={[ t.flex, tw.wFull, t.justifyCenter, tw.bgWhite, tw.border2, tw.borderSolid, tw.mAuto ]}>
+                                <Text style={[ tw.mY3, t.textCenter, tw.wFull, tw.hAuto ]}>{order}</Text>
+                            </View>
+                        })}
+                    </View>
                 </View>
             </ImageBackground>
         </View>
