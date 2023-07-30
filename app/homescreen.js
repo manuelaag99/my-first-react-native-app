@@ -46,11 +46,26 @@ export default function HomeScreen () {
                     <View style={[ t.flex, t.flexCol, tw.wAuto, t.justifyCenter, tw.h2_5, tw.pX2 ]}>
                         <View style={[ t.flex, t.flexCol, tw.wFull, t.justifyCenter, tw.h2_5 ]}>
                             <Text style={[ tw.bgBlack, t.textWhite, tw.text3xl, tw.p3, t.textCenter ]}>Escribe aquí detalles de la orden:</Text>
-                            <View style={[ t.flex, t.flexRow ]}>
-                                <TextInput style={[ tw.w4_5, tw.bgWhite, tw.pX4 ]} onChangeText={changeHandle} value={order} />
-                                <TouchableHighlight style={[ tw.w1_5, tw.bgYellow300, t.p3]} onPress={addButtonHandle} >
-                                    <Text style={[tw.textCenter, t.fontBold ]}>AGREGAR ORDEN</Text>
-                                </TouchableHighlight>
+                            <View style={[ t.flex, t.flexCol, tw.wAuto ]}>
+                                <View style={[ t.flex, t.flexRow, tw.wFull ]}>
+                                    <TextInput placeholder="# de mesa" style={[ tw.w1_2, tw.bgWhite, tw.pX4, t.p3 ]} onChangeText={changeHandle} value={order} />
+                                    <TextInput placeholder="Hora" style={[ tw.w1_2, tw.bgWhite, tw.pX4, t.p3 ]} onChangeText={changeHandle} value={order} />
+                                </View>
+                                
+                                <View style={[ t.flex, t.flexCol, tw.wFull ]}>
+                                    <View style={[ t.flex, t.flexRow, tw.wFull]}>
+                                        <TextInput placeholder="Orden" style={[ tw.w5_6, tw.bgWhite, tw.pX4, t.p3 ]} onChangeText={changeHandle} value={order} />
+                                        <TouchableHighlight style={[ tw.w1_6, tw.bgYellow300 ]} onPress={addButtonHandle} >
+                                            <Text style={[tw.textCenter, t.text4xl ]}>+</Text>
+                                        </TouchableHighlight>
+                                    </View>
+                                </View>
+
+                                <View style={[ t.flex, t.flexRow, tw.wFull]}>
+                                    <TouchableHighlight style={[ tw.wFull, tw.bgYellow300, t.p3]} onPress={addButtonHandle} >
+                                        <Text style={[tw.textCenter, t.fontBold ]}>AGREGAR ORDEN</Text>
+                                    </TouchableHighlight>
+                                </View>
                             </View>
                         </View>
 
