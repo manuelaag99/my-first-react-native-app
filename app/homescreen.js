@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, ImageBackground, StyleSheet, Text, TextInput, TouchableHighlight, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { t, tw } from "react-native-tailwindcss"
@@ -6,15 +6,29 @@ import { t, tw } from "react-native-tailwindcss"
 const imageurl = { uri: "https://www.wcrf-uk.org/wp-content/uploads/2021/06/588595864r-LS.jpg" }
 
 export default function HomeScreen () {
-    const [order, setOrder] = useState()
+    const [order, setOrder] = useState({ tableNumber: "", date: "",  });
     const [listOfOrders, setListOfOrders] = useState([]);
     const [doneOrders, setDoneOrders] = useState([]);
     const [deletedOrders, setDeletedOrders] = useState([]);
 
+    let orderDate;
+    useEffect(() => {
+        orderDate = new Date();
+    }, [])
+
+    console.log(orderDate)
+
+    function tableNumberChangeHandle (event) {
+        setOrder({ ...order, tableNumber: event });
+    }
+
+    function dateChangeHandle (event) {
+        setOrder({ ...order, date: event });
+    }
+
     function changeHandle (event) {
         console.log(event)
         setOrder(event)
-        // console.log(e.target.value)
     }
 
     function addButtonHandle () {
@@ -27,29 +41,28 @@ export default function HomeScreen () {
     }
 
     function doneButtonHandle(event) {
-        setDoneOrders([...doneOrders, order])
-        console.log(event.target)
+        setDoneOrders([...doneOrders, order]);
     }
 
     function deleteButtonHandle() {
         setDeletedOrders([...deletedOrders, order])
-
     }
 
-    console.log(listOfOrders)
+    console.log(order)
 
     const insets = useSafeAreaInsets();
     return (
         <View style={[[ t.flex, t.justifyCenter, tw.wFull, tw.hScreen ], { paddingTop: insets.top}]}>
             <ImageBackground source={imageurl} style={[ t.flex, t.justifyCenter, tw.wFull, tw.hFull ]}>
                 <View style={[ t.flex, t.flexCol, t.justifyCenter, tw.h2_5, tw.wFull ]}>
+                    
                     <View style={[ t.flex, t.flexCol, tw.wAuto, t.justifyCenter, tw.h2_5, tw.pX2 ]}>
                         <View style={[ t.flex, t.flexCol, tw.wFull, t.justifyCenter, tw.h2_5 ]}>
                             <Text style={[ tw.bgBlack, t.textWhite, tw.text3xl, tw.p3, t.textCenter ]}>Escribe aquí detalles de la orden:</Text>
                             <View style={[ t.flex, t.flexCol, tw.wAuto ]}>
                                 <View style={[ t.flex, t.flexRow, tw.wFull ]}>
-                                    <TextInput placeholder="# de mesa" style={[ tw.w1_2, tw.bgWhite, tw.pX4, t.p3 ]} onChangeText={changeHandle} value={order} />
-                                    <TextInput placeholder="Hora" style={[ tw.w1_2, tw.bgWhite, tw.pX4, t.p3 ]} onChangeText={changeHandle} value={order} />
+                                    <TextInput placeholder="# de mesa" style={[ tw.w1_2, tw.bgWhite, tw.pX4, t.p3 ]} onChangeText={tableNumberChangeHandle} value={order.tableNumber} />
+                                    <TextInput placeholder="Hora" style={[ tw.w1_2, tw.bgWhite, tw.pX4, t.p3 ]} onChangeText={dateChangeHandle} value={order.date} />
                                 </View>
                                 
                                 <View style={[ t.flex, t.flexCol, tw.wFull ]}>
@@ -69,7 +82,7 @@ export default function HomeScreen () {
                             </View>
                         </View>
 
-                        <View style={[ t.flex, t.flexCol, tw.wAuto, tw.h3_5, t.overflowHidden, tw.bgWhite, tw.borderY, tw.borderSolid, t.justifyCenter ]}>
+                        <View style={[ t.flex, t.flexCol, tw.wAuto, tw.h3_5, t.overflowHidden, tw.bgWhite, tw.borderY, tw.borderSolid, t.justifyCenter, t.mY3 ]}>
                             <View style={[ t.flex, tw.wFull, t.justifyCenter, tw.bgWhite, tw.borderY, tw.borderSolid, tw.mXAuto, tw.pY1, tw.mY0 ]}>
                                 <Text style={[ t.textCenter, tw.wFull ]}>Lista de órdenes:</Text>
                             </View>
@@ -89,8 +102,9 @@ export default function HomeScreen () {
                             </View>}
                         </View>
                     </View>
-                    <View style={[ tw.flex, tw.flexRow, tw.wAuto, tw.pX2, tw.pY3 ]}>
-                            <TouchableHighlight style={[ tw.wFull, tw.p3, tw.bgGreen400 ]} onPress={clearButtonHandle}>
+
+                    <View style={[ tw.flex, tw.flexRow, tw.wAuto, tw.pX2, tw.mY3 ]}>
+                            <TouchableHighlight style={[ tw.wFull, tw.p3, tw.bgRed400 ]} onPress={clearButtonHandle}>
                                 <Text style={[ t.textCenter ]}>Borrar lista</Text>
                             </TouchableHighlight>
 
