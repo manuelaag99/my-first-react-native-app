@@ -33,9 +33,7 @@ export default function HomeScreen () {
         setDish({ ...dish, [field]: text });
     }
 
-
     function addDishHandle () {
-        // setOrder({ ...order, listOfDishes: dish });
         setOrder((prevState) => ({
             ...prevState,
             listOfDishes: [...prevState.listOfDishes, dish],
@@ -52,8 +50,9 @@ export default function HomeScreen () {
         setQueue([]);
     }
 
-    function doneButtonHandle(event) {
-        setDoneOrders([...doneOrders, order]);
+    function doneButtonHandle(index) {
+        console.log(index)
+        // setDoneOrders([...doneOrders, order]);
     }
 
     function deleteButtonHandle() {
@@ -67,39 +66,40 @@ export default function HomeScreen () {
 
     const insets = useSafeAreaInsets();
     return (
-        <View style={[[ t.flex, t.justifyCenter, tw.wFull, tw.hScreen ], { paddingTop: insets.top}]}>
+        <View style={[[ t.flex, t.justifyCenter, tw.wFull, tw.hFull ], { paddingTop: insets.top}]}>
             <ImageBackground source={imageurl} style={[ t.flex, t.justifyCenter, tw.wFull, tw.hFull ]}>
                 <View style={[ t.flex, t.flexCol, t.justifyCenter, tw.h2_5, tw.wFull ]}>
                     
                     <View style={[ t.flex, t.flexCol, tw.wAuto, t.justifyCenter, tw.h2_5, tw.pX2 ]}>
                         <View style={[ t.flex, t.flexCol, tw.wFull, t.justifyCenter, tw.h2_5 ]}>
                             <Text style={[ tw.bgBlack, t.textWhite, tw.text3xl, tw.p3, t.textCenter ]}>Escribe aquí detalles de la orden:</Text>
-                            <View style={[ t.flex, t.flexCol, tw.wAuto ]}>
+                            <View style={[ t.flex, t.flexCol, tw.wAuto, tw.h9_12 ]}>
+                                
                                 <View style={[ t.flex, t.flexRow, tw.wFull ]}>
                                     <TextInput placeholder="# de mesa" style={[ tw.w1_2, tw.bgWhite, tw.pX4, t.p1 ]} onChangeText={tableNumberChangeHandle} value={order.tableNumber} />
                                     <TextInput placeholder="Hora" style={[ tw.w1_2, tw.bgWhite, tw.pX4, t.p1 ]} onChangeText={dateChangeHandle} value={order.date} />
                                 </View>
                                 
-                                <View style={[ t.flex, t.flexCol, tw.wFull ]}>
-                                    <View style={[ t.flex, t.flexRow, tw.wFull]}>
+                                <View style={[ t.flex, t.flexCol, tw.wFull, tw.h3_5 ]}>
+                                    <View style={[ t.flex, t.flexRow, tw.wFull ]}>
                                         <View style={[ t.flex, t.flexCol, tw.w5_6]}>
                                             <TextInput placeholder="Orden" style={[ tw.wFull, tw.bgWhite, tw.pX4, t.pY1 ]} onChangeText={(text) => dishChangeHandle("menuItem", text)} value={dish.menuItem} />
                                             <TextInput placeholder="Notas o especificaciones" style={[ tw.wFull, tw.bgWhite, tw.pX4, t.pY1 ]} onChangeText={(text) => dishChangeHandle("notes", text)} value={dish.notes} />
                                         </View>
-                                        <View style={[ t.flex, t.flexCol, tw.w1_6 ]}>
-                                            <TouchableHighlight style={[ tw.wFull, tw.bgYellow300 ]} onPress={addDishHandle} >
+                                        <View style={[ t.flex, t.flexGrow, tw.w1_6 ]}>
+                                            <TouchableHighlight style={[ tw.wFull, tw.bgYellow300, tw.mAuto ]} onPress={addDishHandle} >
                                                 <Text style={[tw.textCenter, t.text4xl ]}>+</Text>
                                             </TouchableHighlight>
                                         </View>
                                     </View>
                                     {(order) && (order.listOfDishes) && order.listOfDishes.map((order, index) => {
-                                        return (<View key={index} style={[ t.flex, t.flexRow, tw.wFull, t.bgWhite]}>
+                                        return (<View key={index} style={[ t.flex, t.flexRow, tw.wFull, t.bgWhite ]}>
                                             <View style={[ t.flex, t.flexCol, tw.w5_6, t.pY1 ]}>
                                                 <Text style={[tw.textLeft, tw.pX4, t.pY1, tw.w5_6 ]}>Platillo: {order.menuItem}</Text>
                                                 <Text style={[tw.textLeft, tw.pX4, t.pY1, tw.w5_6 ]}>Notas: {order.notes}</Text>
                                             </View>
-                                            <TouchableHighlight style={[ tw.w1_6, tw.bgRed500 ]} onPress={doneButtonHandle} >
-                                                <Text style={[tw.textCenter, tw.mY3 ]}>BORRAR</Text>
+                                            <TouchableHighlight style={[ t.flex, t.flexGrow, tw.w1_6, tw.bgRed500 ]} onPress={index => doneButtonHandle(index)} >
+                                                <Text style={[tw.textCenter, t.text3xl, tw.mAuto ]}>x</Text>
                                             </TouchableHighlight>
                                         </View>)
                                     })}
@@ -110,6 +110,7 @@ export default function HomeScreen () {
                                         <Text style={[tw.textCenter, t.fontBold ]}>AGREGAR ORDEN</Text>
                                     </TouchableHighlight>
                                 </View>
+
                             </View>
                         </View>
 
