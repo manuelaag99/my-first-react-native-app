@@ -6,19 +6,20 @@ import { t, tw } from "react-native-tailwindcss"
 const imageurl = { uri: "https://www.wcrf-uk.org/wp-content/uploads/2021/06/588595864r-LS.jpg" };
 
 export default function HomeScreen () {
-    const [order, setOrder] = useState({ tableNumber: "", date: "", listOfDishes: [] });
+    const [order, setOrder] = useState({ tableNumber: "", date: "", listOfDishes: "" });
     const [dish, setDish] = useState({ menuItem: "", notes: "" });
     const [queue, setQueue] = useState([]);
 
     const [doneOrders, setDoneOrders] = useState([]);
     const [deletedOrders, setDeletedOrders] = useState([]);
 
-    let orderDate;
-    useEffect(() => {
-        orderDate = new Date();
-    }, [])
+    // let orderDate;
+    // useEffect(() => {
+    //     orderDate = new Date();
+    //     setOrder({ ...order, date: orderDate });
+    // }, [])
 
-    console.log(orderDate)
+    // console.log(orderDate)
 
     function tableNumberChangeHandle (event) {
         setOrder({ ...order, tableNumber: event });
@@ -29,15 +30,19 @@ export default function HomeScreen () {
     }
 
     function dishChangeHandle (field, text) {
-        console.log(text);
-        console.log(field);
         setDish({ ...dish, [field]: text });
     }
 
-    function addButtonHandle (event) {
-        // setListOfOrders([...listOfOrders, order]);
-        setOrder({ ...order, listOfDishes: event });
-    }
+
+    function addDishHandle () {
+        // setOrder({ ...order, listOfDishes: dish });
+        setOrder((prevState) => ({
+            ...prevState,
+            listOfDishes: [...prevState.listOfDishes, dish],
+        }));
+        setDish({ menuItem: "", notes: "" })
+        
+    };
 
     function addToQueueHandle () {
         setQueue([ ...queue, order ])
@@ -56,6 +61,9 @@ export default function HomeScreen () {
     }
 
     console.log(order);
+    if (order) {
+        console.log(order.listOfDishes)
+    }
 
     const insets = useSafeAreaInsets();
     return (
@@ -75,19 +83,25 @@ export default function HomeScreen () {
                                 <View style={[ t.flex, t.flexCol, tw.wFull ]}>
                                     <View style={[ t.flex, t.flexRow, tw.wFull]}>
                                         <View style={[ t.flex, t.flexCol, tw.w5_6]}>
-                                            <TextInput placeholder="Orden" style={[ tw.wFull, tw.bgWhite, tw.pX4, t.p1 ]} onChangeText={(text) => dishChangeHandle("menuItem", text)} value={dish.menuItem} />
-                                            <TextInput placeholder="Notas o especificaciones" style={[ tw.wFull, tw.bgWhite, tw.pX4, t.p1 ]} onChangeText={(text) => dishChangeHandle("notes", text)} value={dish.notes} />
+                                            <TextInput placeholder="Orden" style={[ tw.wFull, tw.bgWhite, tw.pX4, t.pY1 ]} onChangeText={(text) => dishChangeHandle("menuItem", text)} value={dish.menuItem} />
+                                            <TextInput placeholder="Notas o especificaciones" style={[ tw.wFull, tw.bgWhite, tw.pX4, t.pY1 ]} onChangeText={(text) => dishChangeHandle("notes", text)} value={dish.notes} />
                                         </View>
                                         <View style={[ t.flex, t.flexCol, tw.w1_6 ]}>
-                                            <TouchableHighlight style={[ tw.wFull, tw.bgYellow300 ]} onPress={addButtonHandle} >
+                                            <TouchableHighlight style={[ tw.wFull, tw.bgYellow300 ]} onPress={addDishHandle} >
                                                 <Text style={[tw.textCenter, t.text4xl ]}>+</Text>
                                             </TouchableHighlight>
                                         </View>
                                     </View>
-                                    {order.listOfDishes && order.listOfDishes.map((order, index) => {
-                                        return <View key={index} style={[ t.flex, t.flexRow, tw.wFull]}>
-                                            <Text style={[tw.textCenter, t.text4xl ]}>{order}</Text>
-                                        </View>
+                                    {(order) && (order.listOfDishes) && order.listOfDishes.map((order, index) => {
+                                        return (<View key={index} style={[ t.flex, t.flexRow, tw.wFull, t.bgWhite]}>
+                                            <View style={[ t.flex, t.flexCol, tw.w5_6, t.pY1 ]}>
+                                                <Text style={[tw.textLeft, tw.pX4, t.pY1, tw.w5_6 ]}>Platillo: {order.menuItem}</Text>
+                                                <Text style={[tw.textLeft, tw.pX4, t.pY1, tw.w5_6 ]}>Notas: {order.notes}</Text>
+                                            </View>
+                                            <TouchableHighlight style={[ tw.w1_6, tw.bgRed500 ]} onPress={doneButtonHandle} >
+                                                <Text style={[tw.textCenter, tw.mY3 ]}>BORRAR</Text>
+                                            </TouchableHighlight>
+                                        </View>)
                                     })}
                                 </View>
 
