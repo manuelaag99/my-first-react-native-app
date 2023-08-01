@@ -13,13 +13,13 @@ export default function HomeScreen () {
     const [doneOrders, setDoneOrders] = useState([]);
     const [deletedOrders, setDeletedOrders] = useState([]);
 
-    // let orderDate;
-    // useEffect(() => {
-    //     orderDate = new Date();
-    //     setOrder({ ...order, date: orderDate });
-    // }, [])
+    let orderDate;
+    useEffect(() => {
+        orderDate = new Date().toLocaleString();
+        setOrder({ ...order, date: orderDate });
+    }, [])
 
-    // console.log(orderDate)
+    console.log(orderDate)
 
     function tableNumberChangeHandle (event) {
         setOrder({ ...order, tableNumber: event });
@@ -69,7 +69,7 @@ export default function HomeScreen () {
     return (
         <View style={[[ t.flex, t.justifyCenter, tw.wFull, tw.hScreen ], { paddingTop: insets.top}]}>
             <ImageBackground source={imageurl} style={[ t.flex, t.justifyCenter, tw.wFull, tw.hFull ]}>
-                <View style={[[ t.flex, t.flexCol, t.justifyCenter, tw.h2_5, tw.wFull, tw.border2, tw.borderBlack ], { height: "90%" }]}>
+                <View style={[[ t.flex, t.flexCol, t.justifyCenter, tw.hFull, tw.wFull, tw.border2, tw.borderBlack ]]}>
                     
                     <View style={[[ t.flex, t.flexCol, tw.wAuto, t.justifyCenter, tw.pX2, tw.borderWhite, tw.border2 ], { height: "90%" }]}>
                         
@@ -79,8 +79,8 @@ export default function HomeScreen () {
 
                             <View style={[[ t.flex, t.flexCol, tw.wAuto ], { height: "45%" }]}>
                                 <View style={[[ t.flex, t.flexRow, tw.wFull ], { height: "33.3%"}]}>
-                                    <TextInput placeholder="# de mesa" style={[ tw.w1_2, tw.bgWhite, tw.pX4, t.p1 ]} onChangeText={tableNumberChangeHandle} value={order.tableNumber} />
-                                    <TextInput placeholder="Hora" style={[ tw.w1_2, tw.bgWhite, tw.pX4, t.p1 ]} onChangeText={dateChangeHandle} value={order.date} />
+                                    <TextInput placeholder="# de mesa" style={[ tw.w1_2, tw.bgWhite, tw.pX4, t.pY1 ]} onChangeText={tableNumberChangeHandle} value={order.tableNumber} />
+                                    <TextInput editable={false} placeholder="Hora" style={[ tw.w1_2, tw.bgWhite, tw.pX4, t.pY1 ]} onChangeText={dateChangeHandle} value={order.date.split(",")[1]} />
                                 </View>
                                 <View style={[[ t.flex, t.flexCol, tw.wFull ], { height: "66.6%" }]}>
                                     <View style={[[ t.flex, t.flexRow, tw.wFull, tw.hFull ]]}>
@@ -88,8 +88,8 @@ export default function HomeScreen () {
                                             <TextInput placeholder="Orden" style={[[ tw.wFull, tw.bgWhite, tw.pX4, t.pY1 ], { height: "50%" }]} onChangeText={(text) => dishChangeHandle("menuItem", text)} value={dish.menuItem} />
                                             <TextInput placeholder="Notas o especificaciones" style={[[ tw.wFull, tw.bgWhite, tw.pX4, t.pY1 ], { height: "50%" }]} onChangeText={(text) => dishChangeHandle("notes", text)} value={dish.notes} />
                                         </View>
-                                        <View style={[ t.flex, t.flexCol, tw.w1_6, tw.hFull ]}>
-                                            <TouchableHighlight style={[ t.flex, t.flexCol, tw.wFull, tw.bgYellow300, tw.hFull, t.alignCenter ]} onPress={addDishHandle} >
+                                        <View style={[ t.flex, t.flexCol, tw.w1_6, tw.hFull, tw.itemsCenter ]}>
+                                            <TouchableHighlight style={[ t.flex, t.flexCol, tw.wFull, tw.bgYellow300, tw.hFull, tw.itemsCenter ]} onPress={addDishHandle} >
                                                 <Text style={[tw.textCenter, t.text4xl, tw.hFull ]}>+</Text>
                                             </TouchableHighlight>
                                         </View>
@@ -119,7 +119,7 @@ export default function HomeScreen () {
 
                         </View>
 
-                        <View style={[[ t.flex, t.flexCol, tw.wAuto, tw.bgWhite, tw.borderY, tw.borderSolid, t.justifyCenter, t.mY3 ], { height: "fit" }]}>
+                        <View style={[[ t.flex, t.flexCol, tw.wAuto, tw.bgWhite, tw.borderY, tw.borderSolid, t.justifyCenter, t.mY5 ]]}>
                             <View style={[ t.flex, tw.wFull, t.justifyCenter, tw.bgWhite, tw.borderY, tw.borderSolid, tw.mXAuto ]}>
                                 <Text style={[ t.textCenter, tw.wFull ]}>Lista de órdenes:</Text>
                             </View>
