@@ -3,6 +3,8 @@ import { Button, ImageBackground, StyleSheet, Text, TextInput, TouchableHighligh
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { t, tw } from "react-native-tailwindcss"
 
+import { supabase } from "./supabase/client";
+
 const imageurl = { uri: "https://www.wcrf-uk.org/wp-content/uploads/2021/06/588595864r-LS.jpg" };
 
 export default function HomeScreen () {
@@ -12,6 +14,22 @@ export default function HomeScreen () {
 
     const [doneOrders, setDoneOrders] = useState([]);
     const [deletedOrders, setDeletedOrders] = useState([]);
+
+    const [usersInfo, setUsersInfo] = useState()
+
+    useEffect(() => {
+        async function fetchData () {
+            try {
+                const { data, error } = await supabase.from('jk-users').select("*")
+                setUsersInfo(data)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+        fetchData();
+    }, []);  
+
+    console.log(usersInfo)
 
     let orderDate;
     useEffect(() => {
