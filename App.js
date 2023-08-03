@@ -7,6 +7,7 @@ import 'react-native-url-polyfill/auto';
 import { AppRegistry } from 'react-native';
 
 import HomeScreen from './app/homescreen';
+import UserProfile from './app/Screens/userProfile';
 
 export default function App() {
   let colorScheme = useColorScheme();
@@ -33,10 +34,10 @@ export default function App() {
     <SafeAreaProvider>
       <SafeAreaView style={[styles.container, containerTheme]}>
         <View  style={styles.container}>
-          <Text style={textTheme}>Open up App.js to start working on your app!</Text>
+          {/* <Text style={textTheme}>Open up App.js to start working on your app!</Text> */}
           {/* <Link href="/about">About</Link> */}
           <StatusBar style="auto" />
-          <HomeScreen />
+          <UserProfile />
         </View>
       </SafeAreaView>
     </SafeAreaProvider>
