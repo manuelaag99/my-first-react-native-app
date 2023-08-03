@@ -3,6 +3,8 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView, StyleSheet, Text, View, useColorScheme } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useFonts } from "expo-font";
+import 'react-native-url-polyfill/auto';
+import { AppRegistry } from 'react-native';
 
 import HomeScreen from './app/homescreen';
 

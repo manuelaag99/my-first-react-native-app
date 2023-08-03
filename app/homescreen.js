@@ -20,7 +20,7 @@ export default function HomeScreen () {
     useEffect(() => {
         async function fetchData () {
             try {
-                const { data, error } = await supabase.from('jk-users').select("*")
+                const { data, error } = await supabase.from('ALO-users-db').select("*")
                 setUsersInfo(data)
             } catch (err) {
                 console.log(err)
