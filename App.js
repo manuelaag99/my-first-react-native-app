@@ -8,6 +8,7 @@ import { AppRegistry } from 'react-native';
 
 import HomeScreen from './app/homescreen';
 import UserProfile from './app/Screens/userProfile';
+import RestaurantPage from './app/Screens/restaurantPage';
 
 export default function App() {
   let colorScheme = useColorScheme();
@@ -38,6 +39,7 @@ export default function App() {
           {/* <Link href="/about">About</Link> */}
           <StatusBar style="auto" />
           <UserProfile />
+          {/* <RestaurantPage /> */}
         </View>
       </SafeAreaView>
     </SafeAreaProvider>

@@ -3,11 +3,30 @@ import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { t, tw, tailwind } from "react-native-tailwindcss";
+import { supabase } from "../supabase/client";
 
 export default function UserProfile () {
 
+
     const [user, setUser] = useState();
     const [restaurants, setRestaurants] = useState();
+
+    const [usersInfo, setUsersInfo] = useState()
+
+    let email = "manuelaag99@gmail.com"
+    useEffect(() => {
+        async function fetchData () {
+            try {
+                const { data, error } = await supabase.from("ALO-users-db").select("*").eq("user_email", email)
+                setUsersInfo(data[0])
+            } catch (err) {
+                console.log(err)
+            }
+        }
+        fetchData();
+    }, []);  
+
+    console.log(usersInfo)
 
     const USERPROTOTYPE = {
         user_email: "manuelaag99@gmail.com",
@@ -15,10 +34,9 @@ export default function UserProfile () {
         user_display_name: "Manuel Alanis"
     }
 
-
     useEffect(() => {
-        setUser(USERPROTOTYPE)
-        setRestaurants(RESTAURANTS)
+        setUser(usersInfo)
+        setRestaurants(usersInfo.user_restaurants)
     }, [])
 
     const RESTAURANTS = ["JARED", "MEXIAS TACOS"];
