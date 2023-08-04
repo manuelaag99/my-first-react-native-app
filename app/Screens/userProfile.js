@@ -36,7 +36,9 @@ export default function UserProfile () {
 
     useEffect(() => {
         setUser(usersInfo)
-        setRestaurants(usersInfo.user_restaurants)
+        if (usersInfo) {
+            setRestaurants(usersInfo.user_restaurants);
+        }
     }, [])
 
     const RESTAURANTS = ["JARED", "MEXIAS TACOS"];
@@ -86,13 +88,13 @@ export default function UserProfile () {
                         </View>}
                     </View>
     
-                    <View style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgRed400, tw.border2, tw.borderGray300, tailwind.roundedLg, tw.mY5 ]}>
+                    <View style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgRed600, tw.border2, tw.borderGray300, tailwind.roundedLg, tw.mY5 ]}>
                         <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
                             <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold, t.textWhite ]}>CERRAR SESIÓN</Text>
                         </View>
                     </View>
 
-                    <View style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgRed600, tw.border2, tw.borderGray300, tailwind.roundedLg, tw.mY5 ]}>
+                    <View style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgRed800, tw.border2, tw.borderGray300, tailwind.roundedLg, tw.mY5 ]}>
                         <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
                             <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold, t.textWhite ]}>ELIMINAR MI CUENTA</Text>
                         </View>

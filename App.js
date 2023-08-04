@@ -5,6 +5,8 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useFonts } from "expo-font";
 import 'react-native-url-polyfill/auto';
 import { AppRegistry } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import HomeScreen from './app/homescreen';
 import UserProfile from './app/Screens/userProfile';
@@ -31,18 +33,26 @@ export default function App() {
   //     'Anton': require('../assets/fonts/Anton-Regular.ttf'),
   // });
 
+  const Stack = createNativeStackNavigator()
+
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={[styles.container, containerTheme]}>
-        <View  style={styles.container}>
-          {/* <Text style={textTheme}>Open up App.js to start working on your app!</Text> */}
-          {/* <Link href="/about">About</Link> */}
-          <StatusBar style="auto" />
-          <UserProfile />
-          {/* <RestaurantPage /> */}
-        </View>
-      </SafeAreaView>
-    </SafeAreaProvider>
+    <NavigationContainer>
+      <Stack.Navigator>
+        {/* <SafeAreaProvider>
+          <SafeAreaView style={[styles.container, containerTheme]}> */}
+            <Stack.Screen name="User" component={UserProfile} />
+            <Stack.Screen name="Restaurant" component={RestaurantPage} />
+            {/* <View  style={styles.container}> */}
+              {/* <Text style={textTheme}>Open up App.js to start working on your app!</Text> */}
+              {/* <Link href="/about">About</Link> */}
+              {/* <StatusBar style="auto" />
+              <UserProfile /> */}
+              {/* <RestaurantPage /> */}
+            {/* </View> */}
+          {/* </SafeAreaView>
+        </SafeAreaProvider> */}
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
