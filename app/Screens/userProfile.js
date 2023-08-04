@@ -5,7 +5,10 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { t, tw, tailwind } from "react-native-tailwindcss";
 import { supabase } from "../supabase/client";
 
-export default function UserProfile () {
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+export default function UserProfile ({ navigation }) {
 
 
     const [user, setUser] = useState();
@@ -28,12 +31,6 @@ export default function UserProfile () {
 
     console.log(usersInfo)
 
-    const USERPROTOTYPE = {
-        user_email: "manuelaag99@gmail.com",
-        user_username: "manuelaag99",
-        user_display_name: "Manuel Alanis"
-    }
-
     useEffect(() => {
         setUser(usersInfo)
         if (usersInfo) {
@@ -41,7 +38,6 @@ export default function UserProfile () {
         }
     }, [])
 
-    const RESTAURANTS = ["JARED", "MEXIAS TACOS"];
     const insets = useSafeAreaInsets();
     if (!user) {
         return (
@@ -74,9 +70,9 @@ export default function UserProfile () {
                                     <Text style={[ tw.w4_5, tw.mY4, tw.pL4 ]}>
                                         {restaurant}
                                     </Text>
-                                    <Link href="" style={[ tw.w1_5, tw.mY4, t.textCenter, t.fontBold ]}>
+                                    <Text onPress={() => navigation.navigate("Restaurant", { id: "09u0890880" })} style={[ tw.w1_5, tw.mY4, t.textCenter, t.fontBold ]}>
                                         Ver
-                                    </Link>
+                                    </Text>
                                 </View>
                             )
                         })}
@@ -101,7 +97,6 @@ export default function UserProfile () {
                     </View>
     
                 </View>
-                
             </View>
         )
     }

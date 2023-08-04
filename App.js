@@ -40,8 +40,11 @@ export default function App() {
       <Stack.Navigator>
         {/* <SafeAreaProvider>
           <SafeAreaView style={[styles.container, containerTheme]}> */}
-            <Stack.Screen name="User" component={UserProfile} />
+            <Stack.Screen name="User" component={UserProfile} options={{ title: "Mi Perfil" }} />
             <Stack.Screen name="Restaurant" component={RestaurantPage} />
+            
+            
+            
             {/* <View  style={styles.container}> */}
               {/* <Text style={textTheme}>Open up App.js to start working on your app!</Text> */}
               {/* <Link href="/about">About</Link> */}
