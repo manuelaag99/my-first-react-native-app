@@ -10,7 +10,7 @@ export default function RestaurantPage ({ route, navigation }) {
 
     console.log(route.params)
     return (
-        <>
+        <ScrollView>
             <View style={[ t.flex, t.flexCol, tw.justifyStart, t.pX5, tw.hFull, tw.wScreen, t.bgWhite, tw.overflowHidden, tw.pY5 ]}>
                 <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.mXAuto, tw.pY4, tw.mY4 ]}>
                     <Text style={[ tw.wFull, t.textCenter, t.fontBold, t.text4xl, tw.pY5 ]}>
@@ -39,15 +39,15 @@ export default function RestaurantPage ({ route, navigation }) {
                     </Text>
                 </TouchableHighlight>
 
-                <TouchableHighlight onPress={() => setModalVisibility(true)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgRed700, tw.mXAuto, tw.pY6, tw.mY20, tailwind.roundedLg ]}>
+                <TouchableHighlight underlayColor="#ff6666" onPress={() => setModalVisibility(true)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgRed700, tw.mXAuto, tw.pY6, tw.mY16, tailwind.roundedLg ]}>
                     <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
                         Eliminar restaurante
                     </Text>
                 </TouchableHighlight>
                 
-                <ModalTemplate isVisible={modalVisibility} onClose={() => setModalVisibility(false)} />
+                <ModalTemplate isVisible={modalVisibility} onClose={() => setModalVisibility(false)} textForButton="Eliminar" textForModal="¿Quieres eliminar este restaurante? Esto es permanente." />
                 <NewOrder isVisible={newOrderVisibility} onClose={() => setNewOrderVisibility(false)} />
             </View>
-        </>
+        </ScrollView>
     )
 }

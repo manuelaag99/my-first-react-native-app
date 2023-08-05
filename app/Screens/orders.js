@@ -25,12 +25,12 @@ export default function Orders ({ navigation }) {
 
                 <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.mXAuto, tailwind.roundedLg, tw.mY6 ]}>
                     {!ordersArray && <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgYellow500, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tailwind.roundedLg ]}>
-                        <Text style={[ t.textCenter, t.fontBold, t.textBlack  ]}>
+                        <Text style={[ t.textCenter, t.fontBold, t.textWhite  ]}>
                             No hay órdenes
                         </Text>
                     </View>}
-                    {ordersArray && <TouchableHighlight underlayColor={"#FFFFCC"} onPress={() => setOrdersArrayVisibility(!ordersArrayVisibility)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgYellow500, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tailwind.roundedLg ]}>
-                        <Text style={[ t.textCenter, t.fontBold, t.textBlack  ]}>
+                    {ordersArray && <TouchableHighlight underlayColor="#FFFFCC" onPress={() => setOrdersArrayVisibility(!ordersArrayVisibility)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgYellow500, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tailwind.roundedLg ]}>
+                        <Text style={[ t.textCenter, t.fontBold, t.textWhite  ]}>
                             Órdenes
                         </Text>
                     </TouchableHighlight>}
@@ -52,7 +52,7 @@ export default function Orders ({ navigation }) {
                 </TouchableHighlight>
                 
                 <NewOrder isVisible={newOrderVisibility} onClose={() => setNewOrderVisibility(false)} />
-                <ModalTemplate isVisible={modalVisibility} onClose={() => setModalVisibility(false)} />
+                <ModalTemplate isVisible={modalVisibility} onClose={() => setModalVisibility(false)} textForButton="Borrar" textForModal="¿Quieres borrar la lista de órdenes? Esto es permanente." />
             </View>
         </ScrollView>
     )

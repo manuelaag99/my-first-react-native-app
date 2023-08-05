@@ -36,7 +36,7 @@ export default function UserProfile ({ navigation }) {
         }
     }, [])
 
-    
+
     console.log(usersInfo)
     const insets = useSafeAreaInsets();
     if (!user) {
@@ -55,14 +55,14 @@ export default function UserProfile ({ navigation }) {
                             <Text style={[ t.textCenter, tw.mXAuto, tw.wFull, t.fontBold, t.text2xl, t.italic ]}>A LA ORDEN</Text>
                         </View>
 
-                        <View style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgWhite, tw.border2, tw.borderGray300, tailwind.roundedLg, tw.mY5 ]}>
+                        <View style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgWhite, tw.border, tw.borderGray300, tailwind.roundedLg, tw.mY5 ]}>
                             <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
                                 <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold, t.text2xl ]}>Bienvenido, {user.user_display_name}</Text>
                             </View>
                         </View>
                         
 
-                        <View style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgWhite, tw.border2, tw.borderGray300, tailwind.roundedLg, tw.mY5 ]}>
+                        <View style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgWhite, tw.border, tw.borderGray300, tailwind.roundedLg, tw.mY5 ]}>
                             <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
                                 <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold ]}>MIS RESTAURANTES</Text>
                             </View>
@@ -88,13 +88,13 @@ export default function UserProfile ({ navigation }) {
                             </View>}
                         </View>
 
-                        <View style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgRed600, tw.border2, tw.borderGray300, tailwind.roundedLg, tw.mY5 ]}>
+                        <View style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgRed600, tailwind.roundedLg, tw.mY5 ]}>
                             <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
                                 <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold, t.textWhite ]}>CERRAR SESIÓN</Text>
                             </View>
                         </View>
 
-                        <View style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgRed800, tw.border2, tw.borderGray300, tailwind.roundedLg, tw.mY5 ]}>
+                        <View style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgRed800, tailwind.roundedLg, tw.mY5 ]}>
                             <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
                                 <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold, t.textWhite ]}>ELIMINAR MI CUENTA</Text>
                             </View>
