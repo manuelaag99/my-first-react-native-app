@@ -2,11 +2,11 @@ import { useState } from "react";
 import { Modal, ScrollView, Text, TouchableHighlight, View } from "react-native";
 import { t, tw, tailwind } from "react-native-tailwindcss";
 import ModalTemplate from "../Components/ModalTemplate";
-import NewOrder from "../Components/newOrder";
+import NewItem from "../Components/newItem";
 
 export default function RestaurantPage ({ route, navigation }) {
     const [modalVisibility, setModalVisibility] = useState(false);
-    const [newOrderVisibility, setNewOrderVisibility] = useState(false);
+    const [newItemVisibility, setNewItemVisibility] = useState(false);
 
     console.log(route.params)
     return (
@@ -27,7 +27,7 @@ export default function RestaurantPage ({ route, navigation }) {
                     </Text>
                 </TouchableHighlight>
 
-                <TouchableHighlight underlayColor="#ccc" onPress={() => setNewOrderVisibility(true)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgWhite, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
+                <TouchableHighlight underlayColor="#ccc" onPress={() => setNewItemVisibility(true)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgWhite, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
                     <Text style={[ t.textCenter, t.fontBold, t.textBlack  ]}>
                         + Agregar orden
                     </Text>
@@ -45,8 +45,8 @@ export default function RestaurantPage ({ route, navigation }) {
                     </Text>
                 </TouchableHighlight>
                 
+                <NewItem addItemText="Nueva orden" isVisible={newItemVisibility}  itemToAdd="order" onClose={() => setNewItemVisibility(false)} />
                 <ModalTemplate isVisible={modalVisibility} onClose={() => setModalVisibility(false)} textForButton="Eliminar" textForModal="¿Quieres eliminar este restaurante? Esto es permanente." />
-                <NewOrder isVisible={newOrderVisibility} onClose={() => setNewOrderVisibility(false)} />
             </View>
         </ScrollView>
     )

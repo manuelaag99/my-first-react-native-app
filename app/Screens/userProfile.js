@@ -1,16 +1,16 @@
 import { Link } from "expo-router";
 import { useEffect, useState } from "react";
-import { ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, ScrollView, Text, TouchableHighlight, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { t, tw, tailwind } from "react-native-tailwindcss";
 import { supabase } from "../supabase/client";
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import ModalTemplate from "../Components/ModalTemplate";
 
 export default function UserProfile ({ navigation }) {
-
-
+    const [modalVisibility, setModalVisibility] = useState(false);
     const [user, setUser] = useState();
     const [restaurants, setRestaurants] = useState();
 
@@ -36,19 +36,16 @@ export default function UserProfile ({ navigation }) {
         }
     }, [])
 
-
     console.log(usersInfo)
     const insets = useSafeAreaInsets();
     if (!user) {
         return (
-            <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
-                <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold ]}>Disculpa, hubo un error.</Text>
-            </View>
+            <ActivityIndicator style={[ tw.mT10]} size="large" color="#000" />
         )
     } else {
         return (
             <ScrollView>
-                <View style={[[ tw.flex, tw.flexCol, t.pX5, tw.hScreen, tw.wScreen, t.bgWhite ], { paddingTop: insets.top }]}>
+                <View style={[[ tw.flex, tw.flexCol, t.pX5, t.pB10, tw.hScreen, tw.wScreen, t.bgWhite ], { paddingTop: insets.top }]}>
 
                     <View style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.hFull, tw.mXAuto ]}>
                         <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull, tw.mY6 ]}>
@@ -94,14 +91,15 @@ export default function UserProfile ({ navigation }) {
                             </View>
                         </View>
 
-                        <View style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgRed800, tailwind.roundedLg, tw.mY5 ]}>
+                        <TouchableHighlight underlayColor="#ff0000" onPress={() => setModalVisibility(true)} style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgRed800, tailwind.roundedLg, tw.mY5 ]}>
                             <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
                                 <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold, t.textWhite ]}>ELIMINAR MI CUENTA</Text>
                             </View>
-                        </View>
+                        </TouchableHighlight>
 
                     </View>
                 </View>
+                <ModalTemplate animationForModal="fade" isVisible={modalVisibility} onClose={() => setModalVisibility(false)} textForButton="Eliminar" textForModal="¿Quieres eliminar tu cuenta? Esto es permanente." />
             </ScrollView>
         )
     }

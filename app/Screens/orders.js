@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { ScrollView, Text, TouchableHighlight, View } from "react-native";
 import { t, tw, tailwind } from "react-native-tailwindcss";
-import NewOrder from "../Components/newOrder";
+import NewItem from "../Components/newItem";
 import ModalTemplate from "../Components/ModalTemplate";
 
 export default function Orders ({ navigation }) {
-    const [newOrderVisibility, setNewOrderVisibility] = useState(false);
+    const [newItemVisibility, setNewItemVisibility] = useState(false);
     const [modalVisibility, setModalVisibility] = useState(false);
     const [ordersArray, setOrdersArray] = useState();
     const [ordersArrayVisibility, setOrdersArrayVisibility] = useState(false);
@@ -17,7 +17,7 @@ export default function Orders ({ navigation }) {
     return (
         <ScrollView>
             <View style={[ t.flex, t.flexCol, tw.justifyStart, tw.hFull, tw.wFull, t.pX5, t.pT6, t.pB10 ]}>
-                <TouchableHighlight underlayColor="#ccc" onPress={() => setNewOrderVisibility(true)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgWhite, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
+                <TouchableHighlight underlayColor="#ccc" onPress={() => setNewItemVisibility(true)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgWhite, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
                     <Text style={[ t.textCenter, t.fontBold, t.textBlack  ]}>
                         + Agregar orden
                     </Text>
@@ -50,8 +50,14 @@ export default function Orders ({ navigation }) {
                         Borrar lista de órdenes
                     </Text>
                 </TouchableHighlight>
+
+                <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.mXAuto, tw.mY4, tw.pX6 ]}>
+                    <Text style={[ t.textCenter, t.textGray600  ]}>
+                        Se recomienda borrar la lista de órdenes al final de cada día, por motivos de espacio en la base de datos
+                    </Text>
+                </View>
                 
-                <NewOrder isVisible={newOrderVisibility} onClose={() => setNewOrderVisibility(false)} />
+                <NewItem addItemText="Nueva orden"  isVisible={newItemVisibility}  itemToAdd="order" onClose={() => setNewItemVisibility(false)} />
                 <ModalTemplate isVisible={modalVisibility} onClose={() => setModalVisibility(false)} textForButton="Borrar" textForModal="¿Quieres borrar la lista de órdenes? Esto es permanente." />
             </View>
         </ScrollView>

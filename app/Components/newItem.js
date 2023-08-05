@@ -5,7 +5,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { t, tw, tailwind } from "react-native-tailwindcss";
 
-export default function NewOrder ({ isVisible, onClose }) {
+export default function newItem ({ addItemText, isVisible, itemToAdd, onClose }) {
     const [order, setOrder] = useState({ tableNumber: "", date: "", listOfDishes: "" });
     const [dish, setDish] = useState({ menuItem: "", notes: "" });
     const [queue, setQueue] = useState([]);
@@ -58,10 +58,15 @@ export default function NewOrder ({ isVisible, onClose }) {
         <Modal animationType="slide" onRequestClose={onClose} transparent={true} visible={isVisible}>
                     <View style={[[ t.flex, t.flexCol, tw.wFull, tw.hFull, t.justifyCenter, tw.pX2 ]]}>
 
-                        <View style={[[ t.flex, t.flexCol, tw.wFull, t.justifyCenter, tw.border, tw.borderGray200, t.shadow2xl ], { height: "fit" }]}>
-                            <Text style={[[ tw.bgBlack, t.textWhite, tw.text3xl, tw.p3, t.textCenter ]]}>Escribe aquí la orden:</Text>
+                        <View style={[[ t.flex, t.flexCol, tw.wFull, t.justifyCenter, t.shadow2xl ], { height: "fit" }]}>
+                            <Text style={[[ tw.bgBlack, t.textWhite, tw.text3xl, tw.p3, t.textCenter ]]}>{addItemText}</Text>
 
-                            <View style={[[ t.flex, t.flexCol, tw.wAuto ], { height: "fit"}]}>
+                            {(itemToAdd === "menuItem") && <View style={[ t.flex, t.flexCol, tw.wFull, tw.bgWhite ]}>
+                                <TextInput placeholder="Nombre del platillo..." style={[ tw.wFull, tw.pY2, tw.pX3, tw.h12 ]} />
+                                <TextInput placeholder="Descripción del platillo..." style={[ tw.wFull, tw.pY2, tw.pX3, tw.h12, tw.borderT, tw.borderGray300 ]} />
+                            </View>}
+                            
+                            {(itemToAdd === "order") && <View style={[[ t.flex, t.flexCol, tw.wAuto ], { height: "fit"}]}>
                                 <View style={[[ t.flex, t.flexRow, tw.wFull, tw.h12 ]]}>
                                     <TextInput placeholder="# de mesa" style={[ tw.w1_2, tw.bgWhite, tw.pX4, t.pY1, tw.h12 ]} onChangeText={tableNumberChangeHandle} value={order.tableNumber} />
                                     <TextInput editable={false} placeholder="Hora" style={[ tw.w1_2, tw.bgWhite, tw.pX4, t.pY1, tw.h12 ]} onChangeText={dateChangeHandle} value={order.date.split(",")[1]} />
@@ -79,7 +84,7 @@ export default function NewOrder ({ isVisible, onClose }) {
                                         </View>
                                     </View>
                                 </View>
-                            </View>
+                            </View>}
 
                             <View style={[[ t.flex, t.flexCol, tw.wFull ]]}>
                                 {(order) && (order.listOfDishes) && order.listOfDishes.map((order, index) => {
@@ -96,13 +101,13 @@ export default function NewOrder ({ isVisible, onClose }) {
                             </View>
 
                             <View style={[ t.flex, t.flexRow, tw.wFull]}>
-                                <TouchableHighlight style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.bgBlue400, tw.h16]} onPress={addToQueueHandle} >
-                                    <Text style={[tw.textCenter, t.fontBold ]}>AGREGAR ORDEN</Text>
+                                <TouchableHighlight underlayColor="#CCE5FF" style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.bgBlue400, tw.h16]} onPress={addToQueueHandle} >
+                                    <Text style={[tw.textCenter, t.fontBold, t.textWhite ]}>AGREGAR</Text>
                                 </TouchableHighlight>
                             </View>
 
                             <View style={[ t.flex, t.flexRow, tw.wFull]}>
-                                <TouchableHighlight style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.bgRed500, tw.h16]} onPress={onClose} >
+                                <TouchableHighlight underlayColor="#ff8888" style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.bgRed500, tw.h16]} onPress={onClose} >
                                     <Text style={[tw.textCenter, t.fontBold, t.textWhite ]}>CANCELAR</Text>
                                 </TouchableHighlight>
                             </View>
