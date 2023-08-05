@@ -11,6 +11,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from './app/homescreen';
 import UserProfile from './app/Screens/userProfile';
 import RestaurantPage from './app/Screens/restaurantPage';
+import NewOrder from './app/Screens/newOrder';
+import Menu from './app/Screens/menu';
+import Orders from './app/Screens/orders';
 
 export default function App() {
   let colorScheme = useColorScheme();
@@ -42,7 +45,9 @@ export default function App() {
           <SafeAreaView style={[styles.container, containerTheme]}> */}
             <Stack.Screen name="User" component={UserProfile} options={{ title: "Mi Perfil" }} />
             <Stack.Screen name="Restaurant" component={RestaurantPage} />
-            
+            <Stack.Screen name="New Order" component={NewOrder} options={{ title: "Agregar orden" }} />
+            <Stack.Screen name="Menu" component={Menu} options={{ title: "Menú" }} />
+            <Stack.Screen name="Orders" component={Orders} options={{ title: "Órdenes" }} />
             
             
             {/* <View  style={styles.container}> */}

@@ -1,6 +1,6 @@
 import { Link } from "expo-router";
 import { useEffect, useState } from "react";
-import { Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { t, tw, tailwind } from "react-native-tailwindcss";
 import { supabase } from "../supabase/client";
@@ -37,6 +37,7 @@ export default function UserProfile ({ navigation }) {
         }
     }, [])
 
+    
     console.log(usersInfo)   
 
     const insets = useSafeAreaInsets();
@@ -48,59 +49,62 @@ export default function UserProfile ({ navigation }) {
         )
     } else {
         return (
-            <View style={[[ tw.flex, tw.flexCol, t.pX5, tw.hScreen, tw.wScreen, t.bgWhite ], { paddingTop: insets.top }]}>
+            <ScrollView>
+                <View style={[[ tw.flex, tw.flexCol, t.pX5, tw.hScreen, tw.wScreen, t.bgWhite ], { paddingTop: insets.top }]}>
 
-                <View style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.hFull, tw.mXAuto ]}>
-                    <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull, tw.mY6 ]}>
-                        <Text style={[ t.textCenter, tw.mXAuto, tw.wFull, t.fontBold, t.text2xl, t.italic ]}>A LA ORDEN</Text>
-                    </View>
+                    <View style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.hFull, tw.mXAuto ]}>
+                        <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull, tw.mY6 ]}>
+                            <Text style={[ t.textCenter, tw.mXAuto, tw.wFull, t.fontBold, t.text2xl, t.italic ]}>A LA ORDEN</Text>
+                        </View>
 
-                    <View style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgWhite, tw.border2, tw.borderGray300, tailwind.roundedLg, tw.mY5 ]}>
-                        <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
-                            <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold, t.text2xl ]}>Bienvenido, {user.user_display_name}</Text>
+                        <View style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgWhite, tw.border2, tw.borderGray300, tailwind.roundedLg, tw.mY5 ]}>
+                            <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
+                                <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold, t.text2xl ]}>Bienvenido, {user.user_display_name}</Text>
+                            </View>
                         </View>
-                    </View>
-                    
-                    <View style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgWhite, tw.border2, tw.borderGray300, tailwind.roundedLg, tw.mY5 ]}>
-                        <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
-                            <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold ]}>MIS RESTAURANTES</Text>
-                        </View>
-                        {restaurants && restaurants.map((restaurant, index) => {
-                            console.log(restaurant)
-                            console.log(restaurant.restaurant_name)
-                            return (
-                                <View key={index} style={[ tw.flex, tw.flexRow, tw.wFull ]}>
-                                    <Text style={[ tw.w4_5, tw.mY4, tw.pL4 ]}>
-                                        {restaurant}
-                                    </Text>
-                                    <Text onPress={() => navigation.navigate("Restaurant", { id: restaurant.restaurant_id })} style={[ tw.w1_5, tw.mY4, t.textCenter, t.fontBold ]}>
-                                        Verrr
-                                    </Text>
-                                </View>
-                            )
-                        })}
-                        {restaurants && <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
-                            <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold ]}>Agregar otro restaurante</Text>
-                        </View>}
-                        {!restaurants && <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
-                            <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold ]}>Aún no tienes restaurantes. Haz clic aquí para agregar uno</Text>
-                        </View>}
-                    </View>
-    
-                    <View style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgRed600, tw.border2, tw.borderGray300, tailwind.roundedLg, tw.mY5 ]}>
-                        <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
-                            <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold, t.textWhite ]}>CERRAR SESIÓN</Text>
-                        </View>
-                    </View>
+                        
 
-                    <View style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgRed800, tw.border2, tw.borderGray300, tailwind.roundedLg, tw.mY5 ]}>
-                        <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
-                            <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold, t.textWhite ]}>ELIMINAR MI CUENTA</Text>
+                        <View style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgWhite, tw.border2, tw.borderGray300, tailwind.roundedLg, tw.mY5 ]}>
+                            <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
+                                <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold ]}>MIS RESTAURANTES</Text>
+                            </View>
+                            {restaurants && restaurants.map((restaurant, index) => {
+                                console.log(restaurant)
+                                console.log(restaurant.restaurant_name)
+                                return (
+                                    <View key={index} style={[ tw.flex, tw.flexRow, tw.wFull ]}>
+                                        <Text style={[ tw.w4_5, tw.mY4, tw.pL4 ]}>
+                                            {restaurant}
+                                        </Text>
+                                        <Text onPress={() => navigation.navigate("Restaurant", { id: restaurant.restaurant_id })} style={[ tw.w1_5, tw.mY4, t.textCenter, t.fontBold ]}>
+                                            Verrr
+                                        </Text>
+                                    </View>
+                                )
+                            })}
+                            {restaurants && <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
+                                <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold ]}>Agregar otro restaurante</Text>
+                            </View>}
+                            {!restaurants && <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
+                                <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold ]}>Aún no tienes restaurantes. Haz clic aquí para agregar uno</Text>
+                            </View>}
                         </View>
+
+                        <View style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgRed600, tw.border2, tw.borderGray300, tailwind.roundedLg, tw.mY5 ]}>
+                            <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
+                                <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold, t.textWhite ]}>CERRAR SESIÓN</Text>
+                            </View>
+                        </View>
+
+                        <View style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgRed800, tw.border2, tw.borderGray300, tailwind.roundedLg, tw.mY5 ]}>
+                            <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
+                                <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold, t.textWhite ]}>ELIMINAR MI CUENTA</Text>
+                            </View>
+                        </View>
+
                     </View>
-    
                 </View>
-            </View>
+            </ScrollView>
         )
     }
 }

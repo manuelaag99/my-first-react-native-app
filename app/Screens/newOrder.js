@@ -1,3 +1,9 @@
+import { useEffect, useState } from "react";
+import { ImageBackground } from "react-native";
+import { Text, TextInput, TouchableHighlight, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { t, tw, tailwind } from "react-native-tailwindcss";
+
 export default function NewOrder () {
     const [order, setOrder] = useState({ tableNumber: "", date: "", listOfDishes: "" });
     const [dish, setDish] = useState({ menuItem: "", notes: "" });
@@ -64,31 +70,30 @@ export default function NewOrder () {
 
     const insets = useSafeAreaInsets();
     return (
-        <View style={[[ t.flex, t.justifyCenter, tw.wFull, tw.hScreen ], { paddingTop: insets.top}]}>
-            <ImageBackground source={imageurl} style={[ t.flex, t.justifyCenter, tw.wFull, tw.hFull ]}>
-                <View style={[[ t.flex, t.flexCol, t.justifyCenter, tw.hFull, tw.wFull, tw.border2, tw.borderBlack ]]}>
+        <View style={[[ t.flex, t.justifyCenter, tw.wFull ]]}>
+                <View style={[[ t.flex, t.flexCol, t.justifyCenter, tw.h90, tw.wFull ]]}>
                     
-                    <View style={[[ t.flex, t.flexCol, tw.wAuto, t.justifyCenter, tw.pX2, tw.borderWhite, tw.border2 ], { height: "90%" }]}>
+                    <View style={[[ t.flex, t.flexCol, tw.wAuto, t.justifyCenter, tw.pX2 ], { height: "90%" }]}>
 
                         <View style={[[ t.flex, t.flexCol, tw.wFull, t.justifyCenter ], { height: "40%" }]}>
                             <Text style={[[ tw.bgBlack, t.textWhite, tw.text3xl, tw.p3, t.textCenter ]]}>Escribe aquí la orden:</Text>
 
-                            <View style={[[ t.flex, t.flexCol, tw.wAuto ], { height: "45%" }]}>
-                                <View style={[[ t.flex, t.flexRow, tw.wFull ], { height: "33.3%"}]}>
-                                    <TextInput placeholder="# de mesa" style={[ tw.w1_2, tw.bgWhite, tw.pX4, t.pY1 ]} onChangeText={tableNumberChangeHandle} value={order.tableNumber} />
-                                    <TextInput editable={false} placeholder="Hora" style={[ tw.w1_2, tw.bgWhite, tw.pX4, t.pY1 ]} onChangeText={dateChangeHandle} value={order.date.split(",")[1]} />
+                            <View style={[[ t.flex, t.flexCol, tw.wAuto ], { height: "fit"}]}>
+                                <View style={[[ t.flex, t.flexRow, tw.wFull, tw.h12 ]]}>
+                                    <TextInput placeholder="# de mesa" style={[ tw.w1_2, tw.bgWhite, tw.pX4, t.pY1, tw.h12 ]} onChangeText={tableNumberChangeHandle} value={order.tableNumber} />
+                                    <TextInput editable={false} placeholder="Hora" style={[ tw.w1_2, tw.bgWhite, tw.pX4, t.pY1, tw.h12 ]} onChangeText={dateChangeHandle} value={order.date.split(",")[1]} />
                                 </View>
-                                <View style={[[ t.flex, t.flexCol, tw.wFull ], { height: "66.6%" }]}>
+                                <View style={[[ t.flex, t.flexCol, tw.wFull, tw.h24 ]]}>
                                     <View style={[[ t.flex, t.flexRow, tw.wFull, tw.hFull ]]}>
-                                        <View style={[ t.flex, t.flexCol, tw.w5_6, tw.hFull ]}>
-                                            <TextInput placeholder="Orden" style={[[ tw.wFull, tw.bgWhite, tw.pX4, t.pY1 ], { height: "50%" }]} onChangeText={(text) => dishChangeHandle("menuItem", text)} value={dish.menuItem} />
-                                            <TextInput placeholder="Notas o especificaciones" style={[[ tw.wFull, tw.bgWhite, tw.pX4, t.pY1 ], { height: "50%" }]} onChangeText={(text) => dishChangeHandle("notes", text)} value={dish.notes} />
+                                        <View style={[ t.flex, t.flexCol, tw.w5_6, tw.h24 ]}>
+                                            <TextInput placeholder="Orden" style={[[ tw.wFull, tw.bgWhite, tw.pX4, t.pY1, tw.h12 ]]} onChangeText={(text) => dishChangeHandle("menuItem", text)} value={dish.menuItem} />
+                                            <TextInput placeholder="Notas o especificaciones" style={[[ tw.wFull, tw.bgWhite, tw.pX4, t.pY1, tw.h12 ]]} onChangeText={(text) => dishChangeHandle("notes", text)} value={dish.notes} />
                                         </View>
-                                        <View style={[ t.flex, t.flexCol, tw.w1_6, tw.hFull, tw.itemsCenter ]}>
-                                            <TouchableHighlight style={[ t.flex, t.flexCol, tw.wFull, tw.bgYellow300, tw.hFull, tw.itemsCenter ]} onPress={addDishHandle} >
+                                        {/* <View style={[ t.flex, t.flexCol, tw.w1_6, tw.h24, tw.itemsCenter ]}> */}
+                                            <TouchableHighlight style={[ t.flex, t.flexCol, tw.justifyCenter, tw.h24, tw.w1_6, tw.bgYellow300, tw.itemsCenter ]} onPress={addDishHandle} >
                                                 <Text style={[tw.textCenter, t.text4xl, tw.hFull ]}>+</Text>
                                             </TouchableHighlight>
-                                        </View>
+                                        {/* </View> */}
                                     </View>
                                 </View>
                             </View>
@@ -116,7 +121,6 @@ export default function NewOrder () {
                         </View>
                     </View>
                 </View>
-            </ImageBackground>
         </View>
     );
 }
