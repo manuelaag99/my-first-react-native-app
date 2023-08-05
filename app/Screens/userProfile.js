@@ -21,6 +21,7 @@ export default function UserProfile ({ navigation }) {
         async function fetchData () {
             try {
                 const { data, error } = await supabase.from("ALO-users-db").select("*").eq("user_email", email)
+                console.log(data)
                 setUsersInfo(data[0])
             } catch (err) {
                 console.log(err)
@@ -29,14 +30,14 @@ export default function UserProfile ({ navigation }) {
         fetchData();
     }, []);  
 
-    console.log(usersInfo)
-
     useEffect(() => {
         setUser(usersInfo)
         if (usersInfo) {
             setRestaurants(usersInfo.user_restaurants);
         }
     }, [])
+
+    console.log(usersInfo)   
 
     const insets = useSafeAreaInsets();
     if (!user) {
@@ -65,13 +66,15 @@ export default function UserProfile ({ navigation }) {
                             <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold ]}>MIS RESTAURANTES</Text>
                         </View>
                         {restaurants && restaurants.map((restaurant, index) => {
+                            console.log(restaurant)
+                            console.log(restaurant.restaurant_name)
                             return (
                                 <View key={index} style={[ tw.flex, tw.flexRow, tw.wFull ]}>
                                     <Text style={[ tw.w4_5, tw.mY4, tw.pL4 ]}>
                                         {restaurant}
                                     </Text>
-                                    <Text onPress={() => navigation.navigate("Restaurant", { id: "09u0890880" })} style={[ tw.w1_5, tw.mY4, t.textCenter, t.fontBold ]}>
-                                        Ver
+                                    <Text onPress={() => navigation.navigate("Restaurant", { id: restaurant.restaurant_id })} style={[ tw.w1_5, tw.mY4, t.textCenter, t.fontBold ]}>
+                                        Verrr
                                     </Text>
                                 </View>
                             )
