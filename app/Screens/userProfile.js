@@ -27,7 +27,7 @@ export default function UserProfile ({ navigation }) {
             }
         }
         fetchData();
-    }, []);  
+    }, []);
 
     useEffect(() => {
         setUser(usersInfo)

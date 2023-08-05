@@ -1,32 +1,17 @@
 import { useEffect, useState } from "react";
-import { ImageBackground } from "react-native";
+import { ImageBackground, Modal, Pressable } from "react-native";
 import { Text, TextInput, TouchableHighlight, View } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { t, tw, tailwind } from "react-native-tailwindcss";
 
-export default function NewOrder () {
+export default function NewOrder ({ isVisible, onClose }) {
     const [order, setOrder] = useState({ tableNumber: "", date: "", listOfDishes: "" });
     const [dish, setDish] = useState({ menuItem: "", notes: "" });
     const [queue, setQueue] = useState([]);
 
     const [doneOrders, setDoneOrders] = useState([]);
     const [deletedOrders, setDeletedOrders] = useState([]);
-
-    const [usersInfo, setUsersInfo] = useState()
-
-    useEffect(() => {
-        async function fetchData () {
-            try {
-                const { data, error } = await supabase.from('ALO-users-db').select("*")
-                setUsersInfo(data)
-            } catch (err) {
-                console.log(err)
-            }
-        }
-        fetchData();
-    }, []);  
-
-    console.log(usersInfo)
 
     let orderDate;
     useEffect(() => {
@@ -70,12 +55,10 @@ export default function NewOrder () {
 
     const insets = useSafeAreaInsets();
     return (
-        <View style={[[ t.flex, t.justifyCenter, tw.wFull ]]}>
-                <View style={[[ t.flex, t.flexCol, t.justifyCenter, tw.h90, tw.wFull ]]}>
-                    
-                    <View style={[[ t.flex, t.flexCol, tw.wAuto, t.justifyCenter, tw.pX2 ], { height: "90%" }]}>
+        <Modal animationType="slide" onRequestClose={onClose} transparent={true} visible={isVisible}>
+                    <View style={[[ t.flex, t.flexCol, tw.wFull, tw.hFull, t.justifyCenter, tw.pX2 ]]}>
 
-                        <View style={[[ t.flex, t.flexCol, tw.wFull, t.justifyCenter ], { height: "40%" }]}>
+                        <View style={[[ t.flex, t.flexCol, tw.wFull, t.justifyCenter, tw.border, tw.borderGray200, t.shadow2xl ], { height: "fit" }]}>
                             <Text style={[[ tw.bgBlack, t.textWhite, tw.text3xl, tw.p3, t.textCenter ]]}>Escribe aquí la orden:</Text>
 
                             <View style={[[ t.flex, t.flexCol, tw.wAuto ], { height: "fit"}]}>
@@ -89,11 +72,11 @@ export default function NewOrder () {
                                             <TextInput placeholder="Orden" style={[[ tw.wFull, tw.bgWhite, tw.pX4, t.pY1, tw.h12 ]]} onChangeText={(text) => dishChangeHandle("menuItem", text)} value={dish.menuItem} />
                                             <TextInput placeholder="Notas o especificaciones" style={[[ tw.wFull, tw.bgWhite, tw.pX4, t.pY1, tw.h12 ]]} onChangeText={(text) => dishChangeHandle("notes", text)} value={dish.notes} />
                                         </View>
-                                        {/* <View style={[ t.flex, t.flexCol, tw.w1_6, tw.h24, tw.itemsCenter ]}> */}
-                                            <TouchableHighlight style={[ t.flex, t.flexCol, tw.justifyCenter, tw.h24, tw.w1_6, tw.bgYellow300, tw.itemsCenter ]} onPress={addDishHandle} >
-                                                <Text style={[tw.textCenter, t.text4xl, tw.hFull ]}>+</Text>
+                                        <View style={[ t.flex, t.flexCol, tw.hFull, tw.w1_6 ]}>
+                                            <TouchableHighlight style={[ t.flex, t.flexCol, tw.justifyCenter, tw.h24, tw.wFull, tw.bgYellow300 ]} onPress={addDishHandle} >
+                                                <Text style={ [tw.textCenter, t.text3xl, tw.hFull ]}>A</Text>
                                             </TouchableHighlight>
-                                        {/* </View> */}
+                                        </View>
                                     </View>
                                 </View>
                             </View>
@@ -105,22 +88,27 @@ export default function NewOrder () {
                                             <Text style={[tw.textLeft, tw.pX4, t.pY1, tw.w5_6 ]}>Platillo: {order.menuItem}</Text>
                                             <Text style={[tw.textLeft, tw.pX4, t.pY1, tw.w5_6 ]}>Notas: {order.notes}</Text>
                                         </View>
-                                        <TouchableHighlight style={[ tw.w1_6, tw.bgRed500 ]} onPress={doneButtonHandle} >
-                                            <Text style={[tw.textCenter, tw.mY3 ]}>BORRAR</Text>
-                                        </TouchableHighlight>
+                                        <Pressable style={[ tw.w1_6, tw.bgRed500 ]} onPress={doneButtonHandle} >
+                                            <Text style={[tw.textCenter, t.textWhite, tw.mY3 ]}>BORRAR</Text>
+                                        </Pressable>
                                     </View>)
                                 })}
                             </View>
 
                             <View style={[ t.flex, t.flexRow, tw.wFull]}>
-                                <TouchableHighlight style={[ tw.wFull, tw.bgBlue400, t.p3]} onPress={addToQueueHandle} >
+                                <TouchableHighlight style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.bgBlue400, tw.h16]} onPress={addToQueueHandle} >
                                     <Text style={[tw.textCenter, t.fontBold ]}>AGREGAR ORDEN</Text>
+                                </TouchableHighlight>
+                            </View>
+
+                            <View style={[ t.flex, t.flexRow, tw.wFull]}>
+                                <TouchableHighlight style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.bgRed500, tw.h16]} onPress={onClose} >
+                                    <Text style={[tw.textCenter, t.fontBold, t.textWhite ]}>CANCELAR</Text>
                                 </TouchableHighlight>
                             </View>
 
                         </View>
                     </View>
-                </View>
-        </View>
+        </Modal>
     );
 }

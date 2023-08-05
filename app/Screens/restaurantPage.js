@@ -2,9 +2,11 @@ import { useState } from "react";
 import { Modal, ScrollView, Text, TouchableHighlight, View } from "react-native";
 import { t, tw, tailwind } from "react-native-tailwindcss";
 import ModalTemplate from "../Components/ModalTemplate";
+import NewOrder from "../Components/newOrder";
 
 export default function RestaurantPage ({ route, navigation }) {
     const [modalVisibility, setModalVisibility] = useState(false);
+    const [newOrderVisibility, setNewOrderVisibility] = useState(false);
 
     console.log(route.params)
     return (
@@ -25,7 +27,7 @@ export default function RestaurantPage ({ route, navigation }) {
                     </Text>
                 </TouchableHighlight>
 
-                <TouchableHighlight underlayColor="#ccc" onPress={() => navigation.navigate("New Order")} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgWhite, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
+                <TouchableHighlight underlayColor="#ccc" onPress={() => setNewOrderVisibility(true)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgWhite, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
                     <Text style={[ t.textCenter, t.fontBold, t.textBlack  ]}>
                         + Agregar orden
                     </Text>
@@ -44,6 +46,7 @@ export default function RestaurantPage ({ route, navigation }) {
                 </TouchableHighlight>
                 
                 <ModalTemplate isVisible={modalVisibility} onClose={() => setModalVisibility(false)} />
+                <NewOrder isVisible={newOrderVisibility} onClose={() => setNewOrderVisibility(false)} />
             </View>
         </>
     )

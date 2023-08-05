@@ -12,12 +12,12 @@ export default function ModalTemplate ({ isVisible, onClose }) {
                         </Text>
                     </View>
                     <View style={[ t.flex, t.flexRow, tw.wFull, tw.h12, tw.justifyAround, tw.mT3 ]}>
-                        <Pressable style={[ tw.w1_3, t.flex, t.flexCol, tw.justifyCenter, tw.border, tw.borderGray200, tailwind.roundedLg, tw.bgRed700 ]} onPress={onClose}>
+                        <TouchableHighlight underlayColor="#ff6666" style={[ tw.w1_3, t.flex, t.flexCol, tw.justifyCenter, tw.border, tw.borderGray200, tailwind.roundedLg, tw.bgRed700 ]} onPress={onClose}>
                             <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>Eliminar</Text>
-                        </Pressable>
-                        <Pressable style={[ tw.w1_3, t.flex, t.flexCol, tw.justifyCenter, tw.border, tw.borderGray200, tailwind.roundedLg ]} onPress={onClose}>
+                        </TouchableHighlight>
+                        <TouchableHighlight underlayColor="#ccc" style={[ tw.w1_3, t.flex, t.flexCol, tw.justifyCenter, tw.border, tw.borderGray200, tailwind.roundedLg ]} onPress={onClose}>
                             <Text style={[ t.textCenter, t.fontBold ]}>Cancelar</Text>
-                        </Pressable>
+                        </TouchableHighlight>
                     </View>
                 </View>
             </View>
