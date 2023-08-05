@@ -20,8 +20,7 @@ export default function UserProfile ({ navigation }) {
     useEffect(() => {
         async function fetchData () {
             try {
-                const { data, error } = await supabase.from("ALO-users-db").select("*").eq("user_email", email)
-                console.log(data)
+                const { data, error } = await supabase.from("ALO-users-db").select("*").eq("user_email", email);
                 setUsersInfo(data[0])
             } catch (err) {
                 console.log(err)
@@ -38,8 +37,7 @@ export default function UserProfile ({ navigation }) {
     }, [])
 
     
-    console.log(usersInfo)   
-
+    console.log(usersInfo)
     const insets = useSafeAreaInsets();
     if (!user) {
         return (
