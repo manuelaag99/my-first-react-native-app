@@ -1,4 +1,3 @@
-import { Link } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, ScrollView, Text, TouchableHighlight, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -16,12 +15,22 @@ export default function UserProfile ({ navigation }) {
     const [user, setUser] = useState();
     const [restaurants, setRestaurants] = useState();
 
-    const [usersInfo, setUsersInfo] = useState()
+    const [usersInfo, setUsersInfo] = useState();
     let email = "manuelaag99@gmail.com"
+    let user_id = "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22";
+
     async function fetchData () {
         try {
-            const { data, error } = await supabase.from("ALO-users-db").select("*").eq("user_email", email);
+            const { data, error } = await supabase.from("ALO-users-db").select("*").eq("user_id", user_id);
             setUsersInfo(data[0])
+            if (error) console.log(error)
+        } catch (err) {
+            console.log(err)
+        }
+        try {
+            const { data, error } = await supabase.from("ALO-restaurants").select("*").eq("creator_id", user_id);
+            setRestaurants(data)
+            if (error) console.log(error)
         } catch (err) {
             console.log(err)
         }
@@ -33,14 +42,13 @@ export default function UserProfile ({ navigation }) {
 
     useEffect(() => {
         setUser(usersInfo)
-        if (usersInfo) {
-            setRestaurants(usersInfo.user_restaurants);
-        }
-    }, [])
+        // if (usersInfo) {
+        //     setRestaurants(usersInfo.user_restaurants);
+        // }
+    }, [usersInfo])
 
-
-    console.log(usersInfo)
     const insets = useSafeAreaInsets();
+
     if (!user) {
         return (
             <ActivityIndicator style={[ tw.mT10]} size="large" color="#000" />
@@ -66,12 +74,10 @@ export default function UserProfile ({ navigation }) {
                                 <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold ]}>MIS RESTAURANTES</Text>
                             </View>
                             {restaurants && restaurants.map((restaurant, index) => {
-                                console.log(restaurant)
-                                console.log(restaurant.restaurant_name)
                                 return (
-                                    <TouchableHighlight underlayColor="#ccc" key={index} onPress={() => navigation.navigate("Restaurant", { id: restaurant.restaurant_id })} style={[ tw.flex, tw.flexRow, tw.wFull ]}>
-                                        <Text style={[ tw.w4_5, tw.mY4, tw.pL4 ]}>
-                                            {restaurant}
+                                    <TouchableHighlight underlayColor="#ccc" key={index} onPress={() => navigation.navigate("Restaurant", { creator_id: restaurant.creator_id, restaurant_id: restaurant.restaurant_id, restaurant_name: restaurant.restaurant_name })} style={[ tw.flex, tw.flexRow, tw.wFull ]}>
+                                        <Text style={[ t.textCenter, tw.wFull, tw.mY4 ]}>
+                                            {restaurant.restaurant_name}
                                         </Text>
                                     </TouchableHighlight>
                                 )
@@ -105,7 +111,7 @@ export default function UserProfile ({ navigation }) {
                     </View>
                 </View>
                 
-                <NewItem topText="Nueo restaurante" isVisible={newRestaurantVisibility}  itemToAdd="restaurant" onClose={() => setNewRestaurantVisibility(false)}  />
+                <NewItem isUpdating={false} isVisible={newRestaurantVisibility} itemToAdd="restaurant" onClose={() => setNewRestaurantVisibility(false)} textForAddButton="AGREGAR" topText="Nuevo restaurante" />
                 <ModalTemplate animationForModal="fade" isVisible={modalVisibility} onClose={() => setModalVisibility(false)} textForButton="Eliminar" textForModal="¿Quieres eliminar tu cuenta? Esto es permanente." />
             </ScrollView>
         )

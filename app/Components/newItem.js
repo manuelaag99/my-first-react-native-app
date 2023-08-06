@@ -4,8 +4,31 @@ import { Text, TextInput, TouchableHighlight, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { t, tw, tailwind } from "react-native-tailwindcss";
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from "uuid";
+import { supabase } from "../supabase/client";
 
 export default function NewItem ({ isUpdating, isVisible, itemToAdd, onClose, textForAddButton, topText }) {
+    let user_id = "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22";
+    let email = "manuelaag99@gmail.com"
+    const [restaurantInfo, setRestaurantInfo] = useState({ restaurant_name: "" });
+    
+    function restaurantNameChangeHandle (event) {
+        console.log(event);
+        setRestaurantInfo({ ...restaurantInfo, restaurant_name: event });
+    }
+
+    async function insertNewRestaurant () {
+        let restaurant_id = uuidv4()
+        try {
+            const {  error } = await supabase.from("ALO-restaurants").insert({ creator_id: user_id, restaurant_name: restaurantInfo.restaurant_name, restaurant_id: restaurant_id });
+            if (error) console.log(error)
+        } catch (err) {
+            console.log(err)
+        }
+        onClose();
+    }
+    
     const [order, setOrder] = useState({ tableNumber: "", date: "", listOfDishes: "" });
     const [dish, setDish] = useState({ menuItem: "", notes: "" });
     const [queue, setQueue] = useState([]);
@@ -18,8 +41,6 @@ export default function NewItem ({ isUpdating, isVisible, itemToAdd, onClose, te
         orderDate = new Date().toLocaleString();
         setOrder({ ...order, date: orderDate });
     }, [])
-
-    console.log(orderDate)
 
     function tableNumberChangeHandle (event) {
         setOrder({ ...order, tableNumber: event });
@@ -53,6 +74,10 @@ export default function NewItem ({ isUpdating, isVisible, itemToAdd, onClose, te
         setDeletedOrders([...deletedOrders, order])
     }
 
+    function addHandle () {
+        insertNewRestaurant();
+    }
+
     const insets = useSafeAreaInsets();
     return (
         <Modal animationType="fade" onRequestClose={onClose} transparent={true} visible={isVisible}>
@@ -62,7 +87,7 @@ export default function NewItem ({ isUpdating, isVisible, itemToAdd, onClose, te
                             <Text style={[[ tw.bgBlack, t.textWhite, tw.text3xl, tw.p3, t.textCenter ]]}>{topText}</Text>
 
                             {(itemToAdd === "restaurant") && <View style={[ t.flex, t.flexCol, tw.wFull, tw.bgWhite ]}>
-                                <TextInput placeholder="Nombre del restaurante..." style={[ tw.wFull, tw.pY2, tw.pX3, tw.h12 ]} />
+                                <TextInput placeholder="Nombre del restaurante..." style={[ tw.wFull, tw.pY2, tw.pX3, tw.h12 ]} onChangeText={restaurantNameChangeHandle} />
                             </View>}
 
                             {(itemToAdd === "menuItem") && <View style={[ t.flex, t.flexCol, tw.wFull, tw.bgWhite ]}>
@@ -105,7 +130,7 @@ export default function NewItem ({ isUpdating, isVisible, itemToAdd, onClose, te
                             </View>
 
                             <View style={[ t.flex, t.flexRow, tw.wFull]}>
-                                <TouchableHighlight underlayColor="#CCE5FF" style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.bgBlue400, tw.h16]} onPress={addToQueueHandle} >
+                                <TouchableHighlight underlayColor="#CCE5FF" style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.bgBlue400, tw.h16]} onPress={addHandle} >
                                     <Text style={[tw.textCenter, t.fontBold, t.textWhite ]}>{textForAddButton}</Text>
                                 </TouchableHighlight>
                             </View>

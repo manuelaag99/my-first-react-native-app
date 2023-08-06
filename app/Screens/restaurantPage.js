@@ -3,19 +3,32 @@ import { Modal, ScrollView, Text, TouchableHighlight, View } from "react-native"
 import { t, tw, tailwind } from "react-native-tailwindcss";
 import ModalTemplate from "../Components/ModalTemplate";
 import NewItem from "../Components/newItem";
+import { supabase } from "../supabase/client";
 
 export default function RestaurantPage ({ route, navigation }) {
     const [modalVisibility, setModalVisibility] = useState(false);
     const [newItemVisibility, setNewItemVisibility] = useState(false);
     const [updateRestaurantVisibility, setUpdateRestaurantVisibility] = useState(false);
 
-    console.log(route.params)
+    const { creator_id, restaurant_id, restaurant_name } = route.params
+
+    async function deleteRestaurantHandle () {
+        try {
+            const { error } = await supabase.from("ALO-restaurants").delete().eq("restaurant_id", restaurant_id)
+            if (error) console.log(error)
+        } catch (err) {
+            console.log(err)
+        }
+        setModalVisibility(false);
+        navigation.navigate("User");
+    }
+
     return (
         <ScrollView>
             <View style={[ t.flex, t.flexCol, tw.justifyStart, t.pX5, tw.hFull, tw.wScreen, t.bgWhite, tw.overflowHidden, tw.pY5 ]}>
                 <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.mXAuto, tw.pY4, tw.mY4 ]}>
                     <Text style={[ tw.wFull, t.textCenter, t.fontBold, t.text4xl, tw.pY5 ]}>
-                        Nombre
+                        {restaurant_name}
                     </Text>
                     <Text style={[ tw.wFull, t.textCenter, t.fontBold, t.text2xl ]}>
                         creado por nombre de creador
@@ -54,7 +67,7 @@ export default function RestaurantPage ({ route, navigation }) {
 
                 <NewItem isUpdating={false} isVisible={newItemVisibility}  itemToAdd="order" onClose={() => setNewItemVisibility(false)} textForAddButton="AGREGAR" topText="Nueva orden" />
                 <NewItem isUpdating={true} isVisible={updateRestaurantVisibility}  itemToAdd="restaurant" onClose={() => setUpdateRestaurantVisibility(false)} textForAddButton="ACTUALIZAR" topText="Modificar restaurante" />
-                <ModalTemplate isVisible={modalVisibility} onClose={() => setModalVisibility(false)} textForButton="Eliminar" textForModal="¿Quieres eliminar este restaurante? Esto es permanente." />
+                <ModalTemplate isVisible={modalVisibility} onClose={() => setModalVisibility(false)} onPressingRedButton={deleteRestaurantHandle} textForButton="Eliminar" textForModal="¿Quieres eliminar este restaurante? Esto es permanente." />
             </View>
         </ScrollView>
     )
