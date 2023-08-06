@@ -32,7 +32,7 @@ export default function Orders ({ navigation }) {
     }
 
     return (
-        <ScrollView>
+        <ScrollView style={[ t.bgGray200 ]}>
             <View style={[ t.flex, t.flexCol, tw.justifyStart, tw.hFull, tw.wFull, t.pX5, t.pT6, t.pB10 ]}>
                 <TouchableHighlight underlayColor="#ccc" onPress={() => setNewItemVisibility(true)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgWhite, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
                     <Text style={[ t.textCenter, t.fontBold, t.textBlack  ]}>
@@ -46,14 +46,14 @@ export default function Orders ({ navigation }) {
                             No hay platillos
                         </Text>
                     </View>}
-                    {menuItemsArray && <TouchableHighlight underlayColor="#CCE5FF" onPress={() => setMenuItemsArrayVisibility(!menuItemsArrayVisibility)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgBlue400, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tailwind.roundedLg ]}>
+                    {menuItemsArray && <TouchableHighlight underlayColor="#CCE5FF" onPress={() => setMenuItemsArrayVisibility(!menuItemsArrayVisibility)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgBlue400, tw.mXAuto, tw.pY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textWhite  ]}>
                             Platillos
                         </Text>
                     </TouchableHighlight>}
                     {menuItemsArray && menuItemsArrayVisibility && menuItemsArray.map((item, index) => {
                         return (
-                            <TouchableHighlight key={index} onPress={() => updateItem(item)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.borderB, tw.borderGray300, tw.mXAuto, tw.pY6, tailwind.roundedLg ]} underlayColor={"#CCe5ff"} >
+                            <TouchableHighlight key={index} onPress={() => updateItem(item)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.borderB, t.bgWhite, tw.borderGray300, tw.mXAuto, tw.pY6, tailwind.roundedLg ]} underlayColor={"#CCe5ff"} >
                                 <Text style={[ t.textCenter, t.fontBold, t.textBlack, tw.pX4  ]}>
                                     {item.menu_item_name}: {item.menu_item_description}
                                 </Text>

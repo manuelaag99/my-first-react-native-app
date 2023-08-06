@@ -37,7 +37,7 @@ export default function Orders ({ navigation }) {
     }
 
     return (
-        <ScrollView>
+        <ScrollView style={[ t.bgGray200 ]}>
             <View style={[ t.flex, t.flexCol, tw.justifyStart, tw.hFull, tw.wFull, t.pX5, t.pT6, t.pB10 ]}>
                 <TouchableHighlight underlayColor="#ccc" onPress={() => setNewItemVisibility(true)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgWhite, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
                     <Text style={[ t.textCenter, t.fontBold, t.textBlack  ]}>
@@ -51,14 +51,14 @@ export default function Orders ({ navigation }) {
                             No hay órdenes
                         </Text>
                     </View>}
-                    {ordersArray && <TouchableHighlight underlayColor="#ffdd00" onPress={() => setOrdersArrayVisibility(!ordersArrayVisibility)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgYellow500, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tailwind.roundedLg ]}>
+                    {ordersArray && <TouchableHighlight underlayColor="#ffdd00" onPress={() => setOrdersArrayVisibility(!ordersArrayVisibility)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgYellow500, tw.mXAuto, tw.pY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textWhite  ]}>
                             Órdenes
                         </Text>
                     </TouchableHighlight>}
                     {ordersArray && ordersArrayVisibility && ordersArray.map((order, index) => {
                         return (
-                            <TouchableHighlight key={index} onPress={() => updateOrder(order)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.borderB, tw.borderGray300, tw.mXAuto, tw.pY6, tailwind.roundedLg ]} underlayColor="#FFF69A">
+                            <TouchableHighlight key={index} onPress={() => updateOrder(order)} style={[ t.flex, t.flexCol, tw.justifyCenter, t.bgWhite, tw.wFull, tw.borderB, tw.borderGray300, tw.mXAuto, tw.pY6, tailwind.roundedLg ]} underlayColor="#FFF69A">
                                 <View>
                                     <Text style={[ t.textCenter, t.fontBold, t.textBlack  ]}>
                                         Mesa {order.table_number}
