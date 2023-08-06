@@ -9,6 +9,7 @@ export default function Orders ({ navigation }) {
     const [modalVisibility, setModalVisibility] = useState(false);
     const [ordersArray, setOrdersArray] = useState();
     const [ordersArrayVisibility, setOrdersArrayVisibility] = useState(false);
+    const [updateOrderVisibility, setUpdateOrderVisibility] = useState(false);
 
     // fetch orders
     // order them by date/time 
@@ -31,8 +32,8 @@ export default function Orders ({ navigation }) {
         setModalVisibility(false)
     }
 
-    function pressOrderHandle (order) {
-        console.log(order)
+    function updateOrder (order) {
+        setUpdateOrderVisibility(true);
     }
 
     return (
@@ -57,7 +58,7 @@ export default function Orders ({ navigation }) {
                     </TouchableHighlight>}
                     {ordersArray && ordersArrayVisibility && ordersArray.map((order, index) => {
                         return (
-                            <TouchableHighlight key={index} onPress={() => pressOrderHandle(order.order_id)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.borderB, tw.borderGray300, tw.mXAuto, tw.pY6, tailwind.roundedLg ]} underlayColor="#FFF69A">
+                            <TouchableHighlight key={index} onPress={() => updateOrder(order)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.borderB, tw.borderGray300, tw.mXAuto, tw.pY6, tailwind.roundedLg ]} underlayColor="#FFF69A">
                                 <View>
                                     <Text style={[ t.textCenter, t.fontBold, t.textBlack  ]}>
                                         Mesa {order.table_number}
@@ -87,7 +88,8 @@ export default function Orders ({ navigation }) {
                     </Text>
                 </View>
                 
-                <NewItem topText="Nueva orden"  isVisible={newItemVisibility}  itemToAdd="order" onClose={() => setNewItemVisibility(false)} />
+                <NewItem isUpdating={true} isVisible={updateOrderVisibility} itemToAdd="order" onClose={() => setUpdateOrderVisibility(false)} textForAddButton="ACTUALIZAR" topText="Actualizar orden" />
+                <NewItem isUpdating={false} isVisible={newItemVisibility} itemToAdd="order" onClose={() => setNewItemVisibility(false)} textForAddButton="AGREGAR" topText="Nueva orden" />
                 <ModalTemplate isVisible={modalVisibility} onClose={() => setModalVisibility(false)} onPressingRedButton={clearOrdersArray} textForButton="Borrar" textForModal="¿Quieres borrar la lista de órdenes? Esto es permanente." />
             </View>
         </ScrollView>

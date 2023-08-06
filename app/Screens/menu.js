@@ -31,10 +31,6 @@ export default function Orders ({ navigation }) {
         setUpdateItemVisibility(true);
     }
 
-    function pressMenuItemHandle (order) {
-        console.log(order)
-    }
-
     return (
         <ScrollView>
             <View style={[ t.flex, t.flexCol, tw.justifyStart, tw.hFull, tw.wFull, t.pX5, t.pT6, t.pB10 ]}>
