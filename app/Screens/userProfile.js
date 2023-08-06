@@ -17,7 +17,6 @@ export default function UserProfile ({ navigation }) {
     const [restaurants, setRestaurants] = useState();
 
     const [usersInfo, setUsersInfo] = useState()
-
     let email = "manuelaag99@gmail.com"
     async function fetchData () {
         try {
@@ -27,7 +26,7 @@ export default function UserProfile ({ navigation }) {
             console.log(err)
         }
     }
-
+    
     useEffect(() => {
         fetchData();
     }, []);

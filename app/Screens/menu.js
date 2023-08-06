@@ -7,12 +7,22 @@ import ModalTemplate from "../Components/ModalTemplate";
 export default function Orders ({ navigation }) {
     const [newItemVisibility, setNewItemVisibility] = useState(false);
     const [modalVisibility, setModalVisibility] = useState(false);
-    const [ordersArray, setOrdersArray] = useState();
-    const [ordersArrayVisibility, setOrdersArrayVisibility] = useState(false);
+    const [menuItemsArray, setMenuItemsArray] = useState();
+    const [menuItemsArrayVisibility, setMenuItemsArrayVisibility] = useState(false);
 
+    const MENUARRAY = [
+        {menu_item_name: "hamburguesa", menu_item_description: "incluye queso extraoooooooooooooooooooo", menu_item_id: "fb3983ef-ec3b-49ac-92c1-6e9d7d4a2e2d", restaurant_id: "8947488363782", creator_id: "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22"},
+        {menu_item_name: "nuggets", menu_item_description: "incluye papas", menu_item_id: "6bb75b70-869e-4cfd-9046-b7fe79581b9d", restaurant_id: "8947488363782", creator_id: "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22"},
+        {menu_item_name: "hamburguesa de pollo", menu_item_description: "incluye verduras", menu_item_id: "e483f181-cb47-402e-9083-061197b22004", restaurant_id: "8947488363782", creator_id: "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22"}
+    ]
+    
     useEffect(() => {
-        setOrdersArray(["thing 1", "thing 2", "thing 2", "thing 2", "thing 2", "thing 2", "thing 2", "thing 2", "thing 2"])
+        setMenuItemsArray(MENUARRAY)
     }, [])
+
+    function pressMenuItemHandle (order) {
+        console.log(order)
+    }
 
     return (
         <ScrollView>
@@ -24,21 +34,21 @@ export default function Orders ({ navigation }) {
                 </TouchableHighlight>
 
                 <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.mXAuto, tailwind.roundedLg, tw.mY6 ]}>
-                    {!ordersArray && <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgYellow500, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tailwind.roundedLg ]}>
+                    {!menuItemsArray && <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgYellow500, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textWhite  ]}>
                             No hay platillos
                         </Text>
                     </View>}
-                    {ordersArray && <TouchableHighlight underlayColor="#CCE5FF" onPress={() => setOrdersArrayVisibility(!ordersArrayVisibility)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgBlue400, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tailwind.roundedLg ]}>
+                    {menuItemsArray && <TouchableHighlight underlayColor="#CCE5FF" onPress={() => setMenuItemsArrayVisibility(!menuItemsArrayVisibility)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgBlue400, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textWhite  ]}>
                             Platillos
                         </Text>
                     </TouchableHighlight>}
-                    {ordersArray && ordersArrayVisibility && ordersArray.map((order, index) => {
+                    {menuItemsArray && menuItemsArrayVisibility && menuItemsArray.map((item, index) => {
                         return (
-                            <TouchableHighlight key={index} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.borderB, tw.borderGray300, tw.mXAuto, tw.pY6, tailwind.roundedLg ]}>
-                                <Text style={[ t.textCenter, t.fontBold, t.textBlack  ]}>
-                                    {order}
+                            <TouchableHighlight key={index} onPress={() => pressMenuItemHandle(item.menu_item_id)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.borderB, tw.borderGray300, tw.mXAuto, tw.pY6, tailwind.roundedLg ]} underlayColor={"#CCe5ff"} >
+                                <Text style={[ t.textCenter, t.fontBold, t.textBlack, tw.pX4  ]}>
+                                    {item.menu_item_name}: {item.menu_item_description}
                                 </Text>
                             </TouchableHighlight>
                         )

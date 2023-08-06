@@ -10,9 +10,20 @@ export default function Orders ({ navigation }) {
     const [ordersArray, setOrdersArray] = useState();
     const [ordersArrayVisibility, setOrdersArrayVisibility] = useState(false);
 
+    const ORDERSARRAY = [
+        {table_number: "1", order_id: "fb3983ef-ec3b-49ac-92c1-6e9d7d4a2e2d", list_of_dishes: [{ menuItem: "Hamburguesa", notes: "sin lechuga" }, { menuItem: "Nuggets", notes: "Papas extra" }], restaurant_id: "8947488363782", creator_id: "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22"},
+        {table_number: "4", order_id: "6bb75b70-869e-4cfd-9046-b7fe79581b9d", list_of_dishes: [{ menuItem: "Tacos", notes: "sin cebolla" }, { menuItem: "", notes: "" }], restaurant_id: "8947488363782", creator_id: "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22"},
+        {table_number: "2", order_id: "e483f181-cb47-402e-9083-061197b22004", list_of_dishes: [{ menuItem: "", notes: "" }, { menuItem: "", notes: "" }], restaurant_id: "8947488363782", creator_id: "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22"},
+        {table_number: "5", order_id: "83dfshsa-b6rh-0oda-2rda-63td5wasdf04", list_of_dishes: [{ menuItem: "", notes: "" }, { menuItem: "", notes: "" }], restaurant_id: "1453414652716", creator_id: "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22"}
+    ]
+
     useEffect(() => {
-        setOrdersArray(["thing 1", "thing 2", "thing 2", "thing 2", "thing 2", "thing 2", "thing 2", "thing 2", "thing 2"])
+        setOrdersArray(ORDERSARRAY)
     }, [])
+
+    function pressOrderHandle (order) {
+        console.log(order)
+    }
 
     return (
         <ScrollView>
@@ -36,11 +47,20 @@ export default function Orders ({ navigation }) {
                     </TouchableHighlight>}
                     {ordersArray && ordersArrayVisibility && ordersArray.map((order, index) => {
                         return (
-                            <View key={index} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.borderB, tw.borderGray300, tw.mXAuto, tw.pY6, tailwind.roundedLg ]}>
-                                <Text style={[ t.textCenter, t.fontBold, t.textBlack  ]}>
-                                    {order}
-                                </Text>
-                            </View>
+                            <TouchableHighlight key={index} onPress={() => pressOrderHandle(order.order_id)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.borderB, tw.borderGray300, tw.mXAuto, tw.pY6, tailwind.roundedLg ]} underlayColor="#FFF69A">
+                                <View>
+                                    <Text style={[ t.textCenter, t.fontBold, t.textBlack  ]}>
+                                        Mesa {order.table_number}
+                                    </Text>
+                                    {order.list_of_dishes && order.list_of_dishes.map((dish, index) => {
+                                        return (
+                                            <Text key={index} style={[ t.textCenter, t.fontBold, t.textBlack  ]}>
+                                                Platillo: {dish.menuItem}, Notas: {dish.notes}
+                                            </Text>
+                                        )
+                                    })}
+                                </View>
+                            </TouchableHighlight>
                         )
                     })}
                 </View>
