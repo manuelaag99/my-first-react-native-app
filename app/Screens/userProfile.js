@@ -26,7 +26,7 @@ export default function UserProfile ({ navigation }) {
             console.log(err)
         }
     }
-    
+
     useEffect(() => {
         fetchData();
     }, []);
@@ -105,7 +105,7 @@ export default function UserProfile ({ navigation }) {
                     </View>
                 </View>
                 
-                <NewItem addItemText="Nueo restaurante" isVisible={newRestaurantVisibility}  itemToAdd="restaurant" onClose={() => setNewRestaurantVisibility(false)}  />
+                <NewItem topText="Nueo restaurante" isVisible={newRestaurantVisibility}  itemToAdd="restaurant" onClose={() => setNewRestaurantVisibility(false)}  />
                 <ModalTemplate animationForModal="fade" isVisible={modalVisibility} onClose={() => setModalVisibility(false)} textForButton="Eliminar" textForModal="¿Quieres eliminar tu cuenta? Esto es permanente." />
             </ScrollView>
         )

@@ -9,16 +9,27 @@ export default function Orders ({ navigation }) {
     const [modalVisibility, setModalVisibility] = useState(false);
     const [menuItemsArray, setMenuItemsArray] = useState();
     const [menuItemsArrayVisibility, setMenuItemsArrayVisibility] = useState(false);
+    const [updateItemVisibility, setUpdateItemVisibility] = useState(false);
 
     const MENUARRAY = [
         {menu_item_name: "hamburguesa", menu_item_description: "incluye queso extraoooooooooooooooooooo", menu_item_id: "fb3983ef-ec3b-49ac-92c1-6e9d7d4a2e2d", restaurant_id: "8947488363782", creator_id: "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22"},
         {menu_item_name: "nuggets", menu_item_description: "incluye papas", menu_item_id: "6bb75b70-869e-4cfd-9046-b7fe79581b9d", restaurant_id: "8947488363782", creator_id: "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22"},
         {menu_item_name: "hamburguesa de pollo", menu_item_description: "incluye verduras", menu_item_id: "e483f181-cb47-402e-9083-061197b22004", restaurant_id: "8947488363782", creator_id: "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22"}
     ]
-    
+
     useEffect(() => {
         setMenuItemsArray(MENUARRAY)
     }, [])
+
+    function clearMenuArray () {
+        setMenuItemsArray()
+        // then, delete from database
+        setModalVisibility(false)
+    }
+
+    function updateItem (item) {
+        setUpdateItemVisibility(true);
+    }
 
     function pressMenuItemHandle (order) {
         console.log(order)
@@ -34,7 +45,7 @@ export default function Orders ({ navigation }) {
                 </TouchableHighlight>
 
                 <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.mXAuto, tailwind.roundedLg, tw.mY6 ]}>
-                    {!menuItemsArray && <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgYellow500, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tailwind.roundedLg ]}>
+                    {!menuItemsArray && <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgBlue400, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textWhite  ]}>
                             No hay platillos
                         </Text>
@@ -46,7 +57,7 @@ export default function Orders ({ navigation }) {
                     </TouchableHighlight>}
                     {menuItemsArray && menuItemsArrayVisibility && menuItemsArray.map((item, index) => {
                         return (
-                            <TouchableHighlight key={index} onPress={() => pressMenuItemHandle(item.menu_item_id)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.borderB, tw.borderGray300, tw.mXAuto, tw.pY6, tailwind.roundedLg ]} underlayColor={"#CCe5ff"} >
+                            <TouchableHighlight key={index} onPress={() => updateItem(item)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.borderB, tw.borderGray300, tw.mXAuto, tw.pY6, tailwind.roundedLg ]} underlayColor={"#CCe5ff"} >
                                 <Text style={[ t.textCenter, t.fontBold, t.textBlack, tw.pX4  ]}>
                                     {item.menu_item_name}: {item.menu_item_description}
                                 </Text>
@@ -61,8 +72,9 @@ export default function Orders ({ navigation }) {
                     </Text>
                 </TouchableHighlight>
                 
-                <NewItem addItemText="Nuevo platillo" isVisible={newItemVisibility} itemToAdd="menuItem" onClose={() => setNewItemVisibility(false)} />
-                <ModalTemplate isVisible={modalVisibility} onClose={() => setModalVisibility(false)} textForButton="Borrar" textForModal="¿Quieres borrar el menú? Esto es permanente." />
+                <NewItem isUpdating={true} isVisible={updateItemVisibility} itemToAdd="menuItem" onClose={() => setUpdateItemVisibility(false)} textForAddButton="ACTUALIZAR" topText="Actualizar platillo" />
+                <NewItem isUpdating={false} isVisible={newItemVisibility} itemToAdd="menuItem" onClose={() => setNewItemVisibility(false)} textForAddButton="AGREGAR" topText="Nuevo platillo" />
+                <ModalTemplate isVisible={modalVisibility} onClose={() => setModalVisibility(false)} onPressingRedButton={clearMenuArray} textForButton="Borrar" textForModal="¿Quieres borrar el menú? Esto es permanente." />
             </View>
         </ScrollView>
     )

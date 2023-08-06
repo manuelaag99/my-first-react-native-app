@@ -10,6 +10,10 @@ export default function Orders ({ navigation }) {
     const [ordersArray, setOrdersArray] = useState();
     const [ordersArrayVisibility, setOrdersArrayVisibility] = useState(false);
 
+    // fetch orders
+    // order them by date/time 
+    // set them as state
+
     const ORDERSARRAY = [
         {table_number: "1", order_id: "fb3983ef-ec3b-49ac-92c1-6e9d7d4a2e2d", list_of_dishes: [{ menuItem: "Hamburguesa", notes: "sin lechuga" }, { menuItem: "Nuggets", notes: "Papas extra" }], restaurant_id: "8947488363782", creator_id: "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22"},
         {table_number: "4", order_id: "6bb75b70-869e-4cfd-9046-b7fe79581b9d", list_of_dishes: [{ menuItem: "Tacos", notes: "sin cebolla" }, { menuItem: "", notes: "" }], restaurant_id: "8947488363782", creator_id: "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22"},
@@ -20,6 +24,12 @@ export default function Orders ({ navigation }) {
     useEffect(() => {
         setOrdersArray(ORDERSARRAY)
     }, [])
+
+    function clearOrdersArray () {
+        setOrdersArray()
+        // then, delete from database
+        setModalVisibility(false)
+    }
 
     function pressOrderHandle (order) {
         console.log(order)
@@ -77,8 +87,8 @@ export default function Orders ({ navigation }) {
                     </Text>
                 </View>
                 
-                <NewItem addItemText="Nueva orden"  isVisible={newItemVisibility}  itemToAdd="order" onClose={() => setNewItemVisibility(false)} />
-                <ModalTemplate isVisible={modalVisibility} onClose={() => setModalVisibility(false)} textForButton="Borrar" textForModal="¿Quieres borrar la lista de órdenes? Esto es permanente." />
+                <NewItem topText="Nueva orden"  isVisible={newItemVisibility}  itemToAdd="order" onClose={() => setNewItemVisibility(false)} />
+                <ModalTemplate isVisible={modalVisibility} onClose={() => setModalVisibility(false)} onPressingRedButton={clearOrdersArray} textForButton="Borrar" textForModal="¿Quieres borrar la lista de órdenes? Esto es permanente." />
             </View>
         </ScrollView>
     )

@@ -5,7 +5,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { t, tw, tailwind } from "react-native-tailwindcss";
 
-export default function NewItem ({ addItemText, isVisible, itemToAdd, onClose }) {
+export default function NewItem ({ isUpdating, isVisible, itemToAdd, onClose, textForAddButton, topText }) {
     const [order, setOrder] = useState({ tableNumber: "", date: "", listOfDishes: "" });
     const [dish, setDish] = useState({ menuItem: "", notes: "" });
     const [queue, setQueue] = useState([]);
@@ -59,7 +59,7 @@ export default function NewItem ({ addItemText, isVisible, itemToAdd, onClose })
                     <View style={[[ t.flex, t.flexCol, tw.wFull, tw.hFull, t.justifyCenter, tw.pX2 ], { backgroundColor: "#00000075"}]}>
 
                         <View style={[[ t.flex, t.flexCol, tw.wFull, t.justifyCenter, t.shadow2xl ], { height: "fit" }]}>
-                            <Text style={[[ tw.bgBlack, t.textWhite, tw.text3xl, tw.p3, t.textCenter ]]}>{addItemText}</Text>
+                            <Text style={[[ tw.bgBlack, t.textWhite, tw.text3xl, tw.p3, t.textCenter ]]}>{topText}</Text>
 
                             {(itemToAdd === "restaurant") && <View style={[ t.flex, t.flexCol, tw.wFull, tw.bgWhite ]}>
                                 <TextInput placeholder="Nombre del restaurante..." style={[ tw.wFull, tw.pY2, tw.pX3, tw.h12 ]} />
@@ -106,9 +106,15 @@ export default function NewItem ({ addItemText, isVisible, itemToAdd, onClose })
 
                             <View style={[ t.flex, t.flexRow, tw.wFull]}>
                                 <TouchableHighlight underlayColor="#CCE5FF" style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.bgBlue400, tw.h16]} onPress={addToQueueHandle} >
-                                    <Text style={[tw.textCenter, t.fontBold, t.textWhite ]}>AGREGAR</Text>
+                                    <Text style={[tw.textCenter, t.fontBold, t.textWhite ]}>{textForAddButton}</Text>
                                 </TouchableHighlight>
                             </View>
+
+                            {isUpdating && <View style={[ t.flex, t.flexRow, tw.wFull]}>
+                                <TouchableHighlight underlayColor="#ff8888" style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.bgRed700, tw.h16]} onPress={onClose} >
+                                    <Text style={[tw.textCenter, t.fontBold, t.textWhite ]}>BORRAR</Text>
+                                </TouchableHighlight>
+                            </View>}
 
                             <View style={[ t.flex, t.flexRow, tw.wFull]}>
                                 <TouchableHighlight underlayColor="#ff8888" style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.bgRed500, tw.h16]} onPress={onClose} >

@@ -22,12 +22,6 @@ export default function RestaurantPage ({ route, navigation }) {
                     </Text>
                 </View>
 
-                <TouchableHighlight underlayColor="#CCE5FF" onPress={() => navigation.navigate("Menu")} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgBlue400, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
-                    <Text style={[ t.textCenter, t.fontBold, t.textWhite  ]}>
-                        Ver Menú
-                    </Text>
-                </TouchableHighlight>
-
                 <TouchableHighlight underlayColor="#ccc" onPress={() => setNewItemVisibility(true)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgWhite, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
                     <Text style={[ t.textCenter, t.fontBold, t.textBlack  ]}>
                         + Agregar orden
@@ -36,7 +30,13 @@ export default function RestaurantPage ({ route, navigation }) {
 
                 <TouchableHighlight underlayColor="#ffdd00" onPress={() => navigation.navigate("Orders")} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgYellow500, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
                     <Text style={[ t.textCenter, t.fontBold, t.textWhite  ]}>
-                        Órdenes
+                        Ver órdenes
+                    </Text>
+                </TouchableHighlight>
+
+                <TouchableHighlight underlayColor="#CCE5FF" onPress={() => navigation.navigate("Menu")} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgBlue400, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
+                    <Text style={[ t.textCenter, t.fontBold, t.textWhite  ]}>
+                        Ver Menú
                     </Text>
                 </TouchableHighlight>
 
@@ -52,8 +52,8 @@ export default function RestaurantPage ({ route, navigation }) {
                     </Text>
                 </TouchableHighlight>
                 
-                <NewItem addItemText="Nueva orden" isVisible={newItemVisibility}  itemToAdd="order" onClose={() => setNewItemVisibility(false)} />
-                <NewItem addItemText="Modificar restaurante" isVisible={updateRestaurantVisibility}  itemToAdd="restaurant" onClose={() => setUpdateRestaurantVisibility(false)} />
+                <NewItem topText="Nueva orden" isVisible={newItemVisibility}  itemToAdd="order" onClose={() => setNewItemVisibility(false)} />
+                <NewItem topText="Modificar restaurante" isVisible={updateRestaurantVisibility}  itemToAdd="restaurant" onClose={() => setUpdateRestaurantVisibility(false)} />
                 <ModalTemplate isVisible={modalVisibility} onClose={() => setModalVisibility(false)} textForButton="Eliminar" textForModal="¿Quieres eliminar este restaurante? Esto es permanente." />
             </View>
         </ScrollView>
