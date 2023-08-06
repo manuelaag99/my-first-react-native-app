@@ -5,7 +5,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { t, tw, tailwind } from "react-native-tailwindcss";
 
-export default function newItem ({ addItemText, isVisible, itemToAdd, onClose }) {
+export default function NewItem ({ addItemText, isVisible, itemToAdd, onClose }) {
     const [order, setOrder] = useState({ tableNumber: "", date: "", listOfDishes: "" });
     const [dish, setDish] = useState({ menuItem: "", notes: "" });
     const [queue, setQueue] = useState([]);
@@ -55,11 +55,15 @@ export default function newItem ({ addItemText, isVisible, itemToAdd, onClose })
 
     const insets = useSafeAreaInsets();
     return (
-        <Modal animationType="slide" onRequestClose={onClose} transparent={true} visible={isVisible}>
-                    <View style={[[ t.flex, t.flexCol, tw.wFull, tw.hFull, t.justifyCenter, tw.pX2 ]]}>
+        <Modal animationType="fade" onRequestClose={onClose} transparent={true} visible={isVisible}>
+                    <View style={[[ t.flex, t.flexCol, tw.wFull, tw.hFull, t.justifyCenter, tw.pX2 ], { backgroundColor: "#00000075"}]}>
 
                         <View style={[[ t.flex, t.flexCol, tw.wFull, t.justifyCenter, t.shadow2xl ], { height: "fit" }]}>
                             <Text style={[[ tw.bgBlack, t.textWhite, tw.text3xl, tw.p3, t.textCenter ]]}>{addItemText}</Text>
+
+                            {(itemToAdd === "restaurant") && <View style={[ t.flex, t.flexCol, tw.wFull, tw.bgWhite ]}>
+                                <TextInput placeholder="Nombre del restaurante..." style={[ tw.wFull, tw.pY2, tw.pX3, tw.h12 ]} />
+                            </View>}
 
                             {(itemToAdd === "menuItem") && <View style={[ t.flex, t.flexCol, tw.wFull, tw.bgWhite ]}>
                                 <TextInput placeholder="Nombre del platillo..." style={[ tw.wFull, tw.pY2, tw.pX3, tw.h12 ]} />
@@ -78,8 +82,8 @@ export default function newItem ({ addItemText, isVisible, itemToAdd, onClose })
                                             <TextInput placeholder="Notas o especificaciones" style={[[ tw.wFull, tw.bgWhite, tw.pX4, t.pY1, tw.h12 ]]} onChangeText={(text) => dishChangeHandle("notes", text)} value={dish.notes} />
                                         </View>
                                         <View style={[ t.flex, t.flexCol, tw.hFull, tw.w1_6 ]}>
-                                            <TouchableHighlight style={[ t.flex, t.flexCol, tw.justifyCenter, tw.h24, tw.wFull, tw.bgYellow300 ]} onPress={addDishHandle} >
-                                                <Text style={ [tw.textCenter, t.text3xl, tw.hFull ]}>A</Text>
+                                            <TouchableHighlight style={[ t.flex, t.flexCol, tw.justifyCenter, tw.h24, tw.wFull, tw.bgYellow500 ]} onPress={addDishHandle} underlayColor={"#ffdd00"} >
+                                                <Text style={ [t.textCenter, t.textWhite, t.text3xl, tw.hFull ]}>+</Text>
                                             </TouchableHighlight>
                                         </View>
                                     </View>

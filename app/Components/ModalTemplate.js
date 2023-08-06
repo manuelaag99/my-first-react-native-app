@@ -3,8 +3,8 @@ import { t, tailwind, tw } from "react-native-tailwindcss";
 
 export default function ModalTemplate ({ animationForModal, isVisible, onClose, textForButton, textForModal }) {
     return (
-        <Modal animationType={animationForModal || "slide"} onRequestClose={onClose} transparent={true} visible={isVisible}>
-            <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.pX6, tw.wFull, tw.hFull ]}>
+        <Modal animationType={animationForModal || "fade"} onRequestClose={onClose} transparent={true} visible={isVisible}>
+            <View style={[[ t.flex, t.flexCol, tw.justifyCenter, tw.pX6, tw.wFull, tw.hFull ], { backgroundColor: "#00000075"}]}>
                 <View style={[ t.flex, t.flexCol, tw.h50, tw.wFull, tw.bgWhite, tw.border, tw.borderGray300, tw.pT4, tw.pB8, tailwind.roundedLg, t.shadow2xl ]}>
                     <View style={[ t.flex, t.flexCol, tw.wFull, tw.h16, tw.justifyCenter ]}>
                         <Text style={[ t.textCenter, tw.pX4, tw.wFull, t.flex, t.flexCol, tw.justifyCenter ]}>

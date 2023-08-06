@@ -7,6 +7,7 @@ import NewItem from "../Components/newItem";
 export default function RestaurantPage ({ route, navigation }) {
     const [modalVisibility, setModalVisibility] = useState(false);
     const [newItemVisibility, setNewItemVisibility] = useState(false);
+    const [updateRestaurantVisibility, setUpdateRestaurantVisibility] = useState(false);
 
     console.log(route.params)
     return (
@@ -33,19 +34,26 @@ export default function RestaurantPage ({ route, navigation }) {
                     </Text>
                 </TouchableHighlight>
 
-                <TouchableHighlight underlayColor="#FFFFCC" onPress={() => navigation.navigate("Orders")} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgYellow500, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
+                <TouchableHighlight underlayColor="#ffdd00" onPress={() => navigation.navigate("Orders")} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgYellow500, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
                     <Text style={[ t.textCenter, t.fontBold, t.textWhite  ]}>
                         Órdenes
                     </Text>
                 </TouchableHighlight>
 
-                <TouchableHighlight underlayColor="#ff6666" onPress={() => setModalVisibility(true)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgRed700, tw.mXAuto, tw.pY6, tw.mY16, tailwind.roundedLg ]}>
+                <TouchableHighlight underlayColor="#ccc" onPress={() => setUpdateRestaurantVisibility(true)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgWhite, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mT20, tw.mB6, tailwind.roundedLg ]}>
+                    <Text style={[ t.textCenter, t.fontBold, t.textBlack  ]}>
+                        Modificar restaurante
+                    </Text>
+                </TouchableHighlight>
+                
+                <TouchableHighlight underlayColor="#ff6666" onPress={() => setModalVisibility(true)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgRed700, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
                     <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
                         Eliminar restaurante
                     </Text>
                 </TouchableHighlight>
                 
                 <NewItem addItemText="Nueva orden" isVisible={newItemVisibility}  itemToAdd="order" onClose={() => setNewItemVisibility(false)} />
+                <NewItem addItemText="Modificar restaurante" isVisible={updateRestaurantVisibility}  itemToAdd="restaurant" onClose={() => setUpdateRestaurantVisibility(false)} />
                 <ModalTemplate isVisible={modalVisibility} onClose={() => setModalVisibility(false)} textForButton="Eliminar" textForModal="¿Quieres eliminar este restaurante? Esto es permanente." />
             </View>
         </ScrollView>

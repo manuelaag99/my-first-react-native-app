@@ -36,11 +36,11 @@ export default function Orders ({ navigation }) {
                     </TouchableHighlight>}
                     {ordersArray && ordersArrayVisibility && ordersArray.map((order, index) => {
                         return (
-                            <View key={index} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.borderB, tw.borderGray300, tw.mXAuto, tw.pY6, tailwind.roundedLg ]}>
+                            <TouchableHighlight key={index} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.borderB, tw.borderGray300, tw.mXAuto, tw.pY6, tailwind.roundedLg ]}>
                                 <Text style={[ t.textCenter, t.fontBold, t.textBlack  ]}>
                                     {order}
                                 </Text>
-                            </View>
+                            </TouchableHighlight>
                         )
                     })}
                 </View>
