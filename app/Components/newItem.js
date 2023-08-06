@@ -8,7 +8,7 @@ import 'react-native-get-random-values';
 import { v4 as uuidv4 } from "uuid";
 import { supabase } from "../supabase/client";
 
-export default function NewItem ({ isUpdating, isVisible, itemToAdd, onClose, textForAddButton, topText }) {
+export default function NewItem ({ isUpdating, isVisible, itemId, itemToAdd, onClose, textForAddButton, topText }) {
     let user_id = "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22";
     let email = "manuelaag99@gmail.com"
     const [restaurantInfo, setRestaurantInfo] = useState({ restaurant_name: "" });
@@ -18,11 +18,17 @@ export default function NewItem ({ isUpdating, isVisible, itemToAdd, onClose, te
         setRestaurantInfo({ ...restaurantInfo, restaurant_name: event });
     }
 
+    console.log(itemId)
     async function insertNewRestaurant () {
         let restaurant_id = uuidv4()
         try {
-            const {  error } = await supabase.from("ALO-restaurants").insert({ creator_id: user_id, restaurant_name: restaurantInfo.restaurant_name, restaurant_id: restaurant_id });
-            if (error) console.log(error)
+            if (!isUpdating) {
+                const { error } = await supabase.from("ALO-restaurants").insert({ creator_id: user_id, restaurant_name: restaurantInfo.restaurant_name, restaurant_id: restaurant_id });
+                if (error) console.log(error)
+            } else {
+                const { error } = await supabase.from("ALO-restaurants").update({ restaurant_name: restaurantInfo.restaurant_name }).eq("restaurant_id", itemId);
+                if (error) console.log(error)
+            }            
         } catch (err) {
             console.log(err)
         }
@@ -75,7 +81,8 @@ export default function NewItem ({ isUpdating, isVisible, itemToAdd, onClose, te
     }
 
     function addHandle () {
-        insertNewRestaurant();
+        if (itemToAdd === "restaurant") insertNewRestaurant();
+        else console.log("wrong")
     }
 
     const insets = useSafeAreaInsets();

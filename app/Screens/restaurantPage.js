@@ -10,7 +10,7 @@ export default function RestaurantPage ({ route, navigation }) {
     const [newItemVisibility, setNewItemVisibility] = useState(false);
     const [updateRestaurantVisibility, setUpdateRestaurantVisibility] = useState(false);
 
-    const { creator_id, restaurant_id, restaurant_name } = route.params
+    const { creator_id, restaurant_id, restaurant_name, creator_name } = route.params
 
     async function deleteRestaurantHandle () {
         try {
@@ -24,14 +24,14 @@ export default function RestaurantPage ({ route, navigation }) {
     }
 
     return (
-        <ScrollView>
-            <View style={[ t.flex, t.flexCol, tw.justifyStart, t.pX5, tw.hFull, tw.wScreen, t.bgWhite, tw.overflowHidden, tw.pY5 ]}>
+        <ScrollView style={[ t.bgGray200 ]}>
+            <View style={[ t.flex, t.flexCol, tw.justifyStart, t.pX5, tw.hFull, tw.wFull, tw.overflowHidden, tw.pY5 ]}>
                 <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.mXAuto, tw.pY4, tw.mY4 ]}>
                     <Text style={[ tw.wFull, t.textCenter, t.fontBold, t.text4xl, tw.pY5 ]}>
                         {restaurant_name}
                     </Text>
                     <Text style={[ tw.wFull, t.textCenter, t.fontBold, t.text2xl ]}>
-                        creado por nombre de creador
+                        creado por {creator_name}
                     </Text>
                 </View>
 
@@ -65,8 +65,8 @@ export default function RestaurantPage ({ route, navigation }) {
                     </Text>
                 </TouchableHighlight>
 
-                <NewItem isUpdating={false} isVisible={newItemVisibility}  itemToAdd="order" onClose={() => setNewItemVisibility(false)} textForAddButton="AGREGAR" topText="Nueva orden" />
-                <NewItem isUpdating={true} isVisible={updateRestaurantVisibility}  itemToAdd="restaurant" onClose={() => setUpdateRestaurantVisibility(false)} textForAddButton="ACTUALIZAR" topText="Modificar restaurante" />
+                <NewItem isUpdating={false} isVisible={newItemVisibility} itemId={null} itemToAdd="order" onClose={() => setNewItemVisibility(false)} textForAddButton="AGREGAR" topText="Nueva orden" />
+                <NewItem isUpdating={true} isVisible={updateRestaurantVisibility} itemId={restaurant_id} itemToAdd="restaurant" onClose={() => setUpdateRestaurantVisibility(false)} textForAddButton="ACTUALIZAR" topText="Modificar restaurante" />
                 <ModalTemplate isVisible={modalVisibility} onClose={() => setModalVisibility(false)} onPressingRedButton={deleteRestaurantHandle} textForButton="Eliminar" textForModal="¿Quieres eliminar este restaurante? Esto es permanente." />
             </View>
         </ScrollView>

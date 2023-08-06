@@ -4,8 +4,6 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { t, tw, tailwind } from "react-native-tailwindcss";
 import { supabase } from "../supabase/client";
 
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ModalTemplate from "../Components/ModalTemplate";
 import NewItem from "../Components/newItem";
 
@@ -15,14 +13,13 @@ export default function UserProfile ({ navigation }) {
     const [user, setUser] = useState();
     const [restaurants, setRestaurants] = useState();
 
-    const [usersInfo, setUsersInfo] = useState();
     let email = "manuelaag99@gmail.com"
     let user_id = "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22";
 
     async function fetchData () {
         try {
             const { data, error } = await supabase.from("ALO-users-db").select("*").eq("user_id", user_id);
-            setUsersInfo(data[0])
+            setUser(data[0])
             if (error) console.log(error)
         } catch (err) {
             console.log(err)
@@ -39,13 +36,6 @@ export default function UserProfile ({ navigation }) {
     useEffect(() => {
         fetchData();
     }, []);
-
-    useEffect(() => {
-        setUser(usersInfo)
-        // if (usersInfo) {
-        //     setRestaurants(usersInfo.user_restaurants);
-        // }
-    }, [usersInfo])
 
     const insets = useSafeAreaInsets();
 
@@ -75,7 +65,7 @@ export default function UserProfile ({ navigation }) {
                             </View>
                             {restaurants && restaurants.map((restaurant, index) => {
                                 return (
-                                    <TouchableHighlight underlayColor="#ccc" key={index} onPress={() => navigation.navigate("Restaurant", { creator_id: restaurant.creator_id, restaurant_id: restaurant.restaurant_id, restaurant_name: restaurant.restaurant_name })} style={[ tw.flex, tw.flexRow, tw.wFull ]}>
+                                    <TouchableHighlight underlayColor="#ccc" key={index} onPress={() => navigation.navigate("Restaurant", { creator_id: restaurant.creator_id, restaurant_id: restaurant.restaurant_id, restaurant_name: restaurant.restaurant_name, creator_name: user.user_display_name })} style={[ tw.flex, tw.flexRow, tw.wFull ]}>
                                         <Text style={[ t.textCenter, tw.wFull, tw.mY4 ]}>
                                             {restaurant.restaurant_name}
                                         </Text>
