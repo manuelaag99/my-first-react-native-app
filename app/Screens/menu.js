@@ -11,7 +11,7 @@ export default function Orders ({ navigation, route }) {
     const [menuItemsArray, setMenuItemsArray] = useState();
     const [menuItemsArrayVisibility, setMenuItemsArrayVisibility] = useState(false);
     const [updateItemVisibility, setUpdateItemVisibility] = useState(false);
-    const [idOfMenuItemToUpdate, setIdOfMenuItemToUpdate] = useState();
+    const [menuItemToUpdate, setMenuItemToUpdate] = useState();
 
     const { creator_id, restaurant_id } = route.params
 
@@ -46,11 +46,8 @@ export default function Orders ({ navigation, route }) {
 
     function updateItem (item) {
         setUpdateItemVisibility(true);
-        setIdOfMenuItemToUpdate(item.menu_item_id);
-        console.log(item)
+        setMenuItemToUpdate(item);
     }
-
-    console.log(menuItemsArray)
 
     return (
         <ScrollView style={[ t.bgGray200 ]}>
@@ -89,8 +86,8 @@ export default function Orders ({ navigation, route }) {
                     </Text>
                 </TouchableHighlight>
                 
-                <NewItem idOfItemToUpdate={idOfMenuItemToUpdate} isUpdating={true} isVisible={updateItemVisibility} itemToAdd="menuItem" onClose={() => setUpdateItemVisibility(false)} restaurant_id={restaurant_id} textForAddButton="ACTUALIZAR" topText="Actualizar platillo" />
-                <NewItem idOfItemToUpdate={null} isUpdating={false} isVisible={newItemVisibility} itemToAdd="menuItem" onClose={() => setNewItemVisibility(false)} restaurant_id={restaurant_id} textForAddButton="AGREGAR" topText="Nuevo platillo" />
+                <NewItem itemToUpdate={menuItemToUpdate} isUpdating={true} isVisible={updateItemVisibility} itemToAdd="menuItem" onClose={() => setUpdateItemVisibility(false)} restaurantId={restaurant_id} textForAddButton="ACTUALIZAR" topText="Actualizar platillo" />
+                <NewItem itemToUpdate={null} isUpdating={false} isVisible={newItemVisibility} itemToAdd="menuItem" onClose={() => setNewItemVisibility(false)} restaurantId={restaurant_id} textForAddButton="AGREGAR" topText="Nuevo platillo" />
                 <ModalTemplate isVisible={modalVisibility} onClose={() => setModalVisibility(false)} onPressingRedButton={clearMenuHandle} textForButton="Borrar" textForModal="¿Quieres borrar el menú? Esto es permanente." />
             </View>
         </ScrollView>

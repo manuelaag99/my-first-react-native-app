@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Modal, ScrollView, Text, TouchableHighlight, View } from "react-native";
+import { ScrollView, Text, TouchableHighlight, View } from "react-native";
 import { t, tw, tailwind } from "react-native-tailwindcss";
 import ModalTemplate from "../Components/ModalTemplate";
 import NewItem from "../Components/newItem";
