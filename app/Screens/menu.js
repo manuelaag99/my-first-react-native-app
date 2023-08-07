@@ -48,6 +48,8 @@ export default function Orders ({ navigation, route }) {
         setUpdateItemVisibility(true);
     }
 
+    console.log(menuItemsArray)
+
     return (
         <ScrollView style={[ t.bgGray200 ]}>
             <View style={[ t.flex, t.flexCol, tw.justifyStart, tw.hFull, tw.wFull, t.pX5, t.pT6, t.pB10 ]}>
@@ -58,12 +60,12 @@ export default function Orders ({ navigation, route }) {
                 </TouchableHighlight>
 
                 <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.mXAuto, tailwind.roundedLg, tw.mY6 ]}>
-                    {!menuItemsArray && <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgBlue400, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tailwind.roundedLg ]}>
+                    {(menuItemsArray === null) && <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgBlue400, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textWhite  ]}>
                             No hay platillos
                         </Text>
                     </View>}
-                    {menuItemsArray && <TouchableHighlight underlayColor="#CCE5FF" onPress={() => setMenuItemsArrayVisibility(!menuItemsArrayVisibility)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgBlue400, tw.mXAuto, tw.pY6, tailwind.roundedLg ]}>
+                    {(menuItemsArray !== null) && <TouchableHighlight underlayColor="#CCE5FF" onPress={() => setMenuItemsArrayVisibility(!menuItemsArrayVisibility)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgBlue400, tw.mXAuto, tw.pY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textWhite  ]}>
                             Platillos
                         </Text>
@@ -72,7 +74,7 @@ export default function Orders ({ navigation, route }) {
                         return (
                             <TouchableHighlight key={index} onPress={() => updateItem(item)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.borderB, t.bgWhite, tw.borderGray300, tw.mXAuto, tw.pY6, tailwind.roundedLg ]} underlayColor={"#CCe5ff"} >
                                 <Text style={[ t.textCenter, t.fontBold, t.textBlack, tw.pX6  ]}>
-                                    {item.item_name}: {item.item_description}
+                                    {item.menu_item_name}: {item.menu_item_description}
                                 </Text>
                             </TouchableHighlight>
                         )
@@ -85,8 +87,8 @@ export default function Orders ({ navigation, route }) {
                     </Text>
                 </TouchableHighlight>
                 
-                <NewItem isUpdating={true} isVisible={updateItemVisibility} itemToAdd="menuItem" onClose={() => setUpdateItemVisibility(false)} textForAddButton="ACTUALIZAR" topText="Actualizar platillo" />
-                <NewItem isUpdating={false} isVisible={newItemVisibility} itemToAdd="menuItem" onClose={() => setNewItemVisibility(false)} textForAddButton="AGREGAR" topText="Nuevo platillo" />
+                <NewItem isUpdating={true} isVisible={updateItemVisibility} itemToAdd="menuItem" onClose={() => setUpdateItemVisibility(false)} restaurant_id={restaurant_id} textForAddButton="ACTUALIZAR" topText="Actualizar platillo" />
+                <NewItem isUpdating={false} isVisible={newItemVisibility} itemToAdd="menuItem" onClose={() => setNewItemVisibility(false)} restaurant_id={restaurant_id} textForAddButton="AGREGAR" topText="Nuevo platillo" />
                 <ModalTemplate isVisible={modalVisibility} onClose={() => setModalVisibility(false)} onPressingRedButton={clearMenuHandle} textForButton="Borrar" textForModal="¿Quieres borrar el menú? Esto es permanente." />
             </View>
         </ScrollView>

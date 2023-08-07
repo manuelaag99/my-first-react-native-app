@@ -8,21 +8,21 @@ import 'react-native-get-random-values';
 import { v4 as uuidv4 } from "uuid";
 import { supabase } from "../supabase/client";
 
-export default function NewItem ({ isUpdating, isVisible, itemId, itemToAdd, onClose, textForAddButton, topText }) {
+export default function NewItem ({ isUpdating, isVisible, itemId, itemToAdd, onClose, restaurant_id, textForAddButton, topText }) {
     let user_id = "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22";
     let email = "manuelaag99@gmail.com"
+
     const [restaurantInfo, setRestaurantInfo] = useState({ restaurant_name: "" });
-    
     function restaurantNameChangeHandle (event) {
         setRestaurantInfo({ ...restaurantInfo, restaurant_name: event });
     }
 
     console.log(itemId)
     async function insertNewRestaurant () {
-        let restaurant_id = uuidv4()
+        let generated_restaurant_id = uuidv4()
         try {
             if (!isUpdating) {
-                const { error } = await supabase.from("ALO-restaurants").insert({ creator_id: user_id, restaurant_name: restaurantInfo.restaurant_name, restaurant_id: restaurant_id });
+                const { error } = await supabase.from("ALO-restaurants").insert({ creator_id: user_id, restaurant_name: restaurantInfo.restaurant_name, restaurant_id: generated_restaurant_id });
                 if (error) console.log(error)
             } else {
                 const { error } = await supabase.from("ALO-restaurants").update({ restaurant_name: restaurantInfo.restaurant_name }).eq("restaurant_id", itemId);
@@ -33,7 +33,37 @@ export default function NewItem ({ isUpdating, isVisible, itemId, itemToAdd, onC
         }
         onClose();
     }
+
+
+    const [menuItems, setMenuItems] = useState({ menu_item_name: "", menu_item_description: "" });
+    function itemNameChangeHandle (event) {
+        setMenuItems({ ...menuItems, menu_item_name: event });
+    }
+
+    function itemDescriptionChangeHandle (event) {
+        setMenuItems({ ...menuItems, menu_item_description: event });
+    }
+
+    console.log(restaurant_id)
     
+    async function insertNewMenuItem () {
+        let generate_menu_item_id = uuidv4()
+        try {
+            if (!isUpdating) {
+                const { error } = await supabase.from("ALO-restaurant-menu-items").insert({ creator_id: user_id, restaurant_id: restaurant_id, menu_item_id: generate_menu_item_id, menu_item_name: menuItems.menu_item_name, menu_item_description: menuItems.menu_item_description });
+                if (error) console.log(error)
+            } else {
+                const { error } = await supabase.from("ALO-restaurants").update({ restaurant_name: restaurantInfo.restaurant_name }).eq("restaurant_id", itemId);
+                if (error) console.log(error)
+            }            
+        } catch (err) {
+            console.log(err)
+        }
+        onClose();
+    }
+
+
+
     const [order, setOrder] = useState({ tableNumber: "", date: "", listOfDishes: "" });
     const [dish, setDish] = useState({ menuItem: "", notes: "" });
     const [queue, setQueue] = useState([]);
@@ -81,7 +111,7 @@ export default function NewItem ({ isUpdating, isVisible, itemId, itemToAdd, onC
 
     function addHandle () {
         if (itemToAdd === "restaurant") insertNewRestaurant();
-        else console.log("wrong")
+        else if (itemToAdd === "menuItem") insertNewMenuItem();
     }
 
     const insets = useSafeAreaInsets();
@@ -93,12 +123,12 @@ export default function NewItem ({ isUpdating, isVisible, itemId, itemToAdd, onC
                             <Text style={[[ tw.bgBlack, t.textWhite, tw.text3xl, tw.p3, t.textCenter ]]}>{topText}</Text>
 
                             {(itemToAdd === "restaurant") && <View style={[ t.flex, t.flexCol, tw.wFull, tw.bgWhite ]}>
-                                <TextInput placeholder="Nombre del restaurante..." style={[ tw.wFull, tw.pY2, tw.pX3, tw.h12 ]} onChangeText={restaurantNameChangeHandle} />
+                                <TextInput onChangeText={restaurantNameChangeHandle} placeholder="Nombre del restaurante..." style={[ tw.wFull, tw.pY2, tw.pX3, tw.h12 ]} />
                             </View>}
 
                             {(itemToAdd === "menuItem") && <View style={[ t.flex, t.flexCol, tw.wFull, tw.bgWhite ]}>
-                                <TextInput placeholder="Nombre del platillo..." style={[ tw.wFull, tw.pY2, tw.pX3, tw.h12 ]} />
-                                <TextInput placeholder="Descripción del platillo..." style={[ tw.wFull, tw.pY2, tw.pX3, tw.h12, tw.borderT, tw.borderGray300 ]} />
+                                <TextInput onChangeText={itemNameChangeHandle} placeholder="Nombre del platillo..." style={[ tw.wFull, tw.pY2, tw.pX3, tw.h12 ]} />
+                                <TextInput onChangeText={itemDescriptionChangeHandle} placeholder="Descripción del platillo..." style={[ tw.wFull, tw.pY2, tw.pX3, tw.h12, tw.borderT, tw.borderGray300 ]} />
                             </View>}
                             
                             {(itemToAdd === "order") && <View style={[[ t.flex, t.flexCol, tw.wAuto ], { height: "fit"}]}>
