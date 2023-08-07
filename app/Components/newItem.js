@@ -8,7 +8,7 @@ import 'react-native-get-random-values';
 import { v4 as uuidv4 } from "uuid";
 import { supabase } from "../supabase/client";
 
-export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, itemToAdd, onClose, restaurantId, textForAddButton, topText }) {
+export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, itemToAdd, onClose, restaurantId, textForAddButton, topText, updateFetchedData }) {
     let user_id = "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22";
     let email = "manuelaag99@gmail.com"
 
@@ -30,6 +30,7 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
             console.log(err)
         }
         onClose();
+        updateFetchedData();
     }
 
 
@@ -56,6 +57,7 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
             console.log(err)
         }
         onClose();
+        updateFetchedData();
     }
 
 

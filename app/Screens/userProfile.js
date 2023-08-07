@@ -37,6 +37,10 @@ export default function UserProfile ({ navigation }) {
         fetchData();
     }, []);
 
+    function fetchAgain () {
+        fetchData();
+    }
+
     const insets = useSafeAreaInsets();
 
     if (!user) {
@@ -101,7 +105,7 @@ export default function UserProfile ({ navigation }) {
                     </View>
                 </View>
                 
-                <NewItem isUpdating={false} isVisible={newRestaurantVisibility} itemToAdd="restaurant" onClose={() => setNewRestaurantVisibility(false)} textForAddButton="AGREGAR" topText="Nuevo restaurante" />
+                <NewItem isUpdating={false} isVisible={newRestaurantVisibility} itemToAdd="restaurant" onClose={() => setNewRestaurantVisibility(false)} textForAddButton="AGREGAR" topText="Nuevo restaurante" updateFetchedData={fetchAgain} />
                 <ModalTemplate animationForModal="fade" isVisible={modalVisibility} onClose={() => setModalVisibility(false)} textForButton="Eliminar" textForModal="¿Quieres eliminar tu cuenta? Esto es permanente." />
             </ScrollView>
         )

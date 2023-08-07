@@ -38,6 +38,10 @@ export default function Orders ({ navigation, route }) {
         fetchMenuData();
     }, []);
 
+    function fetchAgain () {
+        fetchMenuData();
+    }
+
     function clearMenuHandle () {
         setMenuItemsArray()
         clearMenuData()
@@ -86,8 +90,8 @@ export default function Orders ({ navigation, route }) {
                     </Text>
                 </TouchableHighlight>
                 
-                <NewItem itemToUpdate={menuItemToUpdate} isUpdating={true} isVisible={updateItemVisibility} itemToAdd="menuItem" onClose={() => setUpdateItemVisibility(false)} restaurantId={restaurant_id} textForAddButton="ACTUALIZAR" topText="Actualizar platillo" />
-                <NewItem itemToUpdate={null} isUpdating={false} isVisible={newItemVisibility} itemToAdd="menuItem" onClose={() => setNewItemVisibility(false)} restaurantId={restaurant_id} textForAddButton="AGREGAR" topText="Nuevo platillo" />
+                <NewItem itemToUpdate={menuItemToUpdate} isUpdating={true} isVisible={updateItemVisibility} itemToAdd="menuItem" onClose={() => setUpdateItemVisibility(false)} restaurantId={restaurant_id} textForAddButton="ACTUALIZAR" topText="Actualizar platillo" updateFetchedData={fetchAgain} />
+                <NewItem itemToUpdate={null} isUpdating={false} isVisible={newItemVisibility} itemToAdd="menuItem" onClose={() => setNewItemVisibility(false)} restaurantId={restaurant_id} textForAddButton="AGREGAR" topText="Nuevo platillo" updateFetchedData={fetchAgain} />
                 <ModalTemplate isVisible={modalVisibility} onClose={() => setModalVisibility(false)} onPressingRedButton={clearMenuHandle} textForButton="Borrar" textForModal="¿Quieres borrar el menú? Esto es permanente." />
             </View>
         </ScrollView>
