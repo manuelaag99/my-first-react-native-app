@@ -11,6 +11,7 @@ export default function Orders ({ navigation, route }) {
     const [menuItemsArray, setMenuItemsArray] = useState();
     const [menuItemsArrayVisibility, setMenuItemsArrayVisibility] = useState(false);
     const [updateItemVisibility, setUpdateItemVisibility] = useState(false);
+    const [idOfMenuItemToUpdate, setIdOfMenuItemToUpdate] = useState();
 
     const { creator_id, restaurant_id } = route.params
 
@@ -27,7 +28,6 @@ export default function Orders ({ navigation, route }) {
     async function clearMenuData () {
         try {
             const { data, error } = await supabase.from("ALO-restaurant-menu-items").delete("*").eq("restaurant_id", restaurant_id);
-            setMenuItemsArray(data)
             if (error) console.log(error)
         } catch (err) {
             console.log(err)
@@ -46,6 +46,8 @@ export default function Orders ({ navigation, route }) {
 
     function updateItem (item) {
         setUpdateItemVisibility(true);
+        setIdOfMenuItemToUpdate(item.menu_item_id);
+        console.log(item)
     }
 
     console.log(menuItemsArray)
@@ -87,8 +89,8 @@ export default function Orders ({ navigation, route }) {
                     </Text>
                 </TouchableHighlight>
                 
-                <NewItem isUpdating={true} isVisible={updateItemVisibility} itemToAdd="menuItem" onClose={() => setUpdateItemVisibility(false)} restaurant_id={restaurant_id} textForAddButton="ACTUALIZAR" topText="Actualizar platillo" />
-                <NewItem isUpdating={false} isVisible={newItemVisibility} itemToAdd="menuItem" onClose={() => setNewItemVisibility(false)} restaurant_id={restaurant_id} textForAddButton="AGREGAR" topText="Nuevo platillo" />
+                <NewItem idOfItemToUpdate={idOfMenuItemToUpdate} isUpdating={true} isVisible={updateItemVisibility} itemToAdd="menuItem" onClose={() => setUpdateItemVisibility(false)} restaurant_id={restaurant_id} textForAddButton="ACTUALIZAR" topText="Actualizar platillo" />
+                <NewItem idOfItemToUpdate={null} isUpdating={false} isVisible={newItemVisibility} itemToAdd="menuItem" onClose={() => setNewItemVisibility(false)} restaurant_id={restaurant_id} textForAddButton="AGREGAR" topText="Nuevo platillo" />
                 <ModalTemplate isVisible={modalVisibility} onClose={() => setModalVisibility(false)} onPressingRedButton={clearMenuHandle} textForButton="Borrar" textForModal="¿Quieres borrar el menú? Esto es permanente." />
             </View>
         </ScrollView>

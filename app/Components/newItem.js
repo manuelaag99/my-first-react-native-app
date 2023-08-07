@@ -8,7 +8,7 @@ import 'react-native-get-random-values';
 import { v4 as uuidv4 } from "uuid";
 import { supabase } from "../supabase/client";
 
-export default function NewItem ({ isUpdating, isVisible, itemId, itemToAdd, onClose, restaurant_id, textForAddButton, topText }) {
+export default function NewItem ({ idOfItemToUpdate, isUpdating, isVisible, itemId, itemToAdd, onClose, restaurant_id, textForAddButton, topText }) {
     let user_id = "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22";
     let email = "manuelaag99@gmail.com"
 
@@ -16,8 +16,6 @@ export default function NewItem ({ isUpdating, isVisible, itemId, itemToAdd, onC
     function restaurantNameChangeHandle (event) {
         setRestaurantInfo({ ...restaurantInfo, restaurant_name: event });
     }
-
-    console.log(itemId)
     async function insertNewRestaurant () {
         let generated_restaurant_id = uuidv4()
         try {
@@ -35,17 +33,14 @@ export default function NewItem ({ isUpdating, isVisible, itemId, itemToAdd, onC
     }
 
 
+
     const [menuItems, setMenuItems] = useState({ menu_item_name: "", menu_item_description: "" });
     function itemNameChangeHandle (event) {
         setMenuItems({ ...menuItems, menu_item_name: event });
     }
-
     function itemDescriptionChangeHandle (event) {
         setMenuItems({ ...menuItems, menu_item_description: event });
     }
-
-    console.log(restaurant_id)
-    
     async function insertNewMenuItem () {
         let generate_menu_item_id = uuidv4()
         try {
@@ -53,7 +48,7 @@ export default function NewItem ({ isUpdating, isVisible, itemId, itemToAdd, onC
                 const { error } = await supabase.from("ALO-restaurant-menu-items").insert({ creator_id: user_id, restaurant_id: restaurant_id, menu_item_id: generate_menu_item_id, menu_item_name: menuItems.menu_item_name, menu_item_description: menuItems.menu_item_description });
                 if (error) console.log(error)
             } else {
-                const { error } = await supabase.from("ALO-restaurants").update({ restaurant_name: restaurantInfo.restaurant_name }).eq("restaurant_id", itemId);
+                const { error } = await supabase.from("ALO-restaurant-menu-items").update({ menu_item_name: menuItems.menu_item_name, menu_item_description: menuItems.menu_item_description }).eq("menu_item_id", idOfItemToUpdate);
                 if (error) console.log(error)
             }            
         } catch (err) {
@@ -61,6 +56,7 @@ export default function NewItem ({ isUpdating, isVisible, itemId, itemToAdd, onC
         }
         onClose();
     }
+
 
 
 
