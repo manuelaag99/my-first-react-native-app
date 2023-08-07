@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ImageBackground, Modal, Pressable } from "react-native";
+import { Modal, Pressable } from "react-native";
 import { Text, TextInput, TouchableHighlight, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -14,7 +14,6 @@ export default function NewItem ({ isUpdating, isVisible, itemId, itemToAdd, onC
     const [restaurantInfo, setRestaurantInfo] = useState({ restaurant_name: "" });
     
     function restaurantNameChangeHandle (event) {
-        console.log(event);
         setRestaurantInfo({ ...restaurantInfo, restaurant_name: event });
     }
 
