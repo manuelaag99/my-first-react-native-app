@@ -21,6 +21,7 @@ export default function RestaurantPage ({ route, navigation }) {
         }
         setModalVisibility(false);
         navigation.navigate("User");
+
     }
 
     return (

@@ -7,7 +7,7 @@ import { supabase } from "../supabase/client";
 import ModalTemplate from "../Components/ModalTemplate";
 import NewItem from "../Components/newItem";
 
-export default function UserProfile ({ navigation }) {
+export default function UserProfile ({ navigation, route }) {
     const [newRestaurantVisibility, setNewRestaurantVisibility] = useState(false);
     const [modalVisibility, setModalVisibility] = useState(false);
     const [user, setUser] = useState();
@@ -35,7 +35,7 @@ export default function UserProfile ({ navigation }) {
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [navigation]);
 
     function fetchAgain () {
         fetchData();
