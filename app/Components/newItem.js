@@ -49,20 +49,28 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
         setMenuItems({ ...menuItems, menu_item_description: event });
     }
     async function addOrUpdateMenuItem () {
-        let generate_menu_item_id = uuidv4()
-        try {
-            if (!isUpdating) {
-                const { error } = await supabase.from("ALO-restaurant-menu-items").insert({ creator_id: user_id, restaurant_id: restaurantId, menu_item_id: generate_menu_item_id, menu_item_name: menuItems.menu_item_name, menu_item_description: menuItems.menu_item_description });
-                if (error) console.log(error)
-            } else {
-                const { error } = await supabase.from("ALO-restaurant-menu-items").update({ menu_item_name: menuItems.menu_item_name, menu_item_description: menuItems.menu_item_description }).eq("menu_item_id", itemToUpdate.menu_item_id);
-                if (error) console.log(error)
-            }            
-        } catch (err) {
-            console.log(err)
+        if (menuItems.menu_item_name === null || menuItems.menu_item_name.trim() === "") {
+            setErrorMessage("Debes incluir un nombre del platillo.");
+            setErrorModalVisibility(true);
+        } else if (menuItems.menu_item_description === null || menuItems.menu_item_description.trim() === "") {
+            setErrorMessage("Debes incluir una descripción del platillo.");
+            setErrorModalVisibility(true);
+        } else {
+            let generate_menu_item_id = uuidv4()
+            try {
+                if (!isUpdating) {
+                    const { error } = await supabase.from("ALO-restaurant-menu-items").insert({ creator_id: user_id, restaurant_id: restaurantId, menu_item_id: generate_menu_item_id, menu_item_name: menuItems.menu_item_name, menu_item_description: menuItems.menu_item_description });
+                    if (error) console.log(error)
+                } else {
+                    const { error } = await supabase.from("ALO-restaurant-menu-items").update({ menu_item_name: menuItems.menu_item_name, menu_item_description: menuItems.menu_item_description }).eq("menu_item_id", itemToUpdate.menu_item_id);
+                    if (error) console.log(error)
+                }            
+            } catch (err) {
+                console.log(err)
+            }
+            onClose();
+            updateFetchedData();   
         }
-        onClose();
-        updateFetchedData();
     }
 
 
