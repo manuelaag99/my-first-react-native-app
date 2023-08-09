@@ -8,9 +8,15 @@ import 'react-native-get-random-values';
 import { v4 as uuidv4 } from "uuid";
 import { supabase } from "../supabase/client";
 
+import ErrorModal from "./ErrorModal";
+
 export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, itemToAdd, onClose, restaurantId, textForAddButton, topText, updateFetchedData }) {
     let user_id = "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22";
     let email = "manuelaag99@gmail.com"
+
+    const [errorModalVisibility, setErrorModalVisibility] = useState(false);
+    const [errorMessage, setErrorMessage] = useState();
+
 
     const [restaurantInfo, setRestaurantInfo] = useState({ restaurant_name: "" });
     function restaurantNameChangeHandle (event) {
@@ -34,9 +40,8 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
     }
 
 
+    console.log(itemToUpdate)
     const [menuItems, setMenuItems] = useState({ menu_item_name: "", menu_item_description: "" });
-    
-    
     function itemNameChangeHandle (event) {
         setMenuItems({ ...menuItems, menu_item_name: event });
     }
@@ -62,6 +67,25 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
 
 
 
+    // async function addDishToDb () {
+    //     try {
+    //         const { error } = await supabase.from("ALO-orders-dishes").insert({ creator_id: user_id, restaurant_id: restaurantId, order_id: , dish_id: , dish_menu_item: , dish_notes:  });
+    //         if (error) console.log(error)
+    //     } catch (err) {
+    //         console.log(err)
+    //     }
+    // }
+
+
+    function addDishHandle () {
+        if (dish.menuItem === null || dish.menuItem.trim() === "" ) {
+            console.log("wrong") //add a error modal
+            setErrorMessage("Debes incluir un platillo.");
+            setErrorModalVisibility(true);
+        } else {
+            console.log("success")
+        }
+    }
 
 
     const [order, setOrder] = useState({ tableNumber: "", date: "", listOfDishes: "" });
@@ -76,10 +100,11 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
         orderDate = new Date().toLocaleString();
         setOrder({ ...order, date: orderDate });
         if (itemToUpdate) {
-            setMenuItems({ ...menuItems, menu_item_name: itemToUpdate.menu_item_name });
-            setMenuItems({ ...menuItems, menu_item_description: itemToUpdate.menu_item_description });
+            setMenuItems({ menu_item_name: itemToUpdate.menu_item_name , menu_item_description: itemToUpdate.menu_item_description });
         }
-    }, [])
+    }, [itemToUpdate])
+
+    console.log(menuItems)
 
     function tableNumberChangeHandle (event) {
         setOrder({ ...order, tableNumber: event });
@@ -93,13 +118,13 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
         setDish({ ...dish, [field]: text });
     }
 
-    function addDishHandle () {
-        setOrder((prevState) => ({
-            ...prevState,
-            listOfDishes: [...prevState.listOfDishes, dish],
-        }));
-        setDish({ menuItem: "", notes: "" })
-    };
+    // function addDishHandle () {
+    //     setOrder((prevState) => ({
+    //         ...prevState,
+    //         listOfDishes: [...prevState.listOfDishes, dish],
+    //     }));
+    //     setDish({ menuItem: "", notes: "" })
+    // };
 
     function addToQueueHandle () {
         setQueue([ ...queue, order ])
@@ -112,6 +137,9 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
     function deleteButtonHandle() {
         setDeletedOrders([...deletedOrders, order])
     }
+
+
+
 
     function addHandle () {
         if (itemToAdd === "restaurant") addOrUpdateRestaurant();
@@ -189,6 +217,8 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
 
                 </View>
             </View>
+
+            <ErrorModal isVisible={errorModalVisibility} onClose={() => setErrorModalVisibility(false)} textForButton="Aceptar" textForModal={errorMessage}/>
         </Modal>
     );
 }
