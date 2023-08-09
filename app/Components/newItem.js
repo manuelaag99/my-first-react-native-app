@@ -72,6 +72,17 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
             updateFetchedData();   
         }
     }
+    async function deleteMenuItem () {
+        try {
+            const { error } = await supabase.from("ALO-restaurant-menu-items").delete().eq("menu_item_id", itemToUpdate.menu_item_id);
+            if (error) console.log(error)
+            else console.log("updated")
+        } catch (err) {
+            console.log(err)
+        }
+        onClose();
+        updateFetchedData(); 
+    }
 
 
 
@@ -96,6 +107,9 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
     }
 
 
+
+
+
     const [order, setOrder] = useState({ tableNumber: "", date: "", listOfDishes: "" });
     const [dish, setDish] = useState({ menuItem: "", notes: "" });
     const [queue, setQueue] = useState([]);
@@ -111,8 +125,6 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
             setMenuItems({ menu_item_name: itemToUpdate.menu_item_name , menu_item_description: itemToUpdate.menu_item_description });
         }
     }, [itemToUpdate])
-
-    console.log(menuItems)
 
     function tableNumberChangeHandle (event) {
         setOrder({ ...order, tableNumber: event });
@@ -149,9 +161,14 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
 
 
 
-    function addHandle () {
+    function addButtonHandle () {
         if (itemToAdd === "restaurant") addOrUpdateRestaurant();
         else if (itemToAdd === "menuItem") addOrUpdateMenuItem();
+    }
+
+    function deleteButtonHandle() {
+        if (itemToAdd === "restaurant") addOrUpdateRestaurant();
+        else if (itemToAdd === "menuItem") deleteMenuItem();
     }
 
     const insets = useSafeAreaInsets();
@@ -206,13 +223,13 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
                     </View>
 
                     <View style={[ t.flex, t.flexRow, tw.wFull]}>
-                        <TouchableHighlight underlayColor="#CCE5FF" style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.bgBlue400, tw.h16]} onPress={addHandle} >
+                        <TouchableHighlight underlayColor="#CCE5FF" style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.bgBlue400, tw.h16]} onPress={addButtonHandle} >
                             <Text style={[tw.textCenter, t.fontBold, t.textWhite ]}>{textForAddButton}</Text>
                         </TouchableHighlight>
                     </View>
 
                     {isUpdating && <View style={[ t.flex, t.flexRow, tw.wFull]}>
-                        <TouchableHighlight underlayColor="#ff8888" style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.bgRed700, tw.h16]} onPress={onClose} >
+                        <TouchableHighlight underlayColor="#ff8888" style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.bgRed700, tw.h16]} onPress={deleteButtonHandle} >
                             <Text style={[tw.textCenter, t.fontBold, t.textWhite ]}>BORRAR</Text>
                         </TouchableHighlight>
                     </View>}
