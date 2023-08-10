@@ -18,6 +18,7 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
     const [errorMessage, setErrorMessage] = useState();
 
 
+
     const [restaurantInfo, setRestaurantInfo] = useState({ restaurant_name: "" });
     function restaurantNameChangeHandle (event) {
         setRestaurantInfo({ ...restaurantInfo, restaurant_name: event });
@@ -40,7 +41,7 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
     }
 
 
-    console.log(itemToUpdate)
+
     const [menuItems, setMenuItems] = useState({ menu_item_name: "", menu_item_description: "" });
     function itemNameChangeHandle (event) {
         setMenuItems({ ...menuItems, menu_item_name: event });
@@ -122,7 +123,11 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
         orderDate = new Date().toLocaleString();
         setOrder({ ...order, date: orderDate });
         if (itemToUpdate) {
-            setMenuItems({ menu_item_name: itemToUpdate.menu_item_name , menu_item_description: itemToUpdate.menu_item_description });
+            if (itemToAdd === "restaurant") {
+                setRestaurantInfo({ restaurant_name: itemToUpdate.restaurant_name });
+            } else if (itemToAdd === "menuItem") {
+                setMenuItems({ menu_item_name: itemToUpdate.menu_item_name , menu_item_description: itemToUpdate.menu_item_description });
+            }
         }
     }, [itemToUpdate])
 
@@ -180,7 +185,7 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
                     <Text style={[[ tw.bgBlack, t.textWhite, tw.text3xl, tw.p3, t.textCenter ]]}>{topText}</Text>
 
                     {(itemToAdd === "restaurant") && <View style={[ t.flex, t.flexCol, tw.wFull, tw.bgWhite ]}>
-                        <TextInput onChangeText={restaurantNameChangeHandle} placeholder="Nombre del restaurante..." style={[ tw.wFull, tw.pY2, tw.pX3, tw.h12 ]} />
+                        <TextInput onChangeText={restaurantNameChangeHandle} placeholder={itemToUpdate ? null : "Nombre del restaurante..."} style={[ tw.wFull, tw.pY2, tw.pX3, tw.h12 ]} value={restaurantInfo.restaurant_name} />
                     </View>}
 
                     {(itemToAdd === "menuItem") && <View style={[ t.flex, t.flexCol, tw.wFull, tw.bgWhite ]}>

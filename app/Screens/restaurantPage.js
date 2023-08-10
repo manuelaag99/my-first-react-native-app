@@ -21,7 +21,6 @@ export default function RestaurantPage ({ route, navigation }) {
         }
         setModalVisibility(false);
         navigation.navigate("User");
-
     }
 
     return (
@@ -66,8 +65,8 @@ export default function RestaurantPage ({ route, navigation }) {
                     </Text>
                 </TouchableHighlight>
 
-                <NewItem isUpdating={false} isVisible={newItemVisibility} itemId={null} itemToAdd="order" onClose={() => setNewItemVisibility(false)} textForAddButton="AGREGAR" topText="Nueva orden" />
-                <NewItem isUpdating={true} isVisible={updateRestaurantVisibility} itemId={restaurant_id} itemToAdd="restaurant" onClose={() => setUpdateRestaurantVisibility(false)} textForAddButton="ACTUALIZAR" topText="Modificar restaurante" />
+                <NewItem itemToUpdate={null} isUpdating={false} isVisible={newItemVisibility} itemId={null} itemToAdd="order" onClose={() => setNewItemVisibility(false)} textForAddButton="AGREGAR" topText="Nueva orden" />
+                <NewItem itemToUpdate={route.params} isUpdating={true} isVisible={updateRestaurantVisibility} itemId={restaurant_id} itemToAdd="restaurant" onClose={() => setUpdateRestaurantVisibility(false)} textForAddButton="ACTUALIZAR" topText="Modificar restaurante" />
                 <ModalTemplate isVisible={modalVisibility} onClose={() => setModalVisibility(false)} onPressingRedButton={deleteRestaurantHandle} textForButton="Eliminar" textForModal="¿Quieres eliminar este restaurante? Esto es permanente." />
             </View>
         </ScrollView>
