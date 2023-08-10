@@ -85,26 +85,42 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
     }
 
 
-
-    // async function addDishToDb () {
-    //     try {
-    //         const { error } = await supabase.from("ALO-orders-dishes").insert({ creator_id: user_id, restaurant_id: restaurantId, order_id: , dish_id: , dish_menu_item: , dish_notes:  });
-    //         if (error) console.log(error)
-    //     } catch (err) {
-    //         console.log(err)
-    //     }
-    // }
     const [order, setOrder] = useState({ tableNumber: "", date: "", order_id: "" });
+    function tableNumberChangeHandle (event) {
+        setOrder({ ...order, tableNumber: event });
+    }
+    function dateChangeHandle (event) {
+        setOrder({ ...order, date: event });
+    }
+
+    // when updating, dont update the date!!!
+    async function addOrUpdateOrder () {
+        if (order.tableNumber === null || order.tableNumber.trim() === "" ) {
+            setErrorMessage("Debes incluir número de mesa.");
+            setErrorModalVisibility(true);
+        } else {
+            console.log("worked")
+            try {
+                const { error } = await supabase.from("ALO-restaurant-orders").insert({ creator_id: user_id, restaurant_id: restaurantId, order_id: order.order_id, table_number: order.tableNumber });
+                if (error) console.log(error)
+            } catch (err) {
+                console.log(err);
+            }
+            onClose();
+        }
+        
+    }
+
+    
     const [dish, setDish] = useState({ menuItem: "", notes: "" });
-
-
-
+    function dishChangeHandle (field, text) {
+        setDish({ ...dish, [field]: text });
+    }
     async function addDishHandle () {
         if (dish.menuItem === null || dish.menuItem.trim() === "" ) {
             setErrorMessage("Debes incluir un platillo.");
             setErrorModalVisibility(true);
         } else {
-            console.log("worked")
             let generate_dish_id = uuidv4();
             try {
                 const { error } = await supabase.from("ALO-orders-dishes").insert({ creator_id: user_id, restaurant_id: restaurantId, order_id: order.order_id, dish_id: generate_dish_id, dish_menu_item: dish.menuItem, dish_notes: dish.notes });
@@ -112,13 +128,9 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
             } catch (err) {
                 console.log(err);
             }
+            setDish({ menuItem: "", notes: "" });
         }
     }
-
-
-    console.log(itemToUpdate)
-
-
 
     
     
@@ -152,25 +164,9 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
 
 
 
-    function tableNumberChangeHandle (event) {
-        setOrder({ ...order, tableNumber: event });
-    }
 
-    function dateChangeHandle (event) {
-        setOrder({ ...order, date: event });
-    }
 
-    function dishChangeHandle (field, text) {
-        setDish({ ...dish, [field]: text });
-    }
 
-    // function addDishHandle () {
-    //     setOrder((prevState) => ({
-    //         ...prevState,
-    //         listOfDishes: [...prevState.listOfDishes, dish],
-    //     }));
-    //     setDish({ menuItem: "", notes: "" })
-    // };
 
     function addToQueueHandle () {
         setQueue([ ...queue, order ])
@@ -190,6 +186,7 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
     function addButtonHandle () {
         if (itemToAdd === "restaurant") addOrUpdateRestaurant();
         else if (itemToAdd === "menuItem") addOrUpdateMenuItem();
+        else if (itemToAdd === "order") addOrUpdateOrder();
     }
 
     function deleteButtonHandle() {
