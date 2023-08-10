@@ -65,8 +65,8 @@ export default function RestaurantPage ({ route, navigation }) {
                     </Text>
                 </TouchableHighlight>
 
-                <NewItem itemToUpdate={null} isUpdating={false} isVisible={newItemVisibility} itemId={null} itemToAdd="order" onClose={() => setNewItemVisibility(false)} textForAddButton="AGREGAR" topText="Nueva orden" />
-                <NewItem itemToUpdate={route.params} isUpdating={true} isVisible={updateRestaurantVisibility} itemId={restaurant_id} itemToAdd="restaurant" onClose={() => setUpdateRestaurantVisibility(false)} textForAddButton="ACTUALIZAR" topText="Modificar restaurante" />
+                <NewItem itemToUpdate={null} isUpdating={false} isVisible={newItemVisibility} itemId={null} itemToAdd="order" onClose={() => setNewItemVisibility(false)} restaurantId={restaurant_id} textForAddButton="AGREGAR" topText="Nueva orden" />
+                <NewItem itemToUpdate={route.params} isUpdating={true} isVisible={updateRestaurantVisibility} itemId={restaurant_id} itemToAdd="restaurant" onClose={() => setUpdateRestaurantVisibility(false)} restaurantId={restaurant_id} textForAddButton="ACTUALIZAR" topText="Modificar restaurante" />
                 <ModalTemplate isVisible={modalVisibility} onClose={() => setModalVisibility(false)} onPressingRedButton={deleteRestaurantHandle} textForButton="Eliminar" textForModal="¿Quieres eliminar este restaurante? Esto es permanente." />
             </View>
         </ScrollView>

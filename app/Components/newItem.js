@@ -57,7 +57,7 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
             setErrorMessage("Debes incluir una descripción del platillo.");
             setErrorModalVisibility(true);
         } else {
-            let generate_menu_item_id = uuidv4()
+            let generate_menu_item_id = uuidv4();
             try {
                 if (!isUpdating) {
                     const { error } = await supabase.from("ALO-restaurant-menu-items").insert({ creator_id: user_id, restaurant_id: restaurantId, menu_item_id: generate_menu_item_id, menu_item_name: menuItems.menu_item_name, menu_item_description: menuItems.menu_item_description });
@@ -76,10 +76,9 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
     async function deleteMenuItem () {
         try {
             const { error } = await supabase.from("ALO-restaurant-menu-items").delete().eq("menu_item_id", itemToUpdate.menu_item_id);
-            if (error) console.log(error)
-            else console.log("updated")
+            if (error) console.log(error);
         } catch (err) {
-            console.log(err)
+            console.log(err);
         }
         onClose();
         updateFetchedData(); 
@@ -95,33 +94,46 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
     //         console.log(err)
     //     }
     // }
+    const [order, setOrder] = useState({ tableNumber: "", date: "", order_id: "" });
+    const [dish, setDish] = useState({ menuItem: "", notes: "" });
 
 
-    function addDishHandle () {
+
+    async function addDishHandle () {
         if (dish.menuItem === null || dish.menuItem.trim() === "" ) {
-            console.log("wrong") //add a error modal
             setErrorMessage("Debes incluir un platillo.");
             setErrorModalVisibility(true);
         } else {
-            console.log("success")
+            console.log("worked")
+            let generate_dish_id = uuidv4();
+            try {
+                const { error } = await supabase.from("ALO-orders-dishes").insert({ creator_id: user_id, restaurant_id: restaurantId, order_id: order.order_id, dish_id: generate_dish_id, dish_menu_item: dish.menuItem, dish_notes: dish.notes });
+                if (error) console.log(error)
+            } catch (err) {
+                console.log(err);
+            }
         }
     }
 
 
+    console.log(itemToUpdate)
 
 
 
-    const [order, setOrder] = useState({ tableNumber: "", date: "", listOfDishes: "" });
-    const [dish, setDish] = useState({ menuItem: "", notes: "" });
+    
+    
+    
+    
     const [queue, setQueue] = useState([]);
 
     const [doneOrders, setDoneOrders] = useState([]);
     const [deletedOrders, setDeletedOrders] = useState([]);
 
+    
+    
     let orderDate;
+    let orderId;
     useEffect(() => {
-        orderDate = new Date().toLocaleString();
-        setOrder({ ...order, date: orderDate });
         if (itemToUpdate) {
             if (itemToAdd === "restaurant") {
                 setRestaurantInfo({ restaurant_name: itemToUpdate.restaurant_name });
@@ -130,6 +142,15 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
             }
         }
     }, [itemToUpdate])
+
+    useEffect(() => {
+        orderDate = new Date().toLocaleString();
+        orderId = uuidv4();
+        setOrder({ ...order, date: orderDate, order_id: orderId });
+    }, [])
+
+
+
 
     function tableNumberChangeHandle (event) {
         setOrder({ ...order, tableNumber: event });
