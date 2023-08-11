@@ -188,8 +188,15 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
         setQueue([ ...queue, order ])
     }
 
-    function doneButtonHandle(event) {
-        setDoneOrders([...doneOrders, order]);
+    async function doneButtonHandle(order) {
+        console.log(order.dish_id)
+        try {
+            const { error } = await supabase.from("ALO-orders-dishes").delete().eq("dish_id", order.dish_id)
+            if (error) console.log(error)
+        } catch (err) {
+            console.log(err)
+        }
+        fetchStoredDishes();
     }
 
     function deleteButtonHandle() {
@@ -254,9 +261,9 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
                                     <Text style={[tw.textLeft, tw.pX4, t.pY1, tw.w5_6 ]}>Platillo: {order.dish_menu_item}</Text>
                                     <Text style={[tw.textLeft, tw.pX4, t.pY1, tw.w5_6 ]}>Notas: {order.dish_notes}</Text>
                                 </View>
-                                <Pressable style={[ tw.w1_6, tw.bgRed500 ]} onPress={doneButtonHandle} >
+                                <TouchableHighlight style={[ tw.w1_6, tw.bgRed500 ]} onPress={() => doneButtonHandle(order)} >
                                     <Text style={[tw.textCenter, t.textWhite, tw.mY3 ]}>BORRAR</Text>
-                                </Pressable>
+                                </TouchableHighlight>
                             </View>)
                         })}
                     </View>
