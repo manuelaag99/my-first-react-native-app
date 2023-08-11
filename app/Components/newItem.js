@@ -101,12 +101,14 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
         } else {
             console.log("worked")
             try {
-                const { error } = await supabase.from("ALO-restaurant-orders").insert({ creator_id: user_id, restaurant_id: restaurantId, order_id: order.order_id, table_number: order.tableNumber });
+                const { error } = await supabase.from("ALO-restaurant-orders").insert({ creator_id: user_id, restaurant_id: restaurantId, order_id: order.order_id, table_number: order.tableNumber, created_at: order.date });
                 if (error) console.log(error)
             } catch (err) {
                 console.log(err);
             }
             onClose();
+            setStoredDishes();
+            setOrder({ tableNumber: "", date: "", order_id: "" });
         }
         
     }
@@ -125,7 +127,6 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
             }
         }
     }
-
     function dishChangeHandle (field, text) {
         setDish({ ...dish, [field]: text });
     }
@@ -145,17 +146,19 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
             fetchStoredDishes();
         }
     }
+    async function deleteDishHandle(order) {
+        console.log(order.dish_id)
+        try {
+            const { error } = await supabase.from("ALO-orders-dishes").delete().eq("dish_id", order.dish_id)
+            if (error) console.log(error)
+        } catch (err) {
+            console.log(err)
+        }
+        fetchStoredDishes();
+    }
+    
+    
 
-    
-    
-    
-    
-    const [queue, setQueue] = useState([]);
-
-    const [doneOrders, setDoneOrders] = useState([]);
-    const [deletedOrders, setDeletedOrders] = useState([]);
-
-    
     
     let orderDate;
     let orderId;
@@ -173,35 +176,19 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
         orderDate = new Date().toLocaleString();
         orderId = uuidv4();
         setOrder({ ...order, date: orderDate, order_id: orderId });
-        fetchStoredDishes();
     }, []);
 
 
 
-    console.log(storedDishes);
 
 
 
 
 
-    function addToQueueHandle () {
-        setQueue([ ...queue, order ])
-    }
 
-    async function doneButtonHandle(order) {
-        console.log(order.dish_id)
-        try {
-            const { error } = await supabase.from("ALO-orders-dishes").delete().eq("dish_id", order.dish_id)
-            if (error) console.log(error)
-        } catch (err) {
-            console.log(err)
-        }
-        fetchStoredDishes();
-    }
 
-    function deleteButtonHandle() {
-        setDeletedOrders([...deletedOrders, order])
-    }
+
+
 
 
 
@@ -236,7 +223,7 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
                             
                     {(itemToAdd === "order") && <View style={[[ t.flex, t.flexCol, tw.wAuto ], { height: "fit"}]}>
                         <View style={[[ t.flex, t.flexRow, tw.wFull, tw.h12 ]]}>
-                            <TextInput placeholder="# de mesa" style={[ tw.w1_2, tw.bgWhite, tw.pX4, t.pY1, tw.h12 ]} onChangeText={tableNumberChangeHandle} value={order.tableNumber} />
+                            <TextInput placeholder={itemToUpdate ? null : "# de mesa"} style={[ tw.w1_2, tw.bgWhite, tw.pX4, t.pY1, tw.h12 ]} onChangeText={tableNumberChangeHandle} value={order.tableNumber} />
                             <TextInput editable={false} placeholder="Hora" style={[ tw.w1_2, tw.bgWhite, tw.pX4, t.pY1, tw.h12 ]} onChangeText={dateChangeHandle} value={order.date.split(",")[1]} />
                         </View>
                         <View style={[[ t.flex, t.flexCol, tw.wFull, tw.h24 ]]}>
@@ -261,7 +248,7 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
                                     <Text style={[tw.textLeft, tw.pX4, t.pY1, tw.w5_6 ]}>Platillo: {order.dish_menu_item}</Text>
                                     <Text style={[tw.textLeft, tw.pX4, t.pY1, tw.w5_6 ]}>Notas: {order.dish_notes}</Text>
                                 </View>
-                                <TouchableHighlight style={[ tw.w1_6, tw.bgRed500 ]} onPress={() => doneButtonHandle(order)} >
+                                <TouchableHighlight style={[ tw.w1_6, tw.bgRed500 ]} onPress={() => deleteDishHandle(order)} >
                                     <Text style={[tw.textCenter, t.textWhite, tw.mY3 ]}>BORRAR</Text>
                                 </TouchableHighlight>
                             </View>)
