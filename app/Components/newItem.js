@@ -10,7 +10,7 @@ import { supabase } from "../supabase/client";
 
 import ErrorModal from "./ErrorModal";
 
-export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, itemToAdd, onClose, restaurantId, textForAddButton, topText, updateFetchedData }) {
+export default function NewItem ({ isUpdating, isVisible, itemId, itemToAdd, itemToUpdate, onClose, restaurantId, textForAddButton, topText, updateFetchedData }) {
     let user_id = "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22";
     let email = "manuelaag99@gmail.com"
 
@@ -109,6 +109,7 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
             onClose();
             setStoredDishes();
             setOrder({ tableNumber: "", date: "", order_id: "" });
+            updateFetchedData();
         }
         
     }

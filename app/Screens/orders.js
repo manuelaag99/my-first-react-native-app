@@ -1,35 +1,72 @@
 import { useEffect, useState } from "react";
 import { ScrollView, Text, TouchableHighlight, View } from "react-native";
 import { t, tw, tailwind } from "react-native-tailwindcss";
-import NewItem from "../Components/newItem";
 import ModalTemplate from "../Components/ModalTemplate";
+import NewItem from "../Components/newItem";
 
-export default function Orders ({ navigation }) {
+import { supabase } from "../supabase/client";
+
+export default function Orders ({ navigation, route }) {
     const [newItemVisibility, setNewItemVisibility] = useState(false);
     const [modalVisibility, setModalVisibility] = useState(false);
     const [ordersArray, setOrdersArray] = useState();
+    const [dishesArray, setDishesArray] = useState();
     const [ordersArrayVisibility, setOrdersArrayVisibility] = useState(false);
     const [updateOrderVisibility, setUpdateOrderVisibility] = useState(false);
 
-    // fetch orders
-    // order them by date/time 
-    // set them as state
+    const { creator_id, restaurant_id } = route.params;
 
-    const ORDERSARRAY = [
-        {table_number: "1", order_id: "fb3983ef-ec3b-49ac-92c1-6e9d7d4a2e2d", list_of_dishes: [{ menuItem: "Hamburguesa", notes: "sin lechuga" }, { menuItem: "Nuggets", notes: "Papas extra" }], restaurant_id: "8947488363782", creator_id: "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22"},
-        {table_number: "4", order_id: "6bb75b70-869e-4cfd-9046-b7fe79581b9d", list_of_dishes: [{ menuItem: "Tacos", notes: "sin cebolla" }, { menuItem: "", notes: "" }], restaurant_id: "8947488363782", creator_id: "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22"},
-        {table_number: "2", order_id: "e483f181-cb47-402e-9083-061197b22004", list_of_dishes: [{ menuItem: "", notes: "" }, { menuItem: "", notes: "" }], restaurant_id: "8947488363782", creator_id: "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22"},
-        {table_number: "5", order_id: "83dfshsa-b6rh-0oda-2rda-63td5wasdf04", list_of_dishes: [{ menuItem: "", notes: "" }, { menuItem: "", notes: "" }], restaurant_id: "1453414652716", creator_id: "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22"}
-    ]
+    async function fetchOrdersData () {
+        try {
+            const { data, error } = await supabase.from("ALO-restaurant-orders").select("*").eq("restaurant_id", restaurant_id);
+            setOrdersArray(data);
+            if (error) console.log(error);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    async function clearOrdersData () {
+        try {
+            const { error } = await supabase.from("ALO-restaurant-orders").delete("*").eq("restaurant_id", restaurant_id);
+            if (error) console.log(error);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    async function fetchDishesData () {
+        try {
+            const { data, error } = await supabase.from("ALO-orders-dishes").select("*").eq("restaurant_id", restaurant_id);
+            setDishesArray(data);
+            if (error) console.log(error);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    async function clearDishesData () {
+        try {
+            const { error } = await supabase.from("ALO-orders-dishes").delete("*").eq("restaurant_id", restaurant_id);
+            if (error) console.log(error);
+        } catch (err) {
+            console.log(err);
+        }
+    }
 
     useEffect(() => {
-        setOrdersArray(ORDERSARRAY)
-    }, [])
+        fetchOrdersData();
+        fetchDishesData();
+    }, []);
+
+    function fetchAgain () {
+        fetchOrdersData();
+        fetchDishesData();
+    }
 
     function clearOrdersArray () {
-        setOrdersArray()
-        // then, delete from database
-        setModalVisibility(false)
+        setOrdersArray();
+        clearOrdersData();
+        clearDishesData();
+        setModalVisibility(false);
     }
 
     function updateOrder (order) {
@@ -63,12 +100,14 @@ export default function Orders ({ navigation }) {
                                     <Text style={[ t.textCenter, t.fontBold, t.textBlack  ]}>
                                         Mesa {order.table_number}
                                     </Text>
-                                    {order.list_of_dishes && order.list_of_dishes.map((dish, index) => {
-                                        return (
-                                            <Text key={index} style={[ t.textCenter, t.fontBold, t.textBlack  ]}>
-                                                Platillo: {dish.menuItem}, Notas: {dish.notes}
-                                            </Text>
-                                        )
+                                    {dishesArray && dishesArray.map((dish, index) => {
+                                        if (order.order_id === dish.order_id) {
+                                            return (
+                                                <Text key={index} style={[ t.textCenter, t.fontBold, t.textBlack  ]}>
+                                                    Platillo: {dish.dish_menu_item}, Notas: {dish.dish_notes}
+                                                </Text>
+                                            )
+                                        }
                                     })}
                                 </View>
                             </TouchableHighlight>
@@ -88,8 +127,8 @@ export default function Orders ({ navigation }) {
                     </Text>
                 </View>
                 
-                <NewItem isUpdating={true} isVisible={updateOrderVisibility} itemToAdd="order" onClose={() => setUpdateOrderVisibility(false)} textForAddButton="ACTUALIZAR" topText="Actualizar orden" />
-                <NewItem isUpdating={false} isVisible={newItemVisibility} itemToAdd="order" onClose={() => setNewItemVisibility(false)} textForAddButton="AGREGAR" topText="Nueva orden" />
+                <NewItem isUpdating={true} isVisible={updateOrderVisibility} itemToAdd="order" onClose={() => setUpdateOrderVisibility(false)} restaurantId={restaurant_id} textForAddButton="ACTUALIZAR" topText="Actualizar orden" updateFetchedData={fetchAgain} />
+                <NewItem isUpdating={false} isVisible={newItemVisibility} itemToAdd="order" onClose={() => setNewItemVisibility(false)} restaurantId={restaurant_id} textForAddButton="AGREGAR" topText="Nueva orden" updateFetchedData={fetchAgain} />
                 <ModalTemplate isVisible={modalVisibility} onClose={() => setModalVisibility(false)} onPressingRedButton={clearOrdersArray} textForButton="Borrar" textForModal="¿Quieres borrar la lista de órdenes? Esto es permanente." />
             </View>
         </ScrollView>
