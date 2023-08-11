@@ -113,6 +113,19 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
 
     
     const [dish, setDish] = useState({ menuItem: "", notes: "" });
+    const [storedDishes, setStoredDishes] = useState();
+    async function fetchStoredDishes () {
+        if (itemToAdd === "order") {
+            try {
+                const { data, error } = await supabase.from("ALO-orders-dishes").select("*").eq("order_id", order.order_id);
+                setStoredDishes(data)
+                if (error) console.log(error)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+    }
+
     function dishChangeHandle (field, text) {
         setDish({ ...dish, [field]: text });
     }
@@ -129,6 +142,7 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
                 console.log(err);
             }
             setDish({ menuItem: "", notes: "" });
+            fetchStoredDishes();
         }
     }
 
@@ -153,16 +167,18 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
                 setMenuItems({ menu_item_name: itemToUpdate.menu_item_name , menu_item_description: itemToUpdate.menu_item_description });
             }
         }
-    }, [itemToUpdate])
+    }, [itemToUpdate]);
 
     useEffect(() => {
         orderDate = new Date().toLocaleString();
         orderId = uuidv4();
         setOrder({ ...order, date: orderDate, order_id: orderId });
-    }, [])
+        fetchStoredDishes();
+    }, []);
 
 
 
+    console.log(storedDishes);
 
 
 
@@ -232,11 +248,11 @@ export default function NewItem ({ itemToUpdate, isUpdating, isVisible, itemId, 
                     </View>}
 
                     <View style={[[ t.flex, t.flexCol, tw.wFull ]]}>
-                        {(order) && (order.listOfDishes) && order.listOfDishes.map((order, index) => {
+                        {(order) && (storedDishes) && storedDishes.map((order, index) => {
                             return (<View key={index} style={[ t.flex, t.flexRow, tw.wFull, t.bgWhite]}>
                                 <View style={[ t.flex, t.flexCol, tw.w5_6, t.pY1 ]}>
-                                    <Text style={[tw.textLeft, tw.pX4, t.pY1, tw.w5_6 ]}>Platillo: {order.menuItem}</Text>
-                                    <Text style={[tw.textLeft, tw.pX4, t.pY1, tw.w5_6 ]}>Notas: {order.notes}</Text>
+                                    <Text style={[tw.textLeft, tw.pX4, t.pY1, tw.w5_6 ]}>Platillo: {order.dish_menu_item}</Text>
+                                    <Text style={[tw.textLeft, tw.pX4, t.pY1, tw.w5_6 ]}>Notas: {order.dish_notes}</Text>
                                 </View>
                                 <Pressable style={[ tw.w1_6, tw.bgRed500 ]} onPress={doneButtonHandle} >
                                     <Text style={[tw.textCenter, t.textWhite, tw.mY3 ]}>BORRAR</Text>
