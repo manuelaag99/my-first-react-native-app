@@ -236,6 +236,8 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
                             <View style={[[ t.flex, t.flexRow, tw.wFull, tw.hFull ]]}>
                                 <View style={[ t.flex, t.flexCol, tw.w5_6, tw.h24 ]}>
                                     <TextInput placeholder="Orden" style={[[ tw.wFull, tw.bgWhite, tw.pX4, t.pY1, tw.h12 ]]} onChangeText={(text) => dishChangeHandle("menuItem", text)} value={dish.menuItem} />
+                                    <View style={[ t.flex, tw.h0]}>
+                                    </View>
                                     <TextInput placeholder="Notas o especificaciones" style={[[ tw.wFull, tw.bgWhite, tw.pX4, t.pY1, tw.h12 ]]} onChangeText={(text) => dishChangeHandle("notes", text)} value={dish.notes} />
                                 </View>
                                 <View style={[ t.flex, t.flexCol, tw.hFull, tw.w1_6 ]}>
