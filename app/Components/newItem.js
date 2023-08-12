@@ -10,13 +10,15 @@ import { supabase } from "../supabase/client";
 
 import ErrorModal from "./ErrorModal";
 
-export default function NewItem ({ isUpdating, isVisible, itemId, itemToAdd, itemToUpdate, onClose, restaurantId, textForAddButton, topText, updateFetchedData }) {
+export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId, itemToAdd, itemToUpdate, onClose, restaurantId, textForAddButton, topText, updateFetchedData }) {
     let user_id = "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22";
     let email = "manuelaag99@gmail.com"
 
     const [errorModalVisibility, setErrorModalVisibility] = useState(false);
     const [errorMessage, setErrorMessage] = useState();
 
+    console.log(itemToUpdate)
+    console.log(dishesToUpdate)
 
 
     const [restaurantInfo, setRestaurantInfo] = useState({ restaurant_name: "" });
@@ -169,6 +171,8 @@ export default function NewItem ({ isUpdating, isVisible, itemId, itemToAdd, ite
                 setRestaurantInfo({ restaurant_name: itemToUpdate.restaurant_name });
             } else if (itemToAdd === "menuItem") {
                 setMenuItems({ menu_item_name: itemToUpdate.menu_item_name , menu_item_description: itemToUpdate.menu_item_description });
+            } else if (itemToAdd === "order") {
+                setOrder({ tableNumber: itemToUpdate.table_number.toString(), date: new Date(itemToUpdate.created_at).toLocaleString() });
             }
         }
     }, [itemToUpdate]);

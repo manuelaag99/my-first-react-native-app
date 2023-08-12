@@ -7,12 +7,14 @@ import NewItem from "../Components/newItem";
 import { supabase } from "../supabase/client";
 
 export default function Orders ({ navigation, route }) {
-    const [newItemVisibility, setNewItemVisibility] = useState(false);
+    const [newOrderVisibility, setNewOrderVisibility] = useState(false);
     const [modalVisibility, setModalVisibility] = useState(false);
     const [ordersArray, setOrdersArray] = useState();
     const [dishesArray, setDishesArray] = useState();
     const [ordersArrayVisibility, setOrdersArrayVisibility] = useState(false);
     const [updateOrderVisibility, setUpdateOrderVisibility] = useState(false);
+    const [orderToUpdate, setOrderToUpdate] = useState();
+    const [orderToUpdateDishes, setOrderToUpdateDishes] = useState();
 
     const { creator_id, restaurant_id } = route.params;
 
@@ -38,10 +40,12 @@ export default function Orders ({ navigation, route }) {
         try {
             const { data, error } = await supabase.from("ALO-orders-dishes").select("*").eq("restaurant_id", restaurant_id);
             setDishesArray(data);
+
             if (error) console.log(error);
         } catch (err) {
             console.log(err);
         }
+
     }
     async function clearDishesData () {
         try {
@@ -57,6 +61,11 @@ export default function Orders ({ navigation, route }) {
         fetchDishesData();
     }, []);
 
+    useEffect(() => {
+
+    }, [])
+
+
     function fetchAgain () {
         fetchOrdersData();
         fetchDishesData();
@@ -71,12 +80,15 @@ export default function Orders ({ navigation, route }) {
 
     function updateOrder (order) {
         setUpdateOrderVisibility(true);
+        setOrderToUpdate(order);
+        setOrderToUpdateDishes(dishesArray.filter((dish) => order.order_id === dish.order_id));
+        console.log(order);
     }
 
     return (
         <ScrollView style={[ t.bgGray200 ]}>
             <View style={[ t.flex, t.flexCol, tw.justifyStart, tw.hFull, tw.wFull, t.pX5, t.pT6, t.pB10 ]}>
-                <TouchableHighlight underlayColor="#ccc" onPress={() => setNewItemVisibility(true)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgWhite, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
+                <TouchableHighlight underlayColor="#ccc" onPress={() => setNewOrderVisibility(true)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgWhite, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
                     <Text style={[ t.textCenter, t.fontBold, t.textBlack  ]}>
                         + Agregar orden
                     </Text>
@@ -127,8 +139,8 @@ export default function Orders ({ navigation, route }) {
                     </Text>
                 </View>
                 
-                <NewItem isUpdating={true} isVisible={updateOrderVisibility} itemToAdd="order" onClose={() => setUpdateOrderVisibility(false)} restaurantId={restaurant_id} textForAddButton="ACTUALIZAR" topText="Actualizar orden" updateFetchedData={fetchAgain} />
-                <NewItem isUpdating={false} isVisible={newItemVisibility} itemToAdd="order" onClose={() => setNewItemVisibility(false)} restaurantId={restaurant_id} textForAddButton="AGREGAR" topText="Nueva orden" updateFetchedData={fetchAgain} />
+                <NewItem dishesToUpdate={orderToUpdateDishes} isUpdating={true} isVisible={updateOrderVisibility} itemToAdd="order" itemToUpdate={orderToUpdate} onClose={() => setUpdateOrderVisibility(false)} restaurantId={restaurant_id} textForAddButton="ACTUALIZAR" topText="Actualizar orden" updateFetchedData={fetchAgain} />
+                <NewItem dishesToUpdate={null} isUpdating={false} isVisible={newOrderVisibility} itemToAdd="order" itemToUpdate={null} onClose={() => setNewOrderVisibility(false)} restaurantId={restaurant_id} textForAddButton="AGREGAR" topText="Nueva orden" updateFetchedData={fetchAgain} />
                 <ModalTemplate isVisible={modalVisibility} onClose={() => setModalVisibility(false)} onPressingRedButton={clearOrdersArray} textForButton="Borrar" textForModal="¿Quieres borrar la lista de órdenes? Esto es permanente." />
             </View>
         </ScrollView>
