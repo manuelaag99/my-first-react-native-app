@@ -113,7 +113,6 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
             setOrder({ tableNumber: "", date: "", order_id: "" });
             updateFetchedData();
         }
-        
     }
 
     
@@ -172,7 +171,7 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
             } else if (itemToAdd === "menuItem") {
                 setMenuItems({ menu_item_name: itemToUpdate.menu_item_name , menu_item_description: itemToUpdate.menu_item_description });
             } else if (itemToAdd === "order") {
-                setOrder({ tableNumber: itemToUpdate.table_number.toString(), date: new Date(itemToUpdate.created_at).toLocaleString() });
+                setOrder({ tableNumber: itemToUpdate.table_number.toString(), date: new Date(itemToUpdate.created_at).toLocaleString(), order_id: itemToUpdate.order_id });
                 setStoredDishes(dishesToUpdate);
             }
         }
