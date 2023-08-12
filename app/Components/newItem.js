@@ -87,15 +87,13 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
     }
 
 
-    const [order, setOrder] = useState({ tableNumber: "", date: "", order_id: "" });
+    const [order, setOrder] = useState({ tableNumber: "", date: new Date().toLocaleString(), order_id: "" });
     function tableNumberChangeHandle (event) {
         setOrder({ ...order, tableNumber: event });
     }
     function dateChangeHandle (event) {
         setOrder({ ...order, date: event });
     }
-
-    // when updating, dont update the date!!!
     async function addOrUpdateOrder () {
         if (order.tableNumber === null || order.tableNumber.trim() === "" ) {
             setErrorMessage("Debes incluir número de mesa.");
@@ -103,14 +101,19 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
         } else {
             console.log("worked")
             try {
-                const { error } = await supabase.from("ALO-restaurant-orders").insert({ creator_id: user_id, restaurant_id: restaurantId, order_id: order.order_id, table_number: order.tableNumber, created_at: order.date });
-                if (error) console.log(error)
+                if (!isUpdating) {
+                    const { error } = await supabase.from("ALO-restaurant-orders").insert({ creator_id: user_id, restaurant_id: restaurantId, order_id: order.order_id, table_number: order.tableNumber, created_at: order.date });
+                    if (error) console.log(error)
+                } else {
+                    const { error } = await supabase.from("ALO-restaurant-orders").update({ table_number: order.tableNumber }).eq("order_id", order.order_id);
+                    if (error) console.log(error)
+                }
             } catch (err) {
                 console.log(err);
             }
             onClose();
             setStoredDishes();
-            setOrder({ tableNumber: "", date: "", order_id: "" });
+            setOrder({ tableNumber: "", date: "", order_id: new Date().toLocaleString() });
             updateFetchedData();
         }
     }
@@ -162,7 +165,6 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
     
 
     
-    let orderDate;
     let orderId;
     useEffect(() => {
         if (itemToUpdate) {
@@ -178,9 +180,8 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
     }, [itemToUpdate]);
 
     useEffect(() => {
-        orderDate = new Date().toLocaleString();
         orderId = uuidv4();
-        setOrder({ ...order, date: orderDate, order_id: orderId });
+        setOrder({ ...order, order_id: orderId });
     }, []);
 
 
