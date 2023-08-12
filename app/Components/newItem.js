@@ -173,6 +173,7 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
                 setMenuItems({ menu_item_name: itemToUpdate.menu_item_name , menu_item_description: itemToUpdate.menu_item_description });
             } else if (itemToAdd === "order") {
                 setOrder({ tableNumber: itemToUpdate.table_number.toString(), date: new Date(itemToUpdate.created_at).toLocaleString() });
+                setStoredDishes(dishesToUpdate);
             }
         }
     }, [itemToUpdate]);
