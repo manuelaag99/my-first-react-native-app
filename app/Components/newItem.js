@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from "uuid";
 import { supabase } from "../supabase/client";
 
 import ErrorModal from "./ErrorModal";
+import ListToSelect from "./ListToSelect";
 
 export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId, itemToAdd, itemToUpdate, onClose, restaurantId, textForAddButton, topText, updateFetchedData }) {
     let user_id = "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22";
@@ -236,7 +237,8 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
                             <View style={[[ t.flex, t.flexRow, tw.wFull, tw.hFull ]]}>
                                 <View style={[ t.flex, t.flexCol, tw.w5_6, tw.h24 ]}>
                                     <TextInput placeholder="Orden" style={[[ tw.wFull, tw.bgWhite, tw.pX4, t.pY1, tw.h12 ]]} onChangeText={(text) => dishChangeHandle("menuItem", text)} value={dish.menuItem} />
-                                    <View style={[ t.flex, tw.h0]}>
+                                    <View style={[[ t.flex, tw.wFull, t.relative ], { height: "fit" }]}>
+                                        <ListToSelect restaurantId={restaurantId} searchQuery={dish.menuItem}/>
                                     </View>
                                     <TextInput placeholder="Notas o especificaciones" style={[[ tw.wFull, tw.bgWhite, tw.pX4, t.pY1, tw.h12 ]]} onChangeText={(text) => dishChangeHandle("notes", text)} value={dish.notes} />
                                 </View>
