@@ -18,10 +18,6 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
     const [errorModalVisibility, setErrorModalVisibility] = useState(false);
     const [errorMessage, setErrorMessage] = useState();
 
-    console.log(itemToUpdate)
-    console.log(dishesToUpdate)
-
-
     const [restaurantInfo, setRestaurantInfo] = useState({ restaurant_name: "" });
     function restaurantNameChangeHandle (event) {
         setRestaurantInfo({ ...restaurantInfo, restaurant_name: event });
@@ -37,10 +33,11 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
                 if (error) console.log(error)
             }            
         } catch (err) {
-            console.log(err)
+            console.log(err);
         }
         onClose();
         updateFetchedData();
+        setRestaurantInfo({ restaurant_name: "" });
     }
 
 
@@ -64,16 +61,17 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
             try {
                 if (!isUpdating) {
                     const { error } = await supabase.from("ALO-restaurant-menu-items").insert({ creator_id: user_id, restaurant_id: restaurantId, menu_item_id: generate_menu_item_id, menu_item_name: menuItems.menu_item_name, menu_item_description: menuItems.menu_item_description });
-                    if (error) console.log(error)
+                    if (error) console.log(error);
                 } else {
                     const { error } = await supabase.from("ALO-restaurant-menu-items").update({ menu_item_name: menuItems.menu_item_name, menu_item_description: menuItems.menu_item_description }).eq("menu_item_id", itemToUpdate.menu_item_id);
-                    if (error) console.log(error)
+                    if (error) console.log(error);
                 }            
             } catch (err) {
-                console.log(err)
+                console.log(err);
             }
             onClose();
-            updateFetchedData();   
+            updateFetchedData();
+            setMenuItems({ menu_item_name: "", menu_item_description: "" });
         }
     }
     async function deleteMenuItem () {
@@ -104,10 +102,10 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
             try {
                 if (!isUpdating) {
                     const { error } = await supabase.from("ALO-restaurant-orders").insert({ creator_id: user_id, restaurant_id: restaurantId, order_id: order.order_id, table_number: order.tableNumber, created_at: order.date });
-                    if (error) console.log(error)
+                    if (error) console.log(error);
                 } else {
                     const { error } = await supabase.from("ALO-restaurant-orders").update({ table_number: order.tableNumber }).eq("order_id", order.order_id);
-                    if (error) console.log(error)
+                    if (error) console.log(error);
                 }
             } catch (err) {
                 console.log(err);
@@ -126,10 +124,10 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
         if (itemToAdd === "order") {
             try {
                 const { data, error } = await supabase.from("ALO-orders-dishes").select("*").eq("order_id", order.order_id);
-                setStoredDishes(data)
-                if (error) console.log(error)
+                setStoredDishes(data);
+                if (error) console.log(error);
             } catch (err) {
-                console.log(err)
+                console.log(err);
             }
         }
     }
@@ -137,8 +135,8 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
         setDish({ ...dish, [field]: text });
     }
     function receiveSelectedValueFromList (menuItem) {
-        console.log(menuItem);
         setDish({ ...dish, menuItem: menuItem });
+        setMenuItemsListVisibility(false);
     }
     console.log(dish)
     async function addDishHandle () {
@@ -149,7 +147,7 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
             let generate_dish_id = uuidv4();
             try {
                 const { error } = await supabase.from("ALO-orders-dishes").insert({ creator_id: user_id, restaurant_id: restaurantId, order_id: order.order_id, dish_id: generate_dish_id, dish_menu_item: dish.menuItem, dish_notes: dish.notes });
-                if (error) console.log(error)
+                if (error) console.log(error);
             } catch (err) {
                 console.log(err);
             }
@@ -161,9 +159,9 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
         console.log(order.dish_id)
         try {
             const { error } = await supabase.from("ALO-orders-dishes").delete().eq("dish_id", order.dish_id)
-            if (error) console.log(error)
+            if (error) console.log(error);
         } catch (err) {
-            console.log(err)
+            console.log(err);
         }
         fetchStoredDishes();
     }
@@ -192,20 +190,6 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
     }, []);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     function addButtonHandle () {
         if (itemToAdd === "restaurant") addOrUpdateRestaurant();
         else if (itemToAdd === "menuItem") addOrUpdateMenuItem();
@@ -213,8 +197,18 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
     }
 
     function deleteButtonHandle() {
-        if (itemToAdd === "restaurant") addOrUpdateRestaurant();
-        else if (itemToAdd === "menuItem") deleteMenuItem();
+        if (itemToAdd === "menuItem") deleteMenuItem();
+    }
+
+    function closeNewItemWindowHandle () {
+        onClose();
+        if (itemToAdd === "restaurant") setRestaurantInfo({ restaurant_name: "" });
+        else if (itemToAdd === "menuItem") setMenuItems({ menuItem: "", notes: "" });
+        else if (itemToAdd === "order")  {
+            setDish({ menuItem: "", notes: "" });
+            setOrder({ tableNumber: "", date: "", order_id: new Date().toLocaleString() });
+            setStoredDishes();
+        }
     }
 
     const insets = useSafeAreaInsets();
@@ -275,14 +269,14 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
                         </TouchableHighlight>
                     </View>
 
-                    {isUpdating && <View style={[ t.flex, t.flexRow, tw.wFull]}>
+                    {(isUpdating) && (itemToAdd !== "restaurant") && <View style={[ t.flex, t.flexRow, tw.wFull]}>
                         <TouchableHighlight underlayColor="#ff8888" style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.bgRed700, tw.h16]} onPress={deleteButtonHandle} >
                             <Text style={[tw.textCenter, t.fontBold, t.textWhite ]}>BORRAR</Text>
                         </TouchableHighlight>
                     </View>}
 
                     <View style={[ t.flex, t.flexRow, tw.wFull]}>
-                        <TouchableHighlight underlayColor="#ff8888" style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.bgRed500, tw.h16]} onPress={onClose} >
+                        <TouchableHighlight underlayColor="#ff8888" style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.bgRed500, tw.h16]} onPress={closeNewItemWindowHandle} >
                             <Text style={[tw.textCenter, t.fontBold, t.textWhite ]}>CANCELAR</Text>
                         </TouchableHighlight>
                     </View>
