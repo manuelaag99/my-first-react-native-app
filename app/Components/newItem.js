@@ -136,6 +136,11 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
     function dishChangeHandle (field, text) {
         setDish({ ...dish, [field]: text });
     }
+    function receiveSelectedValueFromList (menuItem) {
+        console.log(menuItem);
+        setDish({ ...dish, menuItem: menuItem });
+    }
+    console.log(dish)
     async function addDishHandle () {
         if (dish.menuItem === null || dish.menuItem.trim() === "" ) {
             setErrorMessage("Debes incluir un platillo.");
@@ -238,7 +243,7 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
                             <View style={[[ t.flex, t.flexRow, tw.wFull, tw.hFull ]]}>
                                 <View style={[ t.flex, t.flexCol, tw.w5_6, tw.h24 ]}>
                                     <TextInput placeholder="Orden" style={[[ tw.wFull, tw.bgWhite, tw.pX4, t.pY1, tw.h12 ]]} onBlur={() => setMenuItemsListVisibility(false)} onChangeText={(text) => dishChangeHandle("menuItem", text)} onFocus={() => setMenuItemsListVisibility(true)} value={dish.menuItem} />                                    
-                                        {menuItemsListVisibility && <ListToSelect restaurantId={restaurantId} searchQuery={dish.menuItem}/>}
+                                        {menuItemsListVisibility && <ListToSelect onClose={() => setMenuItemsListVisibility(false)} restaurantId={restaurantId} searchQuery={dish.menuItem} sendSelectedValueFromList={receiveSelectedValueFromList} />}
                                     <TextInput placeholder="Notas o especificaciones" style={[[ tw.wFull, tw.bgWhite, tw.pX4, t.pY1, tw.h12 ]]} onChangeText={(text) => dishChangeHandle("notes", text)} value={dish.notes} />
                                 </View>
                                 <View style={[ t.flex, t.flexCol, tw.hFull, tw.w1_6 ]}>

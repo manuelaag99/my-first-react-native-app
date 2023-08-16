@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { Text, TouchableHighlight, ScrollView, View } from "react-native";
+import { Text, TouchableHighlight, ScrollView, View, ActivityIndicator } from "react-native";
 import { supabase } from "../supabase/client";
 import { t, tw } from "react-native-tailwindcss";
 
-export default function ListToSelect ({ listToDisplay, restaurantId, searchQuery }) {
+export default function ListToSelect ({ onClose, restaurantId, searchQuery, sendSelectedValueFromList }) {
     const [selectedValue, setSelectedValue] = useState();
     const [arrayOfValues, setArrayOfValues] = useState();
 
@@ -16,29 +16,36 @@ export default function ListToSelect ({ listToDisplay, restaurantId, searchQuery
             console.log(err);
         }
     }
-    console.log(arrayOfValues)
-
+    
     useEffect(() => {
-        // if (listToDisplay) setArrayOfValues(listToDisplay);
         fetchMenuItems();
     }, [])
+
+    function selectValueHandle (value) {
+        setSelectedValue(value.menu_item_name);
+        sendSelectedValueFromList(value.menu_item_name);
+    }
     
-    return (
-        <ScrollView style={[[ t.flex, tw.wFull, tw.h14, t.absolute, t.z20, t.mT12, tw.h48 ], { position: "absolute" }]}>
-            {(arrayOfValues ? arrayOfValues.map((value, index) => {
-                return <TouchableHighlight key={index} onPress={() => setSelectedValue(value.menu_item)} style={[ t.flex, t.flexCol, t.justifyCenter, tw.wFull, t.bgWhite, tw.h12, tw.pX4, t.pY1, t.borderY, t.borderGray300 ]} underlayColor="#ddd">
-                    <Text style={[ tw.wFull, t.textBlack ]}>
-                        {value.menu_item_name}
+    if (!arrayOfValues) {
+        return null
+    } else if (arrayOfValues) {
+        return (
+            <View style={[[ t.flex, tw.wFull, t.absolute, t.z20, t.mT12, tw.h48, t.shadow2xl ], { position: "absolute" }]}>
+                <ScrollView keyboardShouldPersistTaps={"handled"} style={[ t.flex, t.flexCol ]}>
+                    {arrayOfValues && arrayOfValues.map((value, index) => {
+                        return <TouchableHighlight key={index} onPress={() => selectValueHandle(value)} style={[ t.flex, t.flexCol, t.justifyCenter, tw.wFull, t.bgWhite, tw.h12, tw.pX4, t.pY1, t.borderY, t.borderGray300 ]} underlayColor="#ddd">
+                            <Text style={[ tw.wFull, t.textBlack ]}>
+                                {value.menu_item_name}    
+                            </Text>
+                        </TouchableHighlight>
+                    })}
+                </ScrollView>
+                <TouchableHighlight onPress={() => onClose()} style={[ t.flex, t.flexCol, t.justifyCenter, tw.wFull, t.bgRed500, tw.h12, tw.pX4, t.pY1, t.borderRed500 ]} underlayColor="#bb4444">
+                    <Text style={[ tw.wFull, t.textWhite ]}>
+                        Cerrar lista
                     </Text>
                 </TouchableHighlight>
-                {/* if (value.menu_item.includes(searchQuery)) {
-                    return <TouchableHighlight onPress={() => setSelectedValue(value.menu_item)}>
-                        <Text>
-                            {value.menu_item}
-                        </Text>
-                    </TouchableHighlight>
-                } */}
-            }) : null)}
-        </ScrollView>
-    )
+            </View>
+        )
+    }
 }
