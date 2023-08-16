@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Text, TouchableHighlight, View } from "react-native";
+import { Text, TouchableHighlight, ScrollView, View } from "react-native";
 import { supabase } from "../supabase/client";
 import { t, tw } from "react-native-tailwindcss";
 
@@ -24,7 +24,7 @@ export default function ListToSelect ({ listToDisplay, restaurantId, searchQuery
     }, [])
     
     return (
-        <View style={[[ t.flex, tw.wFull, tw.h14, t.absolute, t.z20, t.mT12 ], { position: "absolute" }]}>
+        <ScrollView style={[[ t.flex, tw.wFull, tw.h14, t.absolute, t.z20, t.mT12, tw.h48 ], { position: "absolute" }]}>
             {(arrayOfValues ? arrayOfValues.map((value, index) => {
                 return <TouchableHighlight key={index} onPress={() => setSelectedValue(value.menu_item)} style={[ t.flex, t.flexCol, t.justifyCenter, tw.wFull, t.bgWhite, tw.h12, tw.pX4, t.pY1, t.borderY, t.borderGray300 ]} underlayColor="#ddd">
                     <Text style={[ tw.wFull, t.textBlack ]}>
@@ -39,6 +39,6 @@ export default function ListToSelect ({ listToDisplay, restaurantId, searchQuery
                     </TouchableHighlight>
                 } */}
             }) : null)}
-        </View>
+        </ScrollView>
     )
 }
