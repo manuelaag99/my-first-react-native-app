@@ -228,7 +228,7 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
                         <TextInput onChangeText={itemDescriptionChangeHandle} placeholder={itemToUpdate ? null : "Descripción del platillo..."} style={[ tw.wFull, tw.pY2, tw.pX3, tw.h12, tw.borderT, tw.borderGray300 ]} value={menuItems.menu_item_description} />
                     </View>}
                             
-                    {(itemToAdd === "order") && <View style={[[ t.flex, t.flexCol, tw.wAuto ], { height: "fit"}]}>
+                    {(itemToAdd === "order") && <View style={[[ t.flex, t.flexCol, tw.wAuto, tw.h36 ]]}>
                         <View style={[[ t.flex, t.flexRow, tw.wFull, tw.h12 ]]}>
                             <TextInput placeholder={itemToUpdate ? null : "# de mesa"} style={[ tw.w1_2, tw.bgWhite, tw.pX4, t.pY1, tw.h12 ]} onChangeText={tableNumberChangeHandle} value={order.tableNumber} />
                             <TextInput editable={false} placeholder="Hora" style={[ tw.w1_2, tw.bgWhite, tw.pX4, t.pY1, tw.h12 ]} onChangeText={dateChangeHandle} value={order.date.split(",")[1]} />
@@ -236,10 +236,13 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
                         <View style={[[ t.flex, t.flexCol, tw.wFull, tw.h24 ]]}>
                             <View style={[[ t.flex, t.flexRow, tw.wFull, tw.hFull ]]}>
                                 <View style={[ t.flex, t.flexCol, tw.w5_6, tw.h24 ]}>
-                                    <TextInput placeholder="Orden" style={[[ tw.wFull, tw.bgWhite, tw.pX4, t.pY1, tw.h12 ]]} onChangeText={(text) => dishChangeHandle("menuItem", text)} value={dish.menuItem} />
-                                    <View style={[[ t.flex, tw.wFull, t.relative ], { height: "fit" }]}>
+                                    
+                                        <TextInput placeholder="Orden" style={[[ tw.wFull, tw.bgWhite, tw.pX4, t.pY1, tw.h12 ]]} onChangeText={(text) => dishChangeHandle("menuItem", text)} value={dish.menuItem} />
+                                    
+                                    
+                                    {/* <View style={[[ t.flex, tw.wFull, t.relative ]]}> */}
                                         <ListToSelect restaurantId={restaurantId} searchQuery={dish.menuItem}/>
-                                    </View>
+                                    {/* </View> */}
                                     <TextInput placeholder="Notas o especificaciones" style={[[ tw.wFull, tw.bgWhite, tw.pX4, t.pY1, tw.h12 ]]} onChangeText={(text) => dishChangeHandle("notes", text)} value={dish.notes} />
                                 </View>
                                 <View style={[ t.flex, t.flexCol, tw.hFull, tw.w1_6 ]}>

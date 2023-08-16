@@ -24,10 +24,10 @@ export default function ListToSelect ({ listToDisplay, restaurantId, searchQuery
     }, [])
     
     return (
-        <View style={[ t.flex, t.absolute, tw.wFull, tw.h14, t.bgBlack ]}>
+        <View style={[[ t.flex, tw.wFull, tw.h14, t.absolute, t.z20, t.mT12 ], { position: "absolute" }]}>
             {(arrayOfValues ? arrayOfValues.map((value, index) => {
-                return <TouchableHighlight key={index} onPress={() => setSelectedValue(value.menu_item)} style={[ t.flex, t.flexCol, tw.wFull]}>
-                    <Text style={[ tw.wFull ]}>
+                return <TouchableHighlight key={index} onPress={() => setSelectedValue(value.menu_item)} style={[ t.flex, t.flexCol, t.justifyCenter, tw.wFull, t.bgWhite, tw.h12, tw.pX4, t.pY1, t.borderY, t.borderGray300 ]} underlayColor="#ddd">
+                    <Text style={[ tw.wFull, t.textBlack ]}>
                         {value.menu_item_name}
                     </Text>
                 </TouchableHighlight>
