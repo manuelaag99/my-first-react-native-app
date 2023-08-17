@@ -85,6 +85,22 @@ export default function Orders ({ navigation, route }) {
         console.log(order);
     }
 
+    async function deleteOrder (order) {
+        try {
+            const { error } = await supabase.from("ALO-orders-dishes").delete("*").eq("order_id", order.order_id);
+            if (error) console.log(error);
+        } catch (err) {
+            console.log(err);
+        }
+        try {
+            const { error } = await supabase.from("ALO-restaurant-orders").delete("*").eq("order_id", order.order_id);
+            if (error) console.log(error);
+        } catch (err) {
+            console.log(err);
+        }
+        fetchAgain();
+    }
+
     return (
         <ScrollView style={[ t.bgGray200 ]}>
             <View style={[ t.flex, t.flexCol, tw.justifyStart, tw.hFull, tw.wFull, t.pX5, t.pT6, t.pB10 ]}>
@@ -107,22 +123,34 @@ export default function Orders ({ navigation, route }) {
                     </TouchableHighlight>}
                     {ordersArray && ordersArrayVisibility && ordersArray.map((order, index) => {
                         return (
-                            <TouchableHighlight key={index} onPress={() => updateOrder(order)} style={[ t.flex, t.flexCol, tw.justifyCenter, t.bgWhite, tw.wFull, tw.borderB, tw.borderGray300, tw.mXAuto, tw.pY6, tailwind.roundedLg ]} underlayColor="#FFF69A">
-                                <View>
-                                    <Text style={[ t.textCenter, t.fontBold, t.textBlack  ]}>
-                                        Mesa {order.table_number}
+                            <View key={index} style={[[ t.flex, t.flexRow, tw.justifyCenter, t.bgWhite, tw.wFull, tw.borderB, tw.borderGray300, tw.mXAuto, tailwind.roundedLg ], { height: "fit" }]}>
+                                <TouchableHighlight onPress={() => updateOrder(order)} style={[ t.flex, t.flexCol, tw.justifyCenter, t.w4_6 ]} underlayColor="#FFF69A">
+                                    <View style={[ t.flex, t.flexCol, tw.justifyCenter, t.wFull, tw.pX4, tw.pY6 ]}>
+                                        <Text style={[ t.textLeft, t.fontBold, t.textBlack ]}>
+                                            Mesa {order.table_number}
+                                        </Text>
+                                        {dishesArray && dishesArray.map((dish, index) => {
+                                            if (order.order_id === dish.order_id) {
+                                                return (
+                                                    <Text key={index} style={[ t.textLeft, t.fontBold, t.textBlack ]}>
+                                                        Platillo: {dish.dish_menu_item}, Notas: {dish.dish_notes}
+                                                    </Text>
+                                                )
+                                            }
+                                        })}
+                                    </View>
+                                </TouchableHighlight>
+                                <TouchableHighlight onPress={() => deleteOrder(order)} style={[ t.flex, tw.justifyCenter, tw.w1_6 ]} underlayColor="#22ff88">
+                                    <Text style={[ t.textCenter ]}>
+                                        YA
                                     </Text>
-                                    {dishesArray && dishesArray.map((dish, index) => {
-                                        if (order.order_id === dish.order_id) {
-                                            return (
-                                                <Text key={index} style={[ t.textCenter, t.fontBold, t.textBlack  ]}>
-                                                    Platillo: {dish.dish_menu_item}, Notas: {dish.dish_notes}
-                                                </Text>
-                                            )
-                                        }
-                                    })}
-                                </View>
-                            </TouchableHighlight>
+                                </TouchableHighlight>
+                                <TouchableHighlight onPress={() => deleteOrder(order)} style={[ t.flex, tw.justifyCenter, tw.w1_6 ]} underlayColor="#ff0055">
+                                    <Text style={[ t.textCenter ]}>
+                                        BORRAR
+                                    </Text>
+                                </TouchableHighlight>
+                            </View>
                         )
                     })}
                 </View>
