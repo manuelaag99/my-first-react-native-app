@@ -90,9 +90,6 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
     function tableNumberChangeHandle (event) {
         setOrder({ ...order, tableNumber: event });
     }
-    function dateChangeHandle (event) {
-        setOrder({ ...order, date: event });
-    }
     async function addOrUpdateOrder () {
         if (order.tableNumber === null || order.tableNumber.trim() === "" ) {
             setErrorMessage("Debes incluir número de mesa.");
@@ -112,7 +109,7 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
             }
             onClose();
             setStoredDishes();
-            setOrder({ tableNumber: "", date: "", order_id: new Date().toLocaleString() });
+            setOrder({ tableNumber: "", date: new Date().toLocaleString() , order_id: "" });
             updateFetchedData();
         }
     }
@@ -138,7 +135,7 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
         setDish({ ...dish, menuItem: menuItem });
         setMenuItemsListVisibility(false);
     }
-    console.log(dish)
+    
     async function addDishHandle () {
         if (dish.menuItem === null || dish.menuItem.trim() === "" ) {
             setErrorMessage("Debes incluir un platillo.");
@@ -206,7 +203,7 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
         else if (itemToAdd === "menuItem") setMenuItems({ menuItem: "", notes: "" });
         else if (itemToAdd === "order")  {
             setDish({ menuItem: "", notes: "" });
-            setOrder({ tableNumber: "", date: "", order_id: new Date().toLocaleString() });
+            setOrder({ tableNumber: "", date: new Date().toLocaleString(), order_id: "" });
             setStoredDishes();
         }
     }
@@ -231,7 +228,7 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
                     {(itemToAdd === "order") && <View style={[[ t.flex, t.flexCol, tw.wAuto, tw.h36 ]]}>
                         <View style={[[ t.flex, t.flexRow, tw.wFull, tw.h12 ]]}>
                             <TextInput placeholder={itemToUpdate ? null : "# de mesa"} style={[ tw.w1_2, tw.bgWhite, tw.pX4, t.pY1, tw.h12 ]} onChangeText={tableNumberChangeHandle} value={order.tableNumber} />
-                            <TextInput editable={false} placeholder="Hora" style={[ tw.w1_2, tw.bgWhite, tw.pX4, t.pY1, tw.h12 ]} onChangeText={dateChangeHandle} value={order.date.split(",")[1]} />
+                            <TextInput editable={false} placeholder="Hora" style={[ tw.w1_2, tw.bgWhite, tw.pX4, t.pY1, tw.h12 ]} value={order.date.split(",")[1]} />
                         </View>
                         <View style={[[ t.flex, t.flexCol, tw.wFull, tw.h24 ]]}>
                             <View style={[[ t.flex, t.flexRow, tw.wFull, tw.hFull ]]}>
