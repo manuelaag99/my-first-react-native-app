@@ -98,7 +98,7 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
             console.log("worked")
             try {
                 if (!isUpdating) {
-                    const { error } = await supabase.from("ALO-restaurant-orders").insert({ creator_id: user_id, restaurant_id: restaurantId, order_id: order.order_id, table_number: order.tableNumber, created_at: order.date });
+                    const { error } = await supabase.from("ALO-restaurant-orders").insert({ creator_id: user_id, restaurant_id: restaurantId, order_id: order.order_id, table_number: order.tableNumber });
                     if (error) console.log(error);
                 } else {
                     const { error } = await supabase.from("ALO-restaurant-orders").update({ table_number: order.tableNumber }).eq("order_id", order.order_id);
@@ -117,6 +117,7 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
     
     const [dish, setDish] = useState({ menuItem: "", notes: "" });
     const [storedDishes, setStoredDishes] = useState();
+    const [menuItemsListVisibility, setMenuItemsListVisibility] = useState(false);
     async function fetchStoredDishes () {
         if (itemToAdd === "order") {
             try {
@@ -163,9 +164,6 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
         fetchStoredDishes();
     }
     
-    const [menuItemsListVisibility, setMenuItemsListVisibility] = useState(false);
-    
-
     
     let orderId;
     useEffect(() => {
@@ -207,6 +205,7 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
             setStoredDishes();
         }
     }
+    console.log(order.date)
 
     const insets = useSafeAreaInsets();
     return (

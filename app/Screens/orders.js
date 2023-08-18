@@ -8,16 +8,11 @@ import { supabase } from "../supabase/client";
 
 export default function Orders ({ navigation, route }) {
     const [newOrderVisibility, setNewOrderVisibility] = useState(false);
-    const [modalVisibility, setModalVisibility] = useState(false);
-    const [ordersArray, setOrdersArray] = useState();
-    const [dishesArray, setDishesArray] = useState();
-    const [ordersArrayVisibility, setOrdersArrayVisibility] = useState(false);
-    const [updateOrderVisibility, setUpdateOrderVisibility] = useState(false);
-    const [orderToUpdate, setOrderToUpdate] = useState();
-    const [orderToUpdateDishes, setOrderToUpdateDishes] = useState();
 
     const { creator_id, restaurant_id } = route.params;
 
+    const [ordersArray, setOrdersArray] = useState();
+    const [ordersArrayVisibility, setOrdersArrayVisibility] = useState(false);
     async function fetchOrdersData () {
         try {
             const { data, error } = await supabase.from("ALO-restaurant-orders").select("*").eq("restaurant_id", restaurant_id);
@@ -36,6 +31,7 @@ export default function Orders ({ navigation, route }) {
         }
     }
 
+    const [dishesArray, setDishesArray] = useState();
     async function fetchDishesData () {
         try {
             const { data, error } = await supabase.from("ALO-orders-dishes").select("*").eq("restaurant_id", restaurant_id);
@@ -61,28 +57,17 @@ export default function Orders ({ navigation, route }) {
         fetchDishesData();
     }, []);
 
-    useEffect(() => {
-
-    }, [])
-
-
     function fetchAgain () {
         fetchOrdersData();
         fetchDishesData();
     }
 
+    const [modalVisibility, setModalVisibility] = useState(false);
     function clearOrdersArray () {
         setOrdersArray();
         clearOrdersData();
         clearDishesData();
         setModalVisibility(false);
-    }
-
-    function updateOrder (order) {
-        setUpdateOrderVisibility(true);
-        setOrderToUpdate(order);
-        setOrderToUpdateDishes(dishesArray.filter((dish) => order.order_id === dish.order_id));
-        console.log(order);
     }
 
     async function deleteOrder (order) {
@@ -101,6 +86,17 @@ export default function Orders ({ navigation, route }) {
         fetchAgain();
     }
 
+
+    const [updateOrderVisibility, setUpdateOrderVisibility] = useState(false);    
+    const [orderToUpdate, setOrderToUpdate] = useState();
+    const [orderToUpdateDishes, setOrderToUpdateDishes] = useState();
+    function updateOrder (order) {
+        setUpdateOrderVisibility(true);
+        setOrderToUpdate(order);
+        setOrderToUpdateDishes(dishesArray.filter((dish) => order.order_id === dish.order_id));
+    }
+
+    
     return (
         <ScrollView style={[ t.bgGray200 ]}>
             <View style={[ t.flex, t.flexCol, tw.justifyStart, tw.hFull, tw.wFull, t.pX5, t.pT6, t.pB10 ]}>
@@ -111,12 +107,12 @@ export default function Orders ({ navigation, route }) {
                 </TouchableHighlight>
 
                 <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.mXAuto, tailwind.roundedLg, tw.mY6 ]}>
-                    {!ordersArray && <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgYellow500, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tailwind.roundedLg ]}>
+                    {(!ordersArray || ordersArray.length === 0) && <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgYellow500, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textWhite  ]}>
                             No hay órdenes
                         </Text>
                     </View>}
-                    {ordersArray && <TouchableHighlight underlayColor="#ffdd00" onPress={() => setOrdersArrayVisibility(!ordersArrayVisibility)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgYellow500, tw.mXAuto, tw.pY6, tailwind.roundedLg ]}>
+                    {ordersArray && (ordersArray.length > 0) && <TouchableHighlight underlayColor="#ffdd00" onPress={() => setOrdersArrayVisibility(!ordersArrayVisibility)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgYellow500, tw.mXAuto, tw.pY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textWhite  ]}>
                             Órdenes
                         </Text>
