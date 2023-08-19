@@ -1,7 +1,8 @@
 import { useReducer } from "react";
-import { TextInput } from "react-native";
+import { TextInput, View } from "react-native";
 import { t, tw } from "react-native-tailwindcss";
 import { isTextAnEmail, isTextAPassword, minLengthText, nonEmptyText } from "../CheckValidity";
+import MessageBox from "./MessageBox";
 
 function inputReducer (state, action) {
     switch (action.type) {
@@ -34,6 +35,9 @@ export default function Input ({ field, placeholderText }) {
     }
 
     return (
-        <TextInput value={individualInputState.value} onChangeText={(text) => individualInputChangeHandler(text)} placeholder={placeholderText} style={[ tw.w5_6, tw.pY2, tw.pX2, tw.mY2, tw.h12 ]} />
+        <View style={[ tw.w5_6, tw.mY2, tw.h12 ]}>
+            <TextInput value={individualInputState.value} onChangeText={(text) => individualInputChangeHandler(text)} placeholder={placeholderText} style={[ tw.wFull, tw.pY2, tw.pX2, tw.hFull ]} />
+            <MessageBox textForMessageBox={errorMessage} />
+        </View>
     )
 }
