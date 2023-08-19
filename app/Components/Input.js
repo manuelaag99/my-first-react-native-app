@@ -25,7 +25,7 @@ export default function Input ({ errorMessage, field, individualInputAction, pla
 
     return (
         <View style={[ tw.w5_6, tw.mY2, tw.h12 ]}>
-            <TextInput autoCapitalize="none" autoComplete="off" onBlur={individualInputBlurHandler} onChangeText={(text) => individualInputChangeHandler(text)} onFocus={individualInputFocusHandler} placeholder={placeholderText} style={[[ tw.wFull, tw.pY2, tw.pX2, tw.hFull, tailwind.roundedLg]]} value={value} />
+            <TextInput autoCapitalize="none" autoComplete="off" onBlur={individualInputBlurHandler} onChangeText={(text) => individualInputChangeHandler(text)} onFocus={individualInputFocusHandler} placeholder={placeholderText} style={[[ tw.wFull, tw.pY2, tw.pX2, tw.hFull, tailwind.roundedLg]]} secureTextEntry={ (field === "password") ? true : false } value={value} />
             {(!individualInputState.isValid) && (individualInputState.isTouched) && (individualInputState.isActive) && <MessageBox textForMessageBox={errorMessage} />}
         </View>
     )
