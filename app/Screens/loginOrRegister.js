@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useReducer, useState } from "react";
 import { Text,TouchableHighlight, View } from "react-native";
 import { t, tailwind, tw } from "react-native-tailwindcss";
+import { v4 as uuidv4 } from "uuid";
+
+import { supabase } from "../supabase/client";
 import Input from "../Components/Input";
 import { formReducer } from "../Reducers";
 
@@ -24,16 +27,27 @@ export default function LoginOrRegister () {
 
     useEffect(() => {
         if (logInAction === "register") {
-            setPlaceholderText({ forEmail: "Escribe tu e-mail..." , forDisplayName: "Escribe tu nombre...", forPassword: "Crea una contraseña..." })
+            setPlaceholderText({ forEmail: "Escribe tu e-mail..." , forDisplayName: "Escribe tu nombre...", forPassword: "Crea una contraseña...", forUsername: "Crea un usuario" });
         } else if (logInAction === "signIn") {
-            setPlaceholderText({ forEmail: "Escribe tu e-mail..." , forDisplayName: null, forPassword: "Escribe tu contraseña..." })
+            setPlaceholderText({ forEmail: "Escribe tu e-mail..." , forDisplayName: null, forPassword: "Escribe tu contraseña...", forUsername: null });
         }
     }, [logInAction]);
 
     console.log(stateOfForm);
+    async function registerUser () {
+        let user_id = uuidv4();
+        try {
+            const { error } = await supabase.from("ALO-users-db").insert({ user_id: user_id, user_username: stateOfForm.inputs.username.value, user_email: stateOfForm.inputs.email.value, user_display_name: stateOfForm.inputs.displayName.value, user_password: stateOfForm.inputs.password.value });
+            if (error) console.log(error);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     function submitButtonHandler () {
         if (stateOfForm.isFormValid && logInAction === "register") {
             console.log("register");
+            registerUser();
         } else if (stateOfForm.isFormValid && logInAction === "signIn") {
             console.log("sign in");
         }
@@ -46,6 +60,7 @@ export default function LoginOrRegister () {
             </View>
             <View style={[ t.flex, tw.justifyCenter, tw.itemsCenter, tw.wFull, tw.bgWhite, tw.pX4, tw.pY4, tailwind.roundedLg, tailwind.shadow2xl ]}>
                 {(logInAction === "register") && <Input errorMessage="Escribe un nombre válido." field="displayName" individualInputAction={formHandler} placeholderText={ placeholderText.forDisplayName } />}
+                {(logInAction === "register") && <Input errorMessage="Escribe un usuario válido." field="username" individualInputAction={formHandler} placeholderText={ placeholderText.forUsername } />}
                 <Input errorMessage="Escribe un correo electrónico válido." field="email" individualInputAction={formHandler} placeholderText={placeholderText.forEmail} />
                 <Input errorMessage="Incluye mayúsculas, minúsculas, y símbolos especiales (@, #, etc.)" field="password" individualInputAction={formHandler} placeholderText={placeholderText.forPassword} />
                 <TouchableHighlight onPress={submitButtonHandler} style={[[ tw.pY4, tw.mT4, tw.mB1, tw.pX3, tw.bgBlue500, tailwind.roundedLg, tailwind.shadow2xl ], { width: "95%" }]} underlayColor="#ccddff">
