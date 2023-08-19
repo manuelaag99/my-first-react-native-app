@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Text, TextInput, TouchableHighlight, View } from "react-native";
 import { t, tailwind, tw } from "react-native-tailwindcss";
+import Input from "../Components/Input";
 
 export default function LoginOrRegister () {
     const [logInAction, setLogInAction] = useState("register");
@@ -20,6 +21,7 @@ export default function LoginOrRegister () {
                 <Text style={[ t.textCenter, tw.mXAuto, tw.wFull, t.fontBold, t.text2xl, t.italic ]}>A LA ORDEN</Text>
             </View>
             <View style={[ t.flex, tw.justifyCenter, tw.itemsCenter, tw.wFull, tw.bgWhite, tw.pX4, tw.pY4, tailwind.roundedLg, tailwind.shadow2xl ]}>
+                <Input placeholderText={placeholderText.forEmail} />
                 <TextInput placeholder={placeholderText.forEmail} style={[ tw.w5_6, tw.pY2, tw.pX2, tw.mY2, tw.h12 ]} />
                 {(logInAction === "register") && <TextInput placeholder={placeholderText.forDisplayName} style={[ tw.w5_6, tw.pY2, tw.pX2, tw.mY2, tw.h12 ]} />}
                 <TextInput placeholder={placeholderText.forPassword} style={[ tw.w5_6, tw.pY2, tw.pX2, tw.mY2, tw.h12 ]} />
