@@ -2,30 +2,7 @@ import { useCallback, useEffect, useReducer, useState } from "react";
 import { Text,TouchableHighlight, View } from "react-native";
 import { t, tailwind, tw } from "react-native-tailwindcss";
 import Input from "../Components/Input";
-
-function formReducer (state, action) {
-    switch (action.type) {
-        case "form change":
-            let formIsValid = true
-            for (const specificInput in state.inputs) {
-                if (specificInput === action.field) {
-                    formIsValid = formIsValid && action.isValid
-                } else {
-                    formIsValid = formIsValid && state.inputs[specificInput].isValid
-                }
-            }
-            return {
-                ...state,
-                inputs: {
-                    ...state.inputs,
-                    [action.field]: { value: action.value, isValid: action.isValid }
-                },
-                isFormValid: formIsValid
-            }    
-        default:
-            return state
-    }
-}
+import { formReducer } from "../Reducers";
 
 export default function LoginOrRegister () {
     const [logInAction, setLogInAction] = useState("register");
@@ -54,6 +31,13 @@ export default function LoginOrRegister () {
     }, [logInAction]);
 
     console.log(stateOfForm);
+    function submitButtonHandler () {
+        if (stateOfForm.isFormValid && logInAction === "register") {
+            console.log("register");
+        } else if (stateOfForm.isFormValid && logInAction === "signIn") {
+            console.log("sign in");
+        }
+    }
 
     return (
         <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.itemsCenter, t.pX5, tw.hFull, tw.wFull, tw.pB10 ]}>
@@ -64,7 +48,7 @@ export default function LoginOrRegister () {
                 {(logInAction === "register") && <Input errorMessage="Escribe un nombre válido." field="displayName" individualInputAction={formHandler} placeholderText={ placeholderText.forDisplayName } />}
                 <Input errorMessage="Escribe un correo electrónico válido." field="email" individualInputAction={formHandler} placeholderText={placeholderText.forEmail} />
                 <Input errorMessage="Incluye mayúsculas, minúsculas, y símbolos especiales (@, #, etc.)" field="password" individualInputAction={formHandler} placeholderText={placeholderText.forPassword} />
-                <TouchableHighlight onPress={() => console.log("yeah")} style={[[ tw.pY4, tw.mT4, tw.mB1, tw.pX3, tw.bgBlue500, tailwind.roundedLg, tailwind.shadow2xl ], { width: "95%" }]} underlayColor="#ccddff">
+                <TouchableHighlight onPress={submitButtonHandler} style={[[ tw.pY4, tw.mT4, tw.mB1, tw.pX3, tw.bgBlue500, tailwind.roundedLg, tailwind.shadow2xl ], { width: "95%" }]} underlayColor="#ccddff">
                     <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
                         {(logInAction === "register") && "Registrarse"}
                         {(logInAction === "signIn") && "Iniciar sesión"}
