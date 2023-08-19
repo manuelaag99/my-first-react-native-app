@@ -1,6 +1,6 @@
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { TextInput, View } from "react-native";
-import { t, tw } from "react-native-tailwindcss";
+import { t, tailwind, tw } from "react-native-tailwindcss";
 import { isTextAnEmail, isTextAPassword, minLengthText, nonEmptyText } from "../CheckValidity";
 import MessageBox from "./MessageBox";
 
@@ -22,22 +22,46 @@ function inputReducer (state, action) {
                 value: action.value,
                 isValid: checkValidity
             }
+            case "focus":
+                return {
+                    ...state,
+                    isActive: true,
+                    isTouched: false
+                };
+            case "blur":
+                return {
+                    ...state,
+                    isTouched: true
+                };
         default:
             return state;
     }
 }
 
-export default function Input ({ field, placeholderText }) {
-    const [individualInputState, dispatch] = useReducer(inputReducer, { value: "", isValid: false });
+export default function Input ({ errorMessage, field, individualInputAction, placeholderText }) {
+    const initialValues = { value: "", isValid: true }
+    const [individualInputState, dispatch] = useReducer(inputReducer, initialValues);
+    const {value, isValid} = individualInputState;
+
+
+    function individualInputBlurHandler () {
+        dispatch({ type: "blur" })
+    }
 
     function individualInputChangeHandler (text) {
         dispatch({ type: "change", value: text, field: field });
     }
 
+    function individualInputFocusHandler () {
+        dispatch({ type: "focus" })
+    }
+
+    useEffect(() => individualInputAction(value, isValid, field), [value, isValid, field]);
+
     return (
         <View style={[ tw.w5_6, tw.mY2, tw.h12 ]}>
-            <TextInput value={individualInputState.value} onChangeText={(text) => individualInputChangeHandler(text)} placeholder={placeholderText} style={[ tw.wFull, tw.pY2, tw.pX2, tw.hFull ]} />
-            <MessageBox textForMessageBox={errorMessage} />
+            <TextInput onBlur={individualInputBlurHandler} onChangeText={(text) => individualInputChangeHandler(text)} onFocus={individualInputFocusHandler} placeholder={placeholderText} style={[[ tw.wFull, tw.pY2, tw.pX2, tw.hFull, tailwind.roundedLg]]} value={value} />
+            {(!individualInputState.isValid) && (individualInputState.isTouched) && (individualInputState.isActive) && <MessageBox textForMessageBox={errorMessage} />}
         </View>
     )
 }
