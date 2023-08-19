@@ -18,12 +18,9 @@ function inputReducer (state, action) {
 export default function Input ({ placeholderText }) {
     const [individualInputState, dispatch] = useReducer(inputReducer, { value: "", isValid: false });
 
-
     function individualInputChangeHandler (text) {
-        console.log(text);
         dispatch({ type: "change", value: text });
     }
-    console.log(individualInputState)
 
     return (
         <TextInput onChangeText={(text) => individualInputChangeHandler(text)} placeholder={placeholderText} style={[ tw.w5_6, tw.pY2, tw.pX2, tw.mY2, tw.h12 ]} />
