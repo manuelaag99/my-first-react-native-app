@@ -59,10 +59,10 @@ export default function LoginOrRegister () {
                 <Text style={[ t.textCenter, tw.mXAuto, tw.wFull, t.fontBold, t.text2xl, t.italic ]}>A LA ORDEN</Text>
             </View>
             <View style={[ t.flex, tw.justifyCenter, tw.itemsCenter, tw.wFull, tw.bgWhite, tw.pX4, tw.pY4, tailwind.roundedLg, tailwind.shadow2xl ]}>
-                {(logInAction === "register") && <Input errorMessage="Escribe un nombre válido." field="displayName" individualInputAction={formHandler} placeholderText={ placeholderText.forDisplayName } />}
-                {(logInAction === "register") && <Input errorMessage="Escribe un usuario válido." field="username" individualInputAction={formHandler} placeholderText={ placeholderText.forUsername } />}
-                <Input errorMessage="Escribe un correo electrónico válido." field="email" individualInputAction={formHandler} placeholderText={placeholderText.forEmail} />
-                <Input errorMessage="Incluye mayúsculas, minúsculas, y símbolos especiales (@, #, etc.)" field="password" individualInputAction={formHandler} placeholderText={placeholderText.forPassword} />
+                {(logInAction === "register") && <Input errorMessage="Escribe un nombre válido." field="displayName" individualInputAction={formHandler} instructionMessage={null} placeholderText={ placeholderText.forDisplayName } />}
+                {(logInAction === "register") && <Input errorMessage="Escribe un usuario válido." field="username" individualInputAction={formHandler} instructionMessage="Escribe al menos 6 caracteres" placeholderText={ placeholderText.forUsername } />}
+                <Input errorMessage="Escribe un correo electrónico válido." field="email" individualInputAction={formHandler} instructionMessage={null} placeholderText={placeholderText.forEmail} />
+                <Input errorMessage="Escribe una contraseña válida" field="password" individualInputAction={formHandler} instructionMessage="Escribe al menos 10 caracteres, mayúsculas y minúsculas, y símbolos especiales (@, #, etc.)." placeholderText={placeholderText.forPassword} />
                 <TouchableHighlight onPress={submitButtonHandler} style={[[ tw.pY4, tw.mT4, tw.mB1, tw.pX3, tw.bgBlue500, tailwind.roundedLg, tailwind.shadow2xl ], { width: "95%" }]} underlayColor="#ccddff">
                     <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
                         {(logInAction === "register") && "Registrarse"}

@@ -4,7 +4,7 @@ import { t, tailwind, tw } from "react-native-tailwindcss";
 import MessageBox from "./MessageBox";
 import { inputReducer } from "../Reducers";
 
-export default function Input ({ errorMessage, field, individualInputAction, placeholderText }) {
+export default function Input ({ errorMessage, field, individualInputAction, instructionMessage, placeholderText }) {
     const initialValues = { value: "", isValid: true }
     const [individualInputState, dispatch] = useReducer(inputReducer, initialValues);
     const {value, isValid} = individualInputState;
@@ -26,7 +26,8 @@ export default function Input ({ errorMessage, field, individualInputAction, pla
     return (
         <View style={[ tw.w5_6, tw.mY2, tw.h12 ]}>
             <TextInput autoCapitalize="none" autoComplete="off" onBlur={individualInputBlurHandler} onChangeText={(text) => individualInputChangeHandler(text)} onFocus={individualInputFocusHandler} placeholder={placeholderText} style={[[ tw.wFull, tw.pY2, tw.pX2, tw.hFull, tailwind.roundedLg]]} secureTextEntry={ (field === "password") ? true : false } value={value} />
-            {(!individualInputState.isValid) && (individualInputState.isTouched) && (individualInputState.isActive) && <MessageBox textForMessageBox={errorMessage} />}
+            {(!individualInputState.isValid) && (individualInputState.isTouched) && (individualInputState.isActive) && <MessageBox isError={true} textForMessageBox={errorMessage} />}
+            {(instructionMessage) && (!individualInputState.isTouched) && (individualInputState.isActive) && <MessageBox isError={false} textForMessageBox={instructionMessage} />}
         </View>
     )
 }

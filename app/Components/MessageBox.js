@@ -1,10 +1,10 @@
 import { Text, View } from "react-native";
 import { t, tailwind, tw } from "react-native-tailwindcss";
 
-export default function MessageBox ({ textForMessageBox }) {
+export default function MessageBox ({ isError, textForMessageBox }) {
     return (
-        <View style={[ t.flex, t.flexCol, tw.wFull, t.borderRed700, t.border, tailwind.shadow2xl, t.bgRed100, t.absolute, tw.mT10, t.z20, tw.pX2, tw.pY2, tailwind.roundedLg ]}>
-            <Text style={[ t.textRed700, t.textLeft ]}>
+        <View style={[ t.flex, t.flexCol, tw.wFull, t.border, tailwind.shadow2xl, t.absolute, tw.mT10, t.z40, tw.pX2, tw.pY2, tailwind.roundedLg, isError ? [ t.borderRed700, t.bgRed100 ] : [ t.borderGray600, t.bgWhite ] ]}>
+            <Text style={isError ? [ t.textRed700, t.textLeft ] : [ t.textGray600, t.textLeft ]}>
                 {textForMessageBox}
             </Text>
         </View>
