@@ -1,12 +1,49 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useReducer, useState } from "react";
 import { Text,TouchableHighlight, View } from "react-native";
 import { t, tailwind, tw } from "react-native-tailwindcss";
 import Input from "../Components/Input";
 
+function formReducer (state, action) {
+    switch (action.type) {
+        case "form change":
+            let formIsValid = true
+            for (const specificInput in state.inputs) {
+                if (specificInput === action.field) {
+                    formIsValid = formIsValid && action.isValid
+                } else {
+                    formIsValid = formIsValid && state.inputs[specificInput].isValid
+                }
+            }
+            return {
+                ...state,
+                inputs: {
+                    ...state.inputs,
+                    [action.field]: { value: action.value, isValid: action.isValid }
+                },
+                isFormValid: formIsValid
+            }    
+        default:
+            return state
+    }
+}
+
 export default function LoginOrRegister () {
     const [logInAction, setLogInAction] = useState("register");
     const [placeholderText, setPlaceholderText] = useState({ forEmail: "Escribe tu e-mail..." , forPassword: "Crea una contraseña..." });
-    const [profileInfo, setProfileInfo] = useState({ email: "", displayName: "", password: "" });
+
+    const initialFormState = {
+        inputs: {
+            email: { value: "", isValid: false },
+            password: { value: "", isValid: false }
+        },
+        isFormValid: false
+    }
+
+    const [stateOfForm, dispatch] = useReducer(formReducer, initialFormState);
+
+    const formHandler = useCallback((value, isValid, field) => {
+        dispatch({ type: "form change", value: value, field: field , isValid: isValid });
+    }, [dispatch])
 
     useEffect(() => {
         if (logInAction === "register") {
@@ -16,15 +53,17 @@ export default function LoginOrRegister () {
         }
     }, [logInAction]);
 
+    console.log(stateOfForm);
+
     return (
         <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.itemsCenter, t.pX5, tw.hFull, tw.wFull, tw.pB10 ]}>
             <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull, tw.mB6 ]}>
                 <Text style={[ t.textCenter, tw.mXAuto, tw.wFull, t.fontBold, t.text2xl, t.italic ]}>A LA ORDEN</Text>
             </View>
             <View style={[ t.flex, tw.justifyCenter, tw.itemsCenter, tw.wFull, tw.bgWhite, tw.pX4, tw.pY4, tailwind.roundedLg, tailwind.shadow2xl ]}>
-                {(logInAction === "register") && <Input errorMessage="Escribe un nombre válido." field="displayName" placeholderText={ placeholderText.forDisplayName } />}
-                <Input errorMessage="Escribe un correo electrónico válido." field="email" placeholderText={placeholderText.forEmail} />
-                <Input errorMessage="Incluye mayúsculas, minúsculas, y símbolos especiales (@, #, etc.)" field="password" placeholderText={placeholderText.forPassword} />
+                {(logInAction === "register") && <Input errorMessage="Escribe un nombre válido." field="displayName" individualInputAction={formHandler} placeholderText={ placeholderText.forDisplayName } />}
+                <Input errorMessage="Escribe un correo electrónico válido." field="email" individualInputAction={formHandler} placeholderText={placeholderText.forEmail} />
+                <Input errorMessage="Incluye mayúsculas, minúsculas, y símbolos especiales (@, #, etc.)" field="password" individualInputAction={formHandler} placeholderText={placeholderText.forPassword} />
                 <TouchableHighlight onPress={() => console.log("yeah")} style={[[ tw.pY4, tw.mT4, tw.mB1, tw.pX3, tw.bgBlue500, tailwind.roundedLg, tailwind.shadow2xl ], { width: "95%" }]} underlayColor="#ccddff">
                     <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
                         {(logInAction === "register") && "Registrarse"}
