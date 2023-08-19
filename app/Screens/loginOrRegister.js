@@ -6,6 +6,7 @@ import Input from "../Components/Input";
 export default function LoginOrRegister () {
     const [logInAction, setLogInAction] = useState("register");
     const [placeholderText, setPlaceholderText] = useState({ forEmail: "Escribe tu e-mail..." , forPassword: "Crea una contraseña..." });
+    const [profileInfo, setProfileInfo] = useState({ email: "", displayName: "", password: "" });
 
     useEffect(() => {
         if (logInAction === "register") {
@@ -13,7 +14,7 @@ export default function LoginOrRegister () {
         } else if (logInAction === "signIn") {
             setPlaceholderText({ forEmail: "Escribe tu e-mail..." , forDisplayName: null, forPassword: "Escribe tu contraseña..." })
         }
-    }, [logInAction])
+    }, [logInAction]);
 
     return (
         <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.itemsCenter, t.pX5, tw.hFull, tw.wFull, tw.pB10 ]}>
@@ -21,9 +22,9 @@ export default function LoginOrRegister () {
                 <Text style={[ t.textCenter, tw.mXAuto, tw.wFull, t.fontBold, t.text2xl, t.italic ]}>A LA ORDEN</Text>
             </View>
             <View style={[ t.flex, tw.justifyCenter, tw.itemsCenter, tw.wFull, tw.bgWhite, tw.pX4, tw.pY4, tailwind.roundedLg, tailwind.shadow2xl ]}>
-                {(logInAction === "register") && <Input placeholderText={ placeholderText.forDisplayName } />}
-                <Input placeholderText={placeholderText.forEmail} />
-                <Input placeholderText={placeholderText.forPassword} />
+                {(logInAction === "register") && <Input field="displayName" placeholderText={ placeholderText.forDisplayName } />}
+                <Input field="email" placeholderText={placeholderText.forEmail} />
+                <Input field="password" placeholderText={placeholderText.forPassword} />
                 <TouchableHighlight onPress={() => console.log("yeah")} style={[[ tw.pY4, tw.mT4, tw.mB1, tw.pX3, tw.bgBlue500, tailwind.roundedLg, tailwind.shadow2xl ], { width: "95%" }]} underlayColor="#ccddff">
                     <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
                         {(logInAction === "register") && "Registrarse"}
