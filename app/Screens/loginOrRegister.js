@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer, useState } from "react";
+import { useEffect, useState } from "react";
 import { Text,TouchableHighlight, View } from "react-native";
 import { t, tailwind, tw } from "react-native-tailwindcss";
 import { v4 as uuidv4 } from "uuid";
@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import Input from "../Components/Input";
 import { supabase } from "../supabase/client";
 import { useForm } from "../Custom-Hooks";
+
 
 export default function LoginOrRegister ({ route, navigation }) {
     const [logInAction, setLogInAction] = useState("register");
