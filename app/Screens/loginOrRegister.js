@@ -3,11 +3,11 @@ import { Text,TouchableHighlight, View } from "react-native";
 import { t, tailwind, tw } from "react-native-tailwindcss";
 import { v4 as uuidv4 } from "uuid";
 
-import { supabase } from "../supabase/client";
 import Input from "../Components/Input";
-import { formReducer } from "../Reducers";
+import { supabase } from "../supabase/client";
+import { useForm } from "../Custom-Hooks";
 
-export default function LoginOrRegister () {
+export default function LoginOrRegister ({ route, navigation }) {
     const [logInAction, setLogInAction] = useState("register");
     const [placeholderText, setPlaceholderText] = useState({ forEmail: "Escribe tu e-mail..." , forPassword: "Crea una contraseña..." });
 
@@ -19,11 +19,7 @@ export default function LoginOrRegister () {
         isFormValid: false
     }
 
-    const [stateOfForm, dispatch] = useReducer(formReducer, initialFormState);
-
-    const formHandler = useCallback((value, isValid, field) => {
-        dispatch({ type: "form change", value: value, field: field , isValid: isValid });
-    }, [dispatch])
+    const [stateOfForm, formHandler] = useForm(initialFormState);
 
     useEffect(() => {
         if (logInAction === "register") {
@@ -33,7 +29,6 @@ export default function LoginOrRegister () {
         }
     }, [logInAction]);
 
-    console.log(stateOfForm);
     async function registerUser () {
         let user_id = uuidv4();
         try {
@@ -48,6 +43,7 @@ export default function LoginOrRegister () {
         if (stateOfForm.isFormValid && logInAction === "register") {
             console.log("register");
             registerUser();
+            navigation.navigate("User")
         } else if (stateOfForm.isFormValid && logInAction === "signIn") {
             console.log("sign in");
         }

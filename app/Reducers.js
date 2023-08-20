@@ -52,7 +52,7 @@ export function formReducer (state, action) {
                     [action.field]: { value: action.value, isValid: action.isValid }
                 },
                 isFormValid: formIsValid
-            }    
+            }
         default:
             return state
     }
