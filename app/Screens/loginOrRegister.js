@@ -29,6 +29,7 @@ export default function LoginOrRegister ({ route, navigation }) {
         }
     }, [logInAction]);
 
+
     async function registerUser () {
         let user_id = uuidv4();
         try {
@@ -37,13 +38,13 @@ export default function LoginOrRegister ({ route, navigation }) {
         } catch (err) {
             console.log(err);
         }
+        navigation.navigate("User", { user_id: user_id });
     }
 
     function submitButtonHandler () {
         if (stateOfForm.isFormValid && logInAction === "register") {
             console.log("register");
             registerUser();
-            navigation.navigate("User")
         } else if (stateOfForm.isFormValid && logInAction === "signIn") {
             console.log("sign in");
         }

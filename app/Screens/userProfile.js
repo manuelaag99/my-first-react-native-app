@@ -14,7 +14,9 @@ export default function UserProfile ({ navigation, route }) {
     const [restaurants, setRestaurants] = useState();
 
     let email = "manuelaag99@gmail.com"
-    let user_id = "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22";
+    // let user_id = "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22";
+
+    const { user_id } = route.params;
 
     async function fetchData () {
         try {
