@@ -163,8 +163,7 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
         }
         fetchStoredDishes();
     }
-    
-    
+
     let orderId;
     useEffect(() => {
         if (itemToUpdate) {
@@ -205,7 +204,6 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
             setStoredDishes();
         }
     }
-    console.log(order.date)
 
     const insets = useSafeAreaInsets();
     return (
