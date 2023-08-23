@@ -24,6 +24,7 @@ export default function AuthForm ({ initialAction, isSettingsScreen, navigation,
         try {
             const { data, error } = await supabase.from("ALO-users-db").select("*").eq("user_id", userId);
             console.log(error);
+            console.log(data)
         } catch (err) {
             Alert(err);
         }
@@ -32,6 +33,8 @@ export default function AuthForm ({ initialAction, isSettingsScreen, navigation,
     useEffect(() => {
         if (isSettingsScreen) fetchUserInfo();
     }, [])
+
+    
 
     const [stateOfForm, formHandler] = useForm(initialFormState);
 
@@ -65,7 +68,7 @@ export default function AuthForm ({ initialAction, isSettingsScreen, navigation,
     }
 
     return (
-            <KeyboardAvoidingView style={[ t.flex, t.flexCol, tw.justifyCenter, tw.itemsCenter, t.pX5, tw.hFull, tw.wFull, tw.pB10 ]}>
+            <KeyboardAvoidingView style={[ t.flex, t.flexCol, tw.justifyCenter, tw.itemsCenter, t.pX5, tw.hFull, tw.wFull ]}>
                 <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull, tw.mB6 ]}>
                     <Text style={[ t.textCenter, tw.mXAuto, tw.wFull, t.fontBold, t.text2xl, t.italic ]}>A LA ORDEN</Text>
                 </View>
@@ -88,6 +91,12 @@ export default function AuthForm ({ initialAction, isSettingsScreen, navigation,
                         ¿No tienes cuenta? Regístrate.
                     </Text>}
                 </View>
+
+                {!isSettingsScreen && <TouchableHighlight onPress={() => console.log("click")} style={[ t.flex, t.wFull, tw.pX3, tw.pY5, tw.mT8, tailwind.roundedLg, tailwind.shadow2xl, t.bgRed500]} underlayColor="#ffdddd" >
+                    <Text style={[ t.textCenter, t.textWhite, t.fontBold ]}>
+                        Regístrate con Google
+                    </Text>
+                </TouchableHighlight>}
             </KeyboardAvoidingView>
     )
 }
