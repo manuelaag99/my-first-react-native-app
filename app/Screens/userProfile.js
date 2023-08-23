@@ -86,7 +86,7 @@ export default function UserProfile ({ navigation, route }) {
                             </TouchableHighlight>}
                         </View>
 
-                        <TouchableHighlight underlayColor="#ccc" onPress={() => navigation.navigate("Settings")} style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgWhite, tw.border, tw.borderGray300, tailwind.roundedLg, tw.mY5 ]}>
+                        <TouchableHighlight underlayColor="#ccc" onPress={() => navigation.navigate("Settings", { user_id: user_id })} style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgWhite, tw.border, tw.borderGray300, tailwind.roundedLg, tw.mY5 ]}>
                             <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
                                 <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold, t.textBlack ]}>Ajustes de perfil</Text>
                             </View>

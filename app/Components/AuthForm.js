@@ -65,7 +65,6 @@ export default function AuthForm ({ initialAction, isSettingsScreen, navigation,
     }
 
     return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <KeyboardAvoidingView style={[ t.flex, t.flexCol, tw.justifyCenter, tw.itemsCenter, t.pX5, tw.hFull, tw.wFull, tw.pB10 ]}>
                 <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull, tw.mB6 ]}>
                     <Text style={[ t.textCenter, tw.mXAuto, tw.wFull, t.fontBold, t.text2xl, t.italic ]}>A LA ORDEN</Text>
@@ -90,6 +89,5 @@ export default function AuthForm ({ initialAction, isSettingsScreen, navigation,
                     </Text>}
                 </View>
             </KeyboardAvoidingView>
-        </TouchableWithoutFeedback>
     )
 }
