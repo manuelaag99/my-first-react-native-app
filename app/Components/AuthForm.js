@@ -77,7 +77,7 @@ export default function AuthForm ({ initialAction, isSettingsScreen, navigation,
                     {(logInAction === "register") && <Input errorMessage="Escribe un usuario válido." field="username" individualInputAction={formHandler} instructionMessage="Escribe al menos 6 caracteres" placeholderText={ placeholderText.forUsername } />}
                     <Input errorMessage="Escribe un correo electrónico válido." field="email" individualInputAction={formHandler} instructionMessage={null} placeholderText={placeholderText.forEmail} />
                     <Input errorMessage="Escribe una contraseña válida" field="password" individualInputAction={formHandler} instructionMessage="Escribe al menos 10 caracteres, mayúsculas y minúsculas, y símbolos especiales (@, #, etc.)." placeholderText={placeholderText.forPassword} />
-                    <TouchableHighlight onPress={submitButtonHandler} style={[[ tw.pY4, tw.mT4, tw.mB1, tw.pX3, tw.bgBlue500, tailwind.roundedLg, tailwind.shadow2xl ], { width: "95%" }]} underlayColor="#ccddff">
+                    <TouchableHighlight onPress={submitButtonHandler} style={[[ tw.pY4, tw.mT4, tw.mB1, tw.pX3, tw.bgBlue400, tailwind.roundedLg, tailwind.shadow2xl ], { width: "95%" }]} underlayColor="#ccddff">
                         <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
                             {(logInAction === "register") && "Registrarse"}
                             {(logInAction === "signIn") && "Iniciar sesión"}
@@ -94,7 +94,15 @@ export default function AuthForm ({ initialAction, isSettingsScreen, navigation,
 
                 {!isSettingsScreen && <TouchableHighlight onPress={() => console.log("click")} style={[ t.flex, t.wFull, tw.pX3, tw.pY5, tw.mT8, tailwind.roundedLg, tailwind.shadow2xl, t.bgRed500]} underlayColor="#ffdddd" >
                     <Text style={[ t.textCenter, t.textWhite, t.fontBold ]}>
-                        Regístrate con Google
+                        {(logInAction === "register") && "Registrarse con Google"}
+                        {(logInAction === "signIn") && "Iniciar sesión con Google"}
+                    </Text>
+                </TouchableHighlight>}
+
+                {!isSettingsScreen && <TouchableHighlight onPress={() => console.log("click")} style={[ t.flex, t.wFull, tw.pX3, tw.pY5, tw.mT8, tailwind.roundedLg, tailwind.shadow2xl, t.bgBlue700]} underlayColor="#ddddff" >
+                    <Text style={[ t.textCenter, t.textWhite, t.fontBold ]}>
+                        {(logInAction === "register") && "Registrarse con Facebook"}
+                        {(logInAction === "signIn") && "Iniciar sesión con Facebook"}
                     </Text>
                 </TouchableHighlight>}
             </KeyboardAvoidingView>
