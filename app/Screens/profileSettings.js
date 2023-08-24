@@ -31,7 +31,7 @@ export default function ProfileSettings ({ navigation, route }) {
         return (
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <KeyboardAvoidingView style={[ t.flex, t.flexCol, tw.justifyCenter, t.bgWhite, tw.itemsCenter, t.pX5, tw.hFull, tw.wFull, tw.pB10 ]}>
-                    <AuthForm initialAction="register" navigation={navigation} />
+                    <AuthForm initialAction="update" isSettingsScreen={true} navigation={navigation} />
                 </KeyboardAvoidingView>
             </TouchableWithoutFeedback>
         )
