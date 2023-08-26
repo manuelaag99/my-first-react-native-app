@@ -82,48 +82,53 @@ export default function AuthForm ({ initialAction, isSettingsScreen, navigation,
                     {(logInAction !== "signIn") && <Input errorMessage="Escribe un usuario válido." field="username" individualInputAction={formHandler} instructionMessage="Escribe al menos 6 caracteres" placeholderText={ placeholderText.forUsername } />}
                     <Input errorMessage="Escribe un correo electrónico válido." field="email" individualInputAction={formHandler} instructionMessage={null} placeholderText={placeholderText.forEmail} />
                     <Input errorMessage="Escribe una contraseña válida" field="password" individualInputAction={formHandler} instructionMessage="Escribe al menos 10 caracteres, mayúsculas y minúsculas, y símbolos especiales (@, #, etc.)." placeholderText={placeholderText.forPassword} />
-                    <TouchableHighlight onPress={submitButtonHandler} style={[[ tw.pY4, tw.mT4, tw.mB1, tw.pX3, tw.bgBlue400, tailwind.roundedLg, tailwind.shadow2xl ], { width: "95%" }]} underlayColor="#ccddff">
+                    <TouchableHighlight onPress={submitButtonHandler} style={[[ tw.pY4, tw.mY3, tw.pX3, tw.bgBlue400, tailwind.roundedLg, tailwind.shadow2xl ], { width: "95%" }]} underlayColor="#ccddff">
                         <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
                             {(logInAction === "register") && "Registrarse"}
                             {(logInAction === "signIn") && "Iniciar sesión"}
                             {(logInAction === "update") && "Actualizar"}
                         </Text>
                     </TouchableHighlight>
+
+
+                    {!isSettingsScreen && <TouchableHighlight onPress={() => console.log("click")} style={[[ t.flex, t.justifyCenter, tw.pX3, tw.pY5, tw.mY3, tailwind.roundedLg, tailwind.shadow2xl, t.bgRed500], { width: "95%" }]} underlayColor="#ffdddd" >
+                        <View style={[ t.flex, t.flexRow, t.justifyCenter, t.itemsCenter]}>
+                            <View style={[ tw.mR4 ]}>
+                                <Icon name="google" style={[ t.textWhite, tw.m0]} size={20} color="#000" />
+                            </View>
+                            <View>
+                                <Text style={[ t.textCenter, t.textWhite, t.fontBold ]}>
+                                    {(logInAction === "register") && "Registrarse con Google"}
+                                    {(logInAction === "signIn") && "Iniciar sesión con Google"}
+                                </Text>
+                            </View>
+                        </View>
+                    </TouchableHighlight>}
+
+                    {!isSettingsScreen && <TouchableHighlight onPress={() => console.log("click")} style={[[ t.flex, t.justifyCenter, t.itemsCenter, tw.pX3, tw.pY5, tw.mY3, tailwind.roundedLg, tailwind.shadow2xl, t.bgBlue700], { width: "95%" }]} underlayColor="#ddddff" >
+                        <View style={[ t.flex, t.flexRow, t.justifyCenter, t.itemsCenter]}>
+                            <View style={[ tw.mR4 ]}>
+                                <Icon name="facebook" style={[ t.textWhite, tw.m0]} size={20} color="#000" />
+                            </View>
+                            <View>
+                                <Text style={[ t.textCenter, t.textWhite, t.fontBold ]}>
+                                {(logInAction === "register") && "Registrarse con Facebook"}
+                                {(logInAction === "signIn") && "Iniciar sesión con Facebook"}
+                                </Text>
+                            </View>
+                        </View>
+                    </TouchableHighlight>}
+
                     {!isSettingsScreen && (logInAction === "register") && <Text onPress={() => setLogInAction("signIn")} style={[ tw.mT5, tw.mB2 ]} >
                         ¿Ya tienes cuenta? Inicia sesión.
                     </Text>}
                     {!isSettingsScreen && (logInAction === "signIn") && <Text onPress={() => setLogInAction("register")} style={[ tw.mT5, tw.mB2 ]} >
                         ¿No tienes cuenta? Regístrate.
                     </Text>}
+
                 </View>
 
-                {!isSettingsScreen && <TouchableHighlight onPress={() => console.log("click")} style={[ t.flex, t.justifyCenter, t.wFull, tw.pX3, tw.pY5, tw.mT8, tailwind.roundedLg, tailwind.shadow2xl, t.bgRed500]} underlayColor="#ffdddd" >
-                    <View style={[ t.flex, t.flexRow, t.justifyCenter, t.itemsCenter]}>
-                        <View style={[ tw.mR4 ]}>
-                            <Icon name="google" style={[ t.textWhite, tw.m0]} size={20} color="#000" />
-                        </View>
-                        <View>
-                            <Text style={[ t.textCenter, t.textWhite, t.fontBold ]}>
-                                {(logInAction === "register") && "Registrarse con Google"}
-                                {(logInAction === "signIn") && "Iniciar sesión con Google"}
-                            </Text>
-                        </View>
-                    </View>
-                </TouchableHighlight>}
-
-                {!isSettingsScreen && <TouchableHighlight onPress={() => console.log("click")} style={[ t.flex, t.justifyCenter, t.itemsCenter, t.wFull, tw.pX3, tw.pY5, tw.mT8, tailwind.roundedLg, tailwind.shadow2xl, t.bgBlue700]} underlayColor="#ddddff" >
-                    <View style={[ t.flex, t.flexRow, t.justifyCenter, t.itemsCenter]}>
-                        <View style={[ tw.mR4 ]}>
-                            <Icon name="facebook" style={[ t.textWhite, tw.m0]} size={20} color="#000" />
-                        </View>
-                        <View>
-                            <Text style={[ t.textCenter, t.textWhite, t.fontBold ]}>
-                            {(logInAction === "register") && "Registrarse con Facebook"}
-                            {(logInAction === "signIn") && "Iniciar sesión con Facebook"}
-                            </Text>
-                        </View>
-                    </View>
-                </TouchableHighlight>}
+                
             </View>
         </TouchableWithoutFeedback>
     )
