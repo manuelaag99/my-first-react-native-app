@@ -1,4 +1,4 @@
-import { isTextAnEmail, isTextAPassword, minLengthText, nonEmptyText } from "./CheckValidity";
+import { isTextAnEmail, isTextAPassword, isTextAUsername, minLengthText, nonEmptyText } from "./CheckValidity";
 
 export function inputReducer (state, action) {
     switch (action.type) {
@@ -7,7 +7,7 @@ export function inputReducer (state, action) {
             if (action.field === "email") {
                 checkValidity = isTextAnEmail(action.value);
             } else if (action.field === "username") {
-                checkValidity = minLengthText(action.value, 6);
+                checkValidity =isTextAUsername(action.value, 6);
             } else if (action.field === "password") {
                 checkValidity = isTextAPassword(action.value);
             } else {

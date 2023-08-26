@@ -31,6 +31,18 @@ export function isTextAnEmail (value) {
     }
 }
 
+export function isTextAUsername (value, requiredLength) {
+    if (value.length > requiredLength) {
+        if (value.includes(" ")) {
+            return false
+        } else {
+            return true
+        }
+    } else {
+        return false
+    }    
+}
+
 export function isTextAPassword (value) {
     const specialChars = `/[!@#$%^&*()_+\-=\[\]{};':"|,.<>\/?]+/;`
     const doesItHaveSpecialCharacters = specialChars.split("").some(character => value.includes(character))

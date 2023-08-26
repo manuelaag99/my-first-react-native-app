@@ -79,7 +79,7 @@ export default function AuthForm ({ initialAction, isSettingsScreen, navigation,
                 </View>}
                 <View style={[ t.flex, tw.justifyCenter, tw.itemsCenter, tw.wFull, tw.bgWhite, tw.pX4, tw.pY4, tailwind.roundedLg, (!isSettingsScreen && tailwind.shadow2xl) ]}>
                     {(logInAction !== "signIn") && <Input autoCapitalize="words" errorMessage="Escribe un nombre válido." field="displayName" individualInputAction={formHandler} instructionMessage={null} placeholderText={ placeholderText.forDisplayName } />}
-                    {(logInAction !== "signIn") && <Input errorMessage="Escribe un usuario válido." field="username" individualInputAction={formHandler} instructionMessage="Escribe al menos 6 caracteres" placeholderText={ placeholderText.forUsername } />}
+                    {(logInAction !== "signIn") && <Input errorMessage="Escribe un usuario válido." field="username" individualInputAction={formHandler} instructionMessage="Escribe al menos 6 caracteres, sin espacios." placeholderText={ placeholderText.forUsername } />}
                     <Input errorMessage="Escribe un correo electrónico válido." field="email" individualInputAction={formHandler} instructionMessage={null} placeholderText={placeholderText.forEmail} />
                     <Input errorMessage="Escribe una contraseña válida" field="password" individualInputAction={formHandler} instructionMessage="Escribe al menos 10 caracteres, mayúsculas y minúsculas, y símbolos especiales (@, #, etc.)." placeholderText={placeholderText.forPassword} />
                     <TouchableHighlight onPress={submitButtonHandler} style={[[ tw.pY4, tw.mY3, tw.pX3, tw.bgBlue400, tailwind.roundedLg, tailwind.shadow2xl ], { width: "95%" }]} underlayColor="#ccddff">
@@ -91,7 +91,7 @@ export default function AuthForm ({ initialAction, isSettingsScreen, navigation,
                     </TouchableHighlight>
 
 
-                    {!isSettingsScreen && <TouchableHighlight onPress={() => console.log("click")} style={[[ t.flex, t.justifyCenter, tw.pX3, tw.pY5, tw.mY3, tailwind.roundedLg, tailwind.shadow2xl, t.bgRed500], { width: "95%" }]} underlayColor="#ffdddd" >
+                    {!isSettingsScreen && <TouchableHighlight onPress={() => console.log("click")} style={[[ t.flex, t.justifyCenter, tw.pX3, tw.pY4, tw.mY3, tailwind.roundedLg, tailwind.shadow2xl, t.bgRed500], { width: "95%" }]} underlayColor="#ffdddd" >
                         <View style={[ t.flex, t.flexRow, t.justifyCenter, t.itemsCenter]}>
                             <View style={[ tw.mR4 ]}>
                                 <Icon name="google" style={[ t.textWhite, tw.m0]} size={20} color="#000" />
@@ -105,7 +105,7 @@ export default function AuthForm ({ initialAction, isSettingsScreen, navigation,
                         </View>
                     </TouchableHighlight>}
 
-                    {!isSettingsScreen && <TouchableHighlight onPress={() => console.log("click")} style={[[ t.flex, t.justifyCenter, t.itemsCenter, tw.pX3, tw.pY5, tw.mY3, tailwind.roundedLg, tailwind.shadow2xl, t.bgBlue700], { width: "95%" }]} underlayColor="#ddddff" >
+                    {!isSettingsScreen && <TouchableHighlight onPress={() => console.log("click")} style={[[ t.flex, t.justifyCenter, t.itemsCenter, tw.pX3, tw.pY4, tw.mY3, tailwind.roundedLg, tailwind.shadow2xl, t.bgBlue700], { width: "95%" }]} underlayColor="#ddddff" >
                         <View style={[ t.flex, t.flexRow, t.justifyCenter, t.itemsCenter]}>
                             <View style={[ tw.mR4 ]}>
                                 <Icon name="facebook" style={[ t.textWhite, tw.m0]} size={20} color="#000" />
@@ -119,10 +119,10 @@ export default function AuthForm ({ initialAction, isSettingsScreen, navigation,
                         </View>
                     </TouchableHighlight>}
 
-                    {!isSettingsScreen && (logInAction === "register") && <Text onPress={() => setLogInAction("signIn")} style={[ tw.mT5, tw.mB2 ]} >
+                    {!isSettingsScreen && (logInAction === "register") && <Text onPress={() => setLogInAction("signIn")} style={[ tw.mT4, tw.mB3]} >
                         ¿Ya tienes cuenta? Inicia sesión.
                     </Text>}
-                    {!isSettingsScreen && (logInAction === "signIn") && <Text onPress={() => setLogInAction("register")} style={[ tw.mT5, tw.mB2 ]} >
+                    {!isSettingsScreen && (logInAction === "signIn") && <Text onPress={() => setLogInAction("register")} style={[ tw.mT4, tw.mB3 ]} >
                         ¿No tienes cuenta? Regístrate.
                     </Text>}
 

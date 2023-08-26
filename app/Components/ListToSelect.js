@@ -41,10 +41,10 @@ export default function ListToSelect ({ onClose, restaurantId, searchQuery, send
         return null;
     } else if (arrayOfValues) {
         return (
-            <View style={[[ t.flex, tw.wFull, t.absolute, t.z20, t.mT12, tw.h40, tailwind.shadow2xl ]]}>
-                {listToDisplay && (listToDisplay.length > 0) && <ScrollView keyboardShouldPersistTaps={"handled"} style={[[ t.flex, t.flexCol ], { flexGrow: 0 }]}>
+            <View style={[[ t.flex, tw.wFull, t.absolute, t.z20, t.mT12, tailwind.shadow2xl ]]}>
+                {listToDisplay && (listToDisplay.length > 0) && <ScrollView keyboardShouldPersistTaps={"handled"} style={[[ t.flex, t.flexCol ], { flexGrow: 0, minHeight: 0, maxHeight: 100 }]}>
                     {listToDisplay && listToDisplay.map((value, index) => {
-                        return <TouchableHighlight key={index} onPress={() => selectValueHandle(value)} style={[ t.flex, t.flexCol, t.justifyCenter, tw.wFull, t.bgWhite, tw.h12, tw.pX4, t.pY1, t.borderY, t.borderGray300 ]} underlayColor="#ddd">
+                        return <TouchableHighlight key={index} onPress={() => selectValueHandle(value)} style={[ t.flex, t.flexCol, t.justifyCenter, tw.wFull, t.bgWhite, tw.h12, tw.pX4, t.pY1, t.borderT, t.borderGray300 ]} underlayColor="#ddd">
                             <Text style={[ tw.wFull, t.fontBold, t.textBlack ]}>
                                 {value.menu_item_name}
                             </Text>
@@ -56,7 +56,7 @@ export default function ListToSelect ({ onClose, restaurantId, searchQuery, send
                         No hay platillos que coincidan.
                     </Text>
                 </View>}
-                <TouchableHighlight onPress={() => onClose()} style={[ t.flex, t.flexCol, t.justifyCenter, tw.wFull, t.bgRed500, tw.h12, tw.pX4, t.pY1, t.borderRed500 ]} underlayColor="#bb4444">
+                <TouchableHighlight onPress={() => onClose()} style={[ t.flex, t.flexCol, t.justifyCenter, tw.wFull, t.bgRed700, tw.h12, tw.pX4, t.pY1, t.borderRed500 ]} underlayColor="#FF9999">
                     <Text style={[ tw.wFull, t.textWhite, t.fontBold ]}>
                         Cerrar lista
                     </Text>
