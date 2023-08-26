@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { Modal, Pressable } from "react-native";
+import { Modal, Pressable, ScrollView } from "react-native";
 import { Text, TextInput, TouchableHighlight, View } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { t, tw, tailwind } from "react-native-tailwindcss";
 import 'react-native-get-random-values';
@@ -151,6 +150,7 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
                 console.log(err);
             }
             setDish({ menuItem: "", notes: "" });
+            setMenuItemsListVisibility(false);
             fetchStoredDishes();
         }
     }
@@ -246,20 +246,22 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
                         </View>
                     </View>}
 
-                    <View style={[[ t.flex, t.flexCol, tw.wFull ]]}>
-                        {(order) && (storedDishes) && storedDishes.map((order, index) => {
-                            return (<View key={index} style={[ t.flex, t.flexRow, tw.wFull, t.bgWhite, t.borderT, t.borderGray200]}>
-                                <View style={[ t.flex, t.flexCol, tw.w5_6, t.pY1 ]}>
-                                    <Text style={[tw.textLeft, tw.pX4, t.pY1, tw.w5_6 ]}>Platillo: {order.dish_menu_item}</Text>
-                                    <Text style={[tw.textLeft, tw.pX4, t.pY1, tw.w5_6 ]}>Notas: {order.dish_notes}</Text>
-                                </View>
-                                <TouchableHighlight style={[ tw.w1_6, tw.bgRed500, t.flex, t.flexCol, t.justifyCenter, t.itemsCenter ]} onPress={() => deleteDishHandle(order)} underlayColor="#ffaaaa" >
-                                    <Text style={[tw.textCenter, t.textWhite, tw.mY3 ]}>
-                                        <Icon name="trash" size={25} />
-                                    </Text>
-                                </TouchableHighlight>
-                            </View>)
-                        })}
+                    <View style={[[ t.flex, t.flexCol, tw.wFull ], { flexGrow: 0, minHeight: 0, maxHeight: 120 }]}>
+                        {(order) && (storedDishes) && (storedDishes.length > 0) && <ScrollView style={[[ t.flex, t.flexCol, tw.wFull ], { flexGrow: 0 }]}>
+                            {storedDishes.map((order, index) => {
+                                return (<View key={index} style={[ t.flex, t.flexRow, tw.wFull, t.bgWhite, t.borderT, t.borderGray200]}>
+                                    <View style={[ t.flex, t.flexCol, tw.w5_6, t.pY1 ]}>
+                                        <Text style={[tw.textLeft, tw.pX4, t.pY1, tw.w5_6, t.textGray600 ]}>Platillo: {order.dish_menu_item}</Text>
+                                        <Text style={[tw.textLeft, tw.pX4, t.pY1, tw.w5_6, t.textGray600 ]}>Notas: {order.dish_notes}</Text>
+                                    </View>
+                                    <TouchableHighlight style={[ tw.w1_6, tw.bgRed500, t.flex, t.flexCol, t.justifyCenter, t.itemsCenter ]} onPress={() => deleteDishHandle(order)} underlayColor="#ffaaaa" >
+                                        <Text style={[tw.textCenter, t.textWhite, tw.mY3 ]}>
+                                            <Icon name="trash" size={25} />
+                                        </Text>
+                                    </TouchableHighlight>
+                                </View>)
+                            })}
+                        </ScrollView>}
                     </View>
 
                     <View style={[ t.flex, t.flexRow, tw.wFull]}>
