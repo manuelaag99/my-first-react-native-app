@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { ScrollView, Text, TouchableHighlight, View } from "react-native";
 import { t, tw, tailwind } from "react-native-tailwindcss";
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 import NewItem from "../Components/newItem";
 import ModalTemplate from "../Components/ModalTemplate";
 import { supabase } from "../supabase/client";
@@ -75,11 +77,19 @@ export default function Orders ({ navigation, route }) {
                     </TouchableHighlight>}
                     {menuItemsArray && menuItemsArrayVisibility && menuItemsArray.map((item, index) => {
                         return (
-                            <TouchableHighlight key={index} onPress={() => updateItem(item)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.borderB, t.bgWhite, tw.borderGray300, tw.mXAuto, tw.pY6, tailwind.roundedLg ]} underlayColor={"#CCe5ff"} >
-                                <Text style={[ t.textCenter, t.fontBold, t.textBlack, tw.pX6  ]}>
-                                    {item.menu_item_name}: {item.menu_item_description}
-                                </Text>
-                            </TouchableHighlight>
+                            
+                            <View key={index} style={[[ t.flex, t.flexRow, tw.justifyCenter, t.bgWhite, tw.wFull, tw.borderB, tw.borderGray200, tw.mXAuto, tailwind.roundedLg ], { height: "fit" }]}>
+                                <TouchableHighlight key={index} onPress={() => updateItem(item)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.w5_6, t.bgWhite, tw.mXAuto, tw.pY6, tailwind.roundedLLg ]} underlayColor={"#CCe5ff"} >
+                                    <Text style={[ t.textLeft, t.fontBold, t.textBlack, tw.pX4  ]}>
+                                        {item.menu_item_name}: {item.menu_item_description}
+                                    </Text>
+                                </TouchableHighlight>
+                                <TouchableHighlight onPress={() => deleteOrder(order)} style={[ t.flex, tw.justifyCenter, tw.w1_6, tailwind.roundedRLg ]} underlayColor="#ff0055">
+                                    <Text style={[ t.textCenter ]}>
+                                        <Icon name="trash" size={25} />
+                                    </Text>
+                                </TouchableHighlight>
+                            </View>
                         )
                     })}
                 </View>

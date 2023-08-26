@@ -120,8 +120,8 @@ export default function Orders ({ navigation, route }) {
                     </TouchableHighlight>}
                     {ordersArray && ordersArrayVisibility && ordersArray.map((order, index) => {
                         return (
-                            <View key={index} style={[[ t.flex, t.flexRow, tw.justifyCenter, t.bgWhite, tw.wFull, tw.borderB, tw.borderGray300, tw.mXAuto, tailwind.roundedLg ], { height: "fit" }]}>
-                                <TouchableHighlight onPress={() => updateOrder(order)} style={[ t.flex, t.flexCol, tw.justifyCenter, t.w4_6 ]} underlayColor="#FFF69A">
+                            <View key={index} style={[[ t.flex, t.flexRow, tw.justifyCenter, t.bgWhite, tw.wFull, tw.borderB, tw.borderGray200, tw.mXAuto, tailwind.roundedLg ], { height: "fit" }]}>
+                                <TouchableHighlight onPress={() => updateOrder(order)} style={[ t.flex, t.flexCol, tw.justifyCenter, t.w4_6, tailwind.roundedLLg ]} underlayColor="#FFF69A">
                                     <View style={[ t.flex, t.flexCol, tw.justifyCenter, t.wFull, tw.pX4, tw.pY6 ]}>
                                         <Text style={[ t.textLeft, t.fontBold, t.textBlack ]}>
                                             Mesa {order.table_number}
@@ -139,10 +139,10 @@ export default function Orders ({ navigation, route }) {
                                 </TouchableHighlight>
                                 <TouchableHighlight onPress={() => deleteOrder(order)} style={[ t.flex, tw.justifyCenter, tw.w1_6 ]} underlayColor="#22ff88">
                                     <Text style={[ t.textCenter ]}>
-                                    <Icon name="check" size={25} />
+                                        <Icon name="check" size={25} />
                                     </Text>
                                 </TouchableHighlight>
-                                <TouchableHighlight onPress={() => deleteOrder(order)} style={[ t.flex, tw.justifyCenter, tw.w1_6 ]} underlayColor="#ff0055">
+                                <TouchableHighlight onPress={() => deleteOrder(order)} style={[ t.flex, tw.justifyCenter, tw.w1_6, tailwind.roundedRLg ]} underlayColor="#ff0055">
                                     <Text style={[ t.textCenter ]}>
                                         <Icon name="trash" size={25} />
                                     </Text>
