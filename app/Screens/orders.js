@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { ScrollView, Text, TouchableHighlight, View } from "react-native";
 import { t, tw, tailwind } from "react-native-tailwindcss";
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 import ModalTemplate from "../Components/ModalTemplate";
 import NewItem from "../Components/newItem";
-
 import { supabase } from "../supabase/client";
 
 export default function Orders ({ navigation, route }) {
@@ -138,12 +139,12 @@ export default function Orders ({ navigation, route }) {
                                 </TouchableHighlight>
                                 <TouchableHighlight onPress={() => deleteOrder(order)} style={[ t.flex, tw.justifyCenter, tw.w1_6 ]} underlayColor="#22ff88">
                                     <Text style={[ t.textCenter ]}>
-                                        YA
+                                    <Icon name="check" size={25} />
                                     </Text>
                                 </TouchableHighlight>
                                 <TouchableHighlight onPress={() => deleteOrder(order)} style={[ t.flex, tw.justifyCenter, tw.w1_6 ]} underlayColor="#ff0055">
                                     <Text style={[ t.textCenter ]}>
-                                        BORRAR
+                                        <Icon name="trash" size={25} />
                                     </Text>
                                 </TouchableHighlight>
                             </View>
