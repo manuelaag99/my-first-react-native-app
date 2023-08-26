@@ -43,6 +43,19 @@ export default function UserProfile ({ navigation, route }) {
         fetchData();
     }
 
+    async function refreshHandle () {
+        console.log("refresh")
+        try {
+            const { data, error } = await supabase.from("ALO-restaurants").select("*").eq("creator_id", user_id);
+            console.log(data)
+            setRestaurants(data)
+            if (error) console.log(error)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+    console.log(restaurants)
+
     const insets = useSafeAreaInsets();
 
     if (!user) {
@@ -67,7 +80,7 @@ export default function UserProfile ({ navigation, route }) {
 
                         <View style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgWhite, tw.border, tw.borderGray300, tailwind.roundedLg, tw.mY5 ]}>
                             <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
-                                <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold ]}>MIS RESTAURANTES</Text>
+                                <Text onPress={refreshHandle} style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold ]}>MIS RESTAURANTES</Text>
                             </View>
                             {restaurants && restaurants.map((restaurant, index) => {
                                 return (
@@ -107,7 +120,7 @@ export default function UserProfile ({ navigation, route }) {
                     </View>
                 </View>
                 
-                <NewItem dishesToUpdate={null} isUpdating={false} isVisible={newRestaurantVisibility} itemToAdd="restaurant" onClose={() => setNewRestaurantVisibility(false)} textForAddButton="AGREGAR" topText="Nuevo restaurante" updateFetchedData={fetchAgain} />
+                <NewItem creatorId={user_id} dishesToUpdate={null} isUpdating={false} isVisible={newRestaurantVisibility} itemToAdd="restaurant" onClose={() => setNewRestaurantVisibility(false)} textForAddButton="AGREGAR" topText="Nuevo restaurante" updateFetchedData={fetchAgain} />
                 <ModalTemplate animationForModal="fade" isVisible={modalVisibility} onClose={() => setModalVisibility(false)} textForButton="Eliminar" textForModal="¿Quieres eliminar tu cuenta? Esto es permanente." />
             </ScrollView>
         )

@@ -11,8 +11,6 @@ import { useForm } from "../Custom-Hooks";
 
 
 export default function AuthForm ({ initialAction, isSettingsScreen, navigation, route, userId }) {
-    // const myIcon = <Icon name="rocket" size={30} color="#000" />;
-
     const [logInAction, setLogInAction] = useState(initialAction);
     const [placeholderText, setPlaceholderText] = useState({ forEmail: "Escribe tu e-mail..." , forPassword: "Crea una contraseña..." });
 
@@ -23,6 +21,7 @@ export default function AuthForm ({ initialAction, isSettingsScreen, navigation,
         },
         isFormValid: false
     };
+
 
     async function fetchUserInfo () {
         try {
@@ -51,15 +50,16 @@ export default function AuthForm ({ initialAction, isSettingsScreen, navigation,
     }, [logInAction]);
 
 
+    let user_id
     async function registerUser () {
-        let user_id = uuidv4();
+        user_id = uuidv4();
         try {
             const { error } = await supabase.from("ALO-users-db").insert({ user_id: user_id, user_username: stateOfForm.inputs.username.value, user_email: stateOfForm.inputs.email.value, user_display_name: stateOfForm.inputs.displayName.value, user_password: stateOfForm.inputs.password.value });
             if (error) console.log(error);
+            navigation.navigate("User", { user_id: user_id });
         } catch (err) {
             console.log(err);
         }
-        navigation.navigate("User", { user_id: user_id });
     }
 
     function submitButtonHandler () {

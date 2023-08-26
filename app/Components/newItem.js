@@ -7,12 +7,13 @@ import { t, tw, tailwind } from "react-native-tailwindcss";
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from "uuid";
 import { supabase } from "../supabase/client";
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import ErrorModal from "./ErrorModal";
 import ListToSelect from "./ListToSelect";
 
-export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId, itemToAdd, itemToUpdate, onClose, restaurantId, textForAddButton, topText, updateFetchedData }) {
-    let user_id = "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22";
+export default function NewItem ({ creatorId, dishesToUpdate, isUpdating, isVisible, itemId, itemToAdd, itemToUpdate, onClose, restaurantId, textForAddButton, topText, updateFetchedData }) {
+    // let user_id = "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22";
     let email = "manuelaag99@gmail.com"
 
     const [errorModalVisibility, setErrorModalVisibility] = useState(false);
@@ -26,7 +27,7 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
         let generated_restaurant_id = uuidv4()
         try {
             if (!isUpdating) {
-                const { error } = await supabase.from("ALO-restaurants").insert({ creator_id: user_id, restaurant_name: restaurantInfo.restaurant_name, restaurant_id: generated_restaurant_id });
+                const { error } = await supabase.from("ALO-restaurants").insert({ creator_id: creatorId, restaurant_name: restaurantInfo.restaurant_name, restaurant_id: generated_restaurant_id });
                 if (error) console.log(error)
             } else {
                 const { error } = await supabase.from("ALO-restaurants").update({ restaurant_name: restaurantInfo.restaurant_name }).eq("restaurant_id", itemId);
@@ -250,8 +251,10 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
                                     <Text style={[tw.textLeft, tw.pX4, t.pY1, tw.w5_6 ]}>Platillo: {order.dish_menu_item}</Text>
                                     <Text style={[tw.textLeft, tw.pX4, t.pY1, tw.w5_6 ]}>Notas: {order.dish_notes}</Text>
                                 </View>
-                                <TouchableHighlight style={[ tw.w1_6, tw.bgRed500 ]} onPress={() => deleteDishHandle(order)} >
-                                    <Text style={[tw.textCenter, t.textWhite, tw.mY3 ]}>BORRAR</Text>
+                                <TouchableHighlight style={[ tw.w1_6, tw.bgRed500, t.flex, t.flexCol, t.justifyCenter, t.itemsCenter ]} onPress={() => deleteDishHandle(order)} >
+                                    <Text style={[tw.textCenter, t.textWhite, tw.mY3 ]}>
+                                        <Icon name="trash" size={15} color="#000" />;
+                                    </Text>
                                 </TouchableHighlight>
                             </View>)
                         })}
