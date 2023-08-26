@@ -10,7 +10,7 @@ import { supabase } from "../supabase/client";
 import { useForm } from "../Custom-Hooks";
 
 
-export default function AuthForm ({ initialAction, isSettingsScreen, navigation, paddingX, route, userId }) {
+export default function AuthForm ({ initialAction, isSettingsScreen, justify, navigation, paddingX, route, userId }) {
     const [logInAction, setLogInAction] = useState(initialAction);
     const [placeholderText, setPlaceholderText] = useState({ forEmail: "Escribe tu e-mail..." , forPassword: "Crea una contraseña..." });
 
@@ -72,8 +72,8 @@ export default function AuthForm ({ initialAction, isSettingsScreen, navigation,
     }
 
     return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} style={[ t.flex, t.flexCol, t.justifyCenter, t.itemsCenter ]}>
-            <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.itemsCenter, tw.hFull, tw.wFull, paddingX ]}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={[ t.flex, t.flexCol, tw.itemsCenter, tw.hFull, tw.wFull, paddingX, justify ]}>
                 {!isSettingsScreen && <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull, tw.mB6, tw.mT8 ]}>
                     <Text style={[ t.textCenter, tw.mXAuto, tw.wFull, t.fontBold, t.text2xl, t.italic ]}>A LA ORDEN</Text>
                 </View>}
