@@ -12,7 +12,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import ErrorModal from "./ErrorModal";
 import ListToSelect from "./ListToSelect";
 
-export default function NewItem ({ creatorId, dishesToUpdate, isUpdating, isVisible, itemId, itemToAdd, itemToUpdate, onClose, restaurantId, textForAddButton, topText, updateFetchedData }) {
+export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId, itemToAdd, itemToUpdate, onClose, restaurantId, textForAddButton, topText, updateFetchedData, userId }) {
     // let user_id = "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22";
     let email = "manuelaag99@gmail.com"
 
@@ -27,7 +27,7 @@ export default function NewItem ({ creatorId, dishesToUpdate, isUpdating, isVisi
         let generated_restaurant_id = uuidv4()
         try {
             if (!isUpdating) {
-                const { error } = await supabase.from("ALO-restaurants").insert({ creator_id: creatorId, restaurant_name: restaurantInfo.restaurant_name, restaurant_id: generated_restaurant_id });
+                const { error } = await supabase.from("ALO-restaurants").insert({ creator_id: userId, restaurant_name: restaurantInfo.restaurant_name, restaurant_id: generated_restaurant_id });
                 if (error) console.log(error)
             } else {
                 const { error } = await supabase.from("ALO-restaurants").update({ restaurant_name: restaurantInfo.restaurant_name }).eq("restaurant_id", itemId);
@@ -61,7 +61,7 @@ export default function NewItem ({ creatorId, dishesToUpdate, isUpdating, isVisi
             let generate_menu_item_id = uuidv4();
             try {
                 if (!isUpdating) {
-                    const { error } = await supabase.from("ALO-restaurant-menu-items").insert({ creator_id: user_id, restaurant_id: restaurantId, menu_item_id: generate_menu_item_id, menu_item_name: menuItems.menu_item_name, menu_item_description: menuItems.menu_item_description });
+                    const { error } = await supabase.from("ALO-restaurant-menu-items").insert({ creator_id: userId, restaurant_id: restaurantId, menu_item_id: generate_menu_item_id, menu_item_name: menuItems.menu_item_name, menu_item_description: menuItems.menu_item_description });
                     if (error) console.log(error);
                 } else {
                     const { error } = await supabase.from("ALO-restaurant-menu-items").update({ menu_item_name: menuItems.menu_item_name, menu_item_description: menuItems.menu_item_description }).eq("menu_item_id", itemToUpdate.menu_item_id);
@@ -99,7 +99,7 @@ export default function NewItem ({ creatorId, dishesToUpdate, isUpdating, isVisi
             console.log("worked")
             try {
                 if (!isUpdating) {
-                    const { error } = await supabase.from("ALO-restaurant-orders").insert({ creator_id: user_id, restaurant_id: restaurantId, order_id: order.order_id, table_number: order.tableNumber });
+                    const { error } = await supabase.from("ALO-restaurant-orders").insert({ creator_id: userId, restaurant_id: restaurantId, order_id: order.order_id, table_number: order.tableNumber });
                     if (error) console.log(error);
                 } else {
                     const { error } = await supabase.from("ALO-restaurant-orders").update({ table_number: order.tableNumber }).eq("order_id", order.order_id);
@@ -145,7 +145,7 @@ export default function NewItem ({ creatorId, dishesToUpdate, isUpdating, isVisi
         } else {
             let generate_dish_id = uuidv4();
             try {
-                const { error } = await supabase.from("ALO-orders-dishes").insert({ creator_id: user_id, restaurant_id: restaurantId, order_id: order.order_id, dish_id: generate_dish_id, dish_menu_item: dish.menuItem, dish_notes: dish.notes });
+                const { error } = await supabase.from("ALO-orders-dishes").insert({ creator_id: userId, restaurant_id: restaurantId, order_id: order.order_id, dish_id: generate_dish_id, dish_menu_item: dish.menuItem, dish_notes: dish.notes });
                 if (error) console.log(error);
             } catch (err) {
                 console.log(err);
@@ -236,8 +236,10 @@ export default function NewItem ({ creatorId, dishesToUpdate, isUpdating, isVisi
                                     <TextInput placeholder="Notas o especificaciones" style={[[ tw.wFull, tw.bgWhite, tw.pX4, t.pY1, tw.h12 ]]} onChangeText={(text) => dishChangeHandle("notes", text)} value={dish.notes} />
                                 </View>
                                 <View style={[ t.flex, t.flexCol, tw.hFull, tw.w1_6 ]}>
-                                    <TouchableHighlight style={[ t.flex, t.flexCol, tw.justifyCenter, tw.h24, tw.wFull, tw.bgYellow500 ]} onPress={addDishHandle} underlayColor={"#ffdd00"} >
-                                        <Text style={ [t.textCenter, t.textWhite, t.text3xl, tw.hFull ]}>+</Text>
+                                    <TouchableHighlight style={[ t.flex, t.flexCol, t.justifyCenter, t.itemsCenter, tw.wFull, tw.bgYellow500, tw.hFull ]} onPress={addDishHandle} underlayColor={"#ffdd00"} >
+                                        <Text style={[ t.textCenter, t.textWhite, t.text3xl ]}>
+                                            <Icon name="plus" size={25} />
+                                        </Text>
                                     </TouchableHighlight>
                                 </View>
                             </View>
@@ -246,14 +248,14 @@ export default function NewItem ({ creatorId, dishesToUpdate, isUpdating, isVisi
 
                     <View style={[[ t.flex, t.flexCol, tw.wFull ]]}>
                         {(order) && (storedDishes) && storedDishes.map((order, index) => {
-                            return (<View key={index} style={[ t.flex, t.flexRow, tw.wFull, t.bgWhite]}>
+                            return (<View key={index} style={[ t.flex, t.flexRow, tw.wFull, t.bgWhite, t.borderT, t.borderGray200]}>
                                 <View style={[ t.flex, t.flexCol, tw.w5_6, t.pY1 ]}>
                                     <Text style={[tw.textLeft, tw.pX4, t.pY1, tw.w5_6 ]}>Platillo: {order.dish_menu_item}</Text>
                                     <Text style={[tw.textLeft, tw.pX4, t.pY1, tw.w5_6 ]}>Notas: {order.dish_notes}</Text>
                                 </View>
-                                <TouchableHighlight style={[ tw.w1_6, tw.bgRed500, t.flex, t.flexCol, t.justifyCenter, t.itemsCenter ]} onPress={() => deleteDishHandle(order)} >
+                                <TouchableHighlight style={[ tw.w1_6, tw.bgRed500, t.flex, t.flexCol, t.justifyCenter, t.itemsCenter ]} onPress={() => deleteDishHandle(order)} underlayColor="#ffaaaa" >
                                     <Text style={[tw.textCenter, t.textWhite, tw.mY3 ]}>
-                                        <Icon name="trash" size={15} color="#000" />;
+                                        <Icon name="trash" size={25} />
                                     </Text>
                                 </TouchableHighlight>
                             </View>)
