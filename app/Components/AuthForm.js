@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Alert, Keyboard, KeyboardAvoidingView, Text,TouchableHighlight, TouchableWithoutFeedback, View } from "react-native";
 import { t, tailwind, tw } from "react-native-tailwindcss";
 import { v4 as uuidv4 } from "uuid";
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 
 import Input from "./Input";
 import { supabase } from "../supabase/client";
@@ -9,6 +11,8 @@ import { useForm } from "../Custom-Hooks";
 
 
 export default function AuthForm ({ initialAction, isSettingsScreen, navigation, route, userId }) {
+    // const myIcon = <Icon name="rocket" size={30} color="#000" />;
+
     const [logInAction, setLogInAction] = useState(initialAction);
     const [placeholderText, setPlaceholderText] = useState({ forEmail: "Escribe tu e-mail..." , forPassword: "Crea una contraseña..." });
 
@@ -68,7 +72,7 @@ export default function AuthForm ({ initialAction, isSettingsScreen, navigation,
     }
 
     return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} style={[ t.flex, t.flexCol, t.justifyCenter, t.itemsCenter ]}>
             <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.itemsCenter, t.pX5, tw.hFull, tw.wFull ]}>
                 {!isSettingsScreen && <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull, tw.mB6, tw.mT8 ]}>
                     <Text style={[ t.textCenter, tw.mXAuto, tw.wFull, t.fontBold, t.text2xl, t.italic ]}>A LA ORDEN</Text>
@@ -93,18 +97,32 @@ export default function AuthForm ({ initialAction, isSettingsScreen, navigation,
                     </Text>}
                 </View>
 
-                {!isSettingsScreen && <TouchableHighlight onPress={() => console.log("click")} style={[ t.flex, t.wFull, tw.pX3, tw.pY5, tw.mT8, tailwind.roundedLg, tailwind.shadow2xl, t.bgRed500]} underlayColor="#ffdddd" >
-                    <Text style={[ t.textCenter, t.textWhite, t.fontBold ]}>
-                        {(logInAction === "register") && "Registrarse con Google"}
-                        {(logInAction === "signIn") && "Iniciar sesión con Google"}
-                    </Text>
+                {!isSettingsScreen && <TouchableHighlight onPress={() => console.log("click")} style={[ t.flex, t.justifyCenter, t.wFull, tw.pX3, tw.pY5, tw.mT8, tailwind.roundedLg, tailwind.shadow2xl, t.bgRed500]} underlayColor="#ffdddd" >
+                    <View style={[ t.flex, t.flexRow, t.justifyCenter, t.itemsCenter]}>
+                        <View style={[ tw.mR4 ]}>
+                            <Icon name="google" style={[ t.textWhite, tw.m0]} size={20} color="#000" />
+                        </View>
+                        <View>
+                            <Text style={[ t.textCenter, t.textWhite, t.fontBold ]}>
+                                {(logInAction === "register") && "Registrarse con Google"}
+                                {(logInAction === "signIn") && "Iniciar sesión con Google"}
+                            </Text>
+                        </View>
+                    </View>
                 </TouchableHighlight>}
 
-                {!isSettingsScreen && <TouchableHighlight onPress={() => console.log("click")} style={[ t.flex, t.wFull, tw.pX3, tw.pY5, tw.mT8, tailwind.roundedLg, tailwind.shadow2xl, t.bgBlue700]} underlayColor="#ddddff" >
-                    <Text style={[ t.textCenter, t.textWhite, t.fontBold ]}>
-                        {(logInAction === "register") && "Registrarse con Facebook"}
-                        {(logInAction === "signIn") && "Iniciar sesión con Facebook"}
-                    </Text>
+                {!isSettingsScreen && <TouchableHighlight onPress={() => console.log("click")} style={[ t.flex, t.justifyCenter, t.itemsCenter, t.wFull, tw.pX3, tw.pY5, tw.mT8, tailwind.roundedLg, tailwind.shadow2xl, t.bgBlue700]} underlayColor="#ddddff" >
+                    <View style={[ t.flex, t.flexRow, t.justifyCenter, t.itemsCenter]}>
+                        <View style={[ tw.mR4 ]}>
+                            <Icon name="facebook" style={[ t.textWhite, tw.m0]} size={20} color="#000" />
+                        </View>
+                        <View>
+                            <Text style={[ t.textCenter, t.textWhite, t.fontBold ]}>
+                            {(logInAction === "register") && "Registrarse con Facebook"}
+                            {(logInAction === "signIn") && "Iniciar sesión con Facebook"}
+                            </Text>
+                        </View>
+                    </View>
                 </TouchableHighlight>}
             </View>
         </TouchableWithoutFeedback>
