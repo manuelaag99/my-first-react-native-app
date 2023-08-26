@@ -10,7 +10,7 @@ import { supabase } from "../supabase/client";
 import { useForm } from "../Custom-Hooks";
 
 
-export default function AuthForm ({ initialAction, isSettingsScreen, navigation, route, userId }) {
+export default function AuthForm ({ initialAction, isSettingsScreen, navigation, paddingX, route, userId }) {
     const [logInAction, setLogInAction] = useState(initialAction);
     const [placeholderText, setPlaceholderText] = useState({ forEmail: "Escribe tu e-mail..." , forPassword: "Crea una contraseña..." });
 
@@ -73,12 +73,12 @@ export default function AuthForm ({ initialAction, isSettingsScreen, navigation,
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} style={[ t.flex, t.flexCol, t.justifyCenter, t.itemsCenter ]}>
-            <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.itemsCenter, t.pX5, tw.hFull, tw.wFull ]}>
+            <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.itemsCenter, tw.hFull, tw.wFull, paddingX ]}>
                 {!isSettingsScreen && <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull, tw.mB6, tw.mT8 ]}>
                     <Text style={[ t.textCenter, tw.mXAuto, tw.wFull, t.fontBold, t.text2xl, t.italic ]}>A LA ORDEN</Text>
                 </View>}
                 <View style={[ t.flex, tw.justifyCenter, tw.itemsCenter, tw.wFull, tw.bgWhite, tw.pX4, tw.pY4, tailwind.roundedLg, (!isSettingsScreen && tailwind.shadow2xl) ]}>
-                    {(logInAction !== "signIn") && <Input errorMessage="Escribe un nombre válido." field="displayName" individualInputAction={formHandler} instructionMessage={null} placeholderText={ placeholderText.forDisplayName } />}
+                    {(logInAction !== "signIn") && <Input autoCapitalize="words" errorMessage="Escribe un nombre válido." field="displayName" individualInputAction={formHandler} instructionMessage={null} placeholderText={ placeholderText.forDisplayName } />}
                     {(logInAction !== "signIn") && <Input errorMessage="Escribe un usuario válido." field="username" individualInputAction={formHandler} instructionMessage="Escribe al menos 6 caracteres" placeholderText={ placeholderText.forUsername } />}
                     <Input errorMessage="Escribe un correo electrónico válido." field="email" individualInputAction={formHandler} instructionMessage={null} placeholderText={placeholderText.forEmail} />
                     <Input errorMessage="Escribe una contraseña válida" field="password" individualInputAction={formHandler} instructionMessage="Escribe al menos 10 caracteres, mayúsculas y minúsculas, y símbolos especiales (@, #, etc.)." placeholderText={placeholderText.forPassword} />
