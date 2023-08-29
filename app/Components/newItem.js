@@ -29,10 +29,10 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
         let generated_restaurant_id = uuidv4()
         try {
             if (!isUpdating) {
-                const { error } = await supabase.from("ALO-restaurants").insert({ creator_id: userId, restaurant_name: restaurantInfo.restaurant_name, restaurant_id: generated_restaurant_id });
+                const { error } = await supabase.from("ALO-restaurants").insert({ creator_id: userId, restaurant_name: restaurantInfo.restaurant_name, restaurant_description: restaurantInfo.restaurant_description, restaurant_id: generated_restaurant_id });
                 if (error) console.log(error)
             } else {
-                const { error } = await supabase.from("ALO-restaurants").update({ restaurant_name: restaurantInfo.restaurant_name }).eq("restaurant_id", itemId);
+                const { error } = await supabase.from("ALO-restaurants").update({ restaurant_name: restaurantInfo.restaurant_name, restaurant_description: restaurantInfo.restaurant_description }).eq("restaurant_id", itemId);
                 if (error) console.log(error)
             }            
         } catch (err) {
