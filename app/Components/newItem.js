@@ -18,9 +18,12 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
     const [errorModalVisibility, setErrorModalVisibility] = useState(false);
     const [errorMessage, setErrorMessage] = useState();
 
-    const [restaurantInfo, setRestaurantInfo] = useState({ restaurant_name: "" });
+    const [restaurantInfo, setRestaurantInfo] = useState({ restaurant_name: "", restaurant_description: "" });
     function restaurantNameChangeHandle (event) {
         setRestaurantInfo({ ...restaurantInfo, restaurant_name: event });
+    }
+    function restaurantDescriptionChangeHandle (event) {
+        setRestaurantInfo({ ...restaurantInfo, restaurant_description: event });
     }
     async function addOrUpdateRestaurant () {
         let generated_restaurant_id = uuidv4()
@@ -216,6 +219,7 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
 
                     {(itemToAdd === "restaurant") && <View style={[ t.flex, t.flexCol, tw.wFull, tw.bgWhite ]}>
                         <TextInput onChangeText={restaurantNameChangeHandle} placeholder={itemToUpdate ? null : "Nombre del restaurante..."} style={[ tw.wFull, tw.pY2, tw.pX3, tw.h12 ]} value={restaurantInfo.restaurant_name} />
+                        <TextInput onChangeText={restaurantDescriptionChangeHandle} placeholder={itemToUpdate ? null : "Información del restaurante..."} style={[ tw.wFull, tw.pY2, tw.pX3, tw.h12 ]} value={restaurantInfo.restaurant_description} />
                     </View>}
 
                     {(itemToAdd === "menuItem") && <View style={[ t.flex, t.flexCol, tw.wFull, tw.bgWhite ]}>
