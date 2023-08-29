@@ -13,7 +13,7 @@ export default function UserProfile ({ navigation, route }) {
     const [user, setUser] = useState();
     const [restaurants, setRestaurants] = useState();
 
-    let email = "manuelaag99@gmail.com"
+    let email = "manuelaag99@gmail.com";
     // let user_id = "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22";
 
     const { user_id } = route.params;
@@ -21,17 +21,17 @@ export default function UserProfile ({ navigation, route }) {
     async function fetchData () {
         try {
             const { data, error } = await supabase.from("ALO-users-db").select("*").eq("user_id", user_id);
-            setUser(data[0])
-            if (error) console.log(error)
+            setUser(data[0]);
+            if (error) console.log(error);
         } catch (err) {
-            console.log(err)
+            console.log(err);
         }
         try {
             const { data, error } = await supabase.from("ALO-restaurants").select("*").eq("creator_id", user_id);
-            setRestaurants(data)
-            if (error) console.log(error)
+            setRestaurants(data);
+            if (error) console.log(error);
         } catch (err) {
-            console.log(err)
+            console.log(err);
         }
     }
 
@@ -44,17 +44,14 @@ export default function UserProfile ({ navigation, route }) {
     }
 
     async function refreshHandle () {
-        console.log("refresh")
         try {
             const { data, error } = await supabase.from("ALO-restaurants").select("*").eq("creator_id", user_id);
-            console.log(data)
-            setRestaurants(data)
-            if (error) console.log(error)
+            setRestaurants(data);
+            if (error) console.log(error);
         } catch (err) {
-            console.log(err)
+            console.log(err);
         }
     }
-    console.log(restaurants)
 
     const insets = useSafeAreaInsets();
 
