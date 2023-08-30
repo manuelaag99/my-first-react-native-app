@@ -73,7 +73,7 @@ export default function RestaurantPage ({ route, navigation }) {
                         </Text>
                     </TouchableHighlight>
     
-                    <TouchableHighlight underlayColor="#ffdd00" onPress={() => navigation.navigate("Orders", { user_id: user_id, restaurant_id: restaurant_id })} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgYellow500, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
+                    <TouchableHighlight underlayColor="#ffeebb" onPress={() => navigation.navigate("Orders", { user_id: user_id, restaurant_id: restaurant_id })} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgYellow500, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
                             Ver órdenes
                         </Text>

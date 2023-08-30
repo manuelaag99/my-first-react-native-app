@@ -240,7 +240,7 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
                                     <TextInput placeholder="Notas o especificaciones" style={[[ tw.wFull, tw.bgWhite, tw.pX4, t.pY1, tw.h12 ]]} onChangeText={(text) => dishChangeHandle("notes", text)} value={dish.notes} />
                                 </View>
                                 <View style={[ t.flex, t.flexCol, tw.hFull, tw.w1_6 ]}>
-                                    <TouchableHighlight style={[ t.flex, t.flexCol, t.justifyCenter, t.itemsCenter, tw.wFull, tw.bgYellow500, tw.hFull ]} onPress={addDishHandle} underlayColor={"#ffdd00"} >
+                                    <TouchableHighlight style={[ t.flex, t.flexCol, t.justifyCenter, t.itemsCenter, tw.wFull, tw.bgYellow500, tw.hFull ]} onPress={addDishHandle} underlayColor={"#ffeebb"} >
                                         <Text style={[ t.textCenter, t.textWhite, t.text3xl ]}>
                                             <Icon name="plus" size={25} />
                                         </Text>

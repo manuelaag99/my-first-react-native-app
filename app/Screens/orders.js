@@ -113,7 +113,7 @@ export default function Orders ({ navigation, route }) {
                             No hay órdenes
                         </Text>
                     </View>}
-                    {ordersArray && (ordersArray.length > 0) && <TouchableHighlight underlayColor="#ffdd00" onPress={() => setOrdersArrayVisibility(!ordersArrayVisibility)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgYellow500, tw.mXAuto, tw.pY6, tailwind.roundedLg ]}>
+                    {ordersArray && (ordersArray.length > 0) && <TouchableHighlight underlayColor="#ffeebb" onPress={() => setOrdersArrayVisibility(!ordersArrayVisibility)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgYellow500, tw.mXAuto, tw.pY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textWhite  ]}>
                             Órdenes
                         </Text>
