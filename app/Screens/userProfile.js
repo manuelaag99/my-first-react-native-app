@@ -59,7 +59,7 @@ export default function UserProfile ({ navigation, route }) {
         return (
             <ActivityIndicator style={[ tw.mT10]} size="large" color="#000" />
         )
-    } else {
+    } else if (user && restaurants) {
         return (
             <ScrollView>
                 <View style={[[ tw.flex, tw.flexCol, t.pX5, t.pB10, tw.hScreen, tw.wScreen, t.bgWhite ], { paddingTop: insets.top }]}>
@@ -92,6 +92,27 @@ export default function UserProfile ({ navigation, route }) {
                                 <Text style={[ t.textCenter, tw.mXAuto, tw.mY5, tw.wFull, t.fontBold ]}>Agregar otro restaurante</Text>
                             </TouchableHighlight>}
                             {!restaurants && <TouchableHighlight underlayColor="#ccc" onPress={() => setNewRestaurantVisibility(true)} style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
+                                <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold ]}>Aún no tienes restaurantes. Haz clic aquí para agregar uno</Text>
+                            </TouchableHighlight>}
+                        </View>
+
+                        <View style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgWhite, tw.border, tw.borderGray300, tailwind.roundedLg, tw.mY5 ]}>
+                            <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
+                                <Text onPress={refreshHandle} style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold ]}>RESTAURANTES DONDE TRABAJO</Text>
+                            </View>
+                            {restaurants && restaurants.map((restaurant, index) => {
+                                return (
+                                    <TouchableHighlight underlayColor="#ccc" key={index} onPress={() => navigation.navigate("Restaurant", { user_id: user_id, restaurant_id: restaurant.restaurant_id, restaurant_name: restaurant.restaurant_name, creator_name: user.user_display_name })} style={[ tw.flex, tw.flexRow, tw.wFull ]}>
+                                        <Text style={[ t.textCenter, tw.wFull, tw.mY4 ]}>
+                                            {restaurant.restaurant_name}
+                                        </Text>
+                                    </TouchableHighlight>
+                                )
+                            })}
+                            {restaurants && <TouchableHighlight underlayColor="#ccc" onPress={() => console.log("search restaurant")} style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
+                                <Text style={[ t.textCenter, tw.mXAuto, tw.mY5, tw.wFull, t.fontBold ]}>Agregar otro restaurante</Text>
+                            </TouchableHighlight>}
+                            {!restaurants && <TouchableHighlight underlayColor="#ccc" onPress={() => console.log("search restaurant")} style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
                                 <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold ]}>Aún no tienes restaurantes. Haz clic aquí para agregar uno</Text>
                             </TouchableHighlight>}
                         </View>
