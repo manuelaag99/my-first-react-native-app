@@ -64,25 +64,31 @@ export default function RestaurantPage ({ route, navigation }) {
                     </View>
     
                     <TouchableHighlight underlayColor="#ccc" onPress={() => setNewItemVisibility(true)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgWhite, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
-                        <Text style={[ t.textCenter, t.fontBold, t.textBlack  ]}>
+                        <Text style={[ t.textCenter, t.fontBold, t.textBlack ]}>
                             + Agregar orden
                         </Text>
                     </TouchableHighlight>
     
                     <TouchableHighlight underlayColor="#ffdd00" onPress={() => navigation.navigate("Orders", { creator_id: creator_id, restaurant_id: restaurant_id })} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgYellow500, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
-                        <Text style={[ t.textCenter, t.fontBold, t.textWhite  ]}>
+                        <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
                             Ver órdenes
                         </Text>
                     </TouchableHighlight>
     
-                    <TouchableHighlight underlayColor="#CCE5FF" onPress={() => navigation.navigate("Menu", { creator_id: creator_id, restaurant_id: restaurant_id })} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgBlue400, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
-                        <Text style={[ t.textCenter, t.fontBold, t.textWhite  ]}>
+                    <TouchableHighlight underlayColor="#DDFFDD" onPress={() => navigation.navigate("Menu", { creator_id: creator_id, restaurant_id: restaurant_id })} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgGreen400, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
+                        <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
                             Ver Menú
+                        </Text>
+                    </TouchableHighlight>
+
+                    <TouchableHighlight underlayColor="#CCE5FF" onPress={() => navigation.navigate("Menu", { creator_id: creator_id, restaurant_id: restaurant_id })} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgBlue400, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
+                        <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
+                            Ver Empleados
                         </Text>
                     </TouchableHighlight>
     
                     <TouchableHighlight underlayColor="#ccc" onPress={() => setUpdateRestaurantVisibility(true)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgWhite, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mT20, tw.mB6, tailwind.roundedLg ]}>
-                        <Text style={[ t.textCenter, t.fontBold, t.textBlack  ]}>
+                        <Text style={[ t.textCenter, t.fontBold, t.textBlack ]}>
                             Modificar restaurante
                         </Text>
                     </TouchableHighlight>
