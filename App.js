@@ -15,6 +15,7 @@ import Menu from './app/Screens/menu';
 import Orders from './app/Screens/orders';
 import LoginOrRegister from './app/Screens/loginOrRegister';
 import ProfileSettings from './app/Screens/profileSettings';
+import RestaurantTeamScreen from './app/Screens/RestaurantTeamScreen';
 
 export default function App() {
   let colorScheme = useColorScheme();
@@ -44,12 +45,13 @@ export default function App() {
       <Stack.Navigator>
         {/* <SafeAreaProvider>
           <SafeAreaView style={[styles.container, containerTheme]}> */}
-            <Stack.Screen name="LoginOrRegister" component={LoginOrRegister} options={{ title: "Iniciar sesión o registrarse" }} />
+            {/* <Stack.Screen name="LoginOrRegister" component={LoginOrRegister} options={{ title: "Iniciar sesión o registrarse" }} /> */}
             <Stack.Screen name="User" component={UserProfile} options={{ title: "Mi Perfil" }} />
             <Stack.Screen name="Restaurant" component={RestaurantPage} />
             <Stack.Screen name="Menu" component={Menu} options={{ title: "Menú" }} />
             <Stack.Screen name="Orders" component={Orders} options={{ title: "Órdenes" }} />
             <Stack.Screen name="Settings" component={ProfileSettings} options={{ title: "Ajustes" }} />
+            <Stack.Screen name="Team" component={RestaurantTeamScreen} options={{ title: "Equipo" }} />
             
             
             {/* <View  style={styles.container}> */}

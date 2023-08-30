@@ -11,7 +11,7 @@ export default function RestaurantPage ({ route, navigation }) {
     const [updateRestaurantVisibility, setUpdateRestaurantVisibility] = useState(false);
     const [restaurantInfo, setRestaurantInfo] = useState();
 
-    const { creator_id, restaurant_id, restaurant_name, creator_name } = route.params
+    const { user_id, restaurant_id, restaurant_name, creator_name } = route.params
 
     async function fetchRestaurantInfo () {
         try {
@@ -61,6 +61,10 @@ export default function RestaurantPage ({ route, navigation }) {
                         <Text style={[ tw.wFull, t.textCenter, t.fontBold, t.textGray500, t.textBase ]}>
                             creado por {creator_name}
                         </Text>
+                        <Text style={[ tw.wFull, t.textCenter, t.fontBold, t.textGray500, t.textBase, tw.mY2 ]}>
+                            {(user_id === restaurantInfo.user_id) && "Eres administrador."}
+                            {(user_id !== restaurantInfo.user_id) && "Eres empleado."}
+                        </Text>
                     </View>
     
                     <TouchableHighlight underlayColor="#ccc" onPress={() => setNewItemVisibility(true)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgWhite, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
@@ -69,21 +73,21 @@ export default function RestaurantPage ({ route, navigation }) {
                         </Text>
                     </TouchableHighlight>
     
-                    <TouchableHighlight underlayColor="#ffdd00" onPress={() => navigation.navigate("Orders", { creator_id: creator_id, restaurant_id: restaurant_id })} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgYellow500, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
+                    <TouchableHighlight underlayColor="#ffdd00" onPress={() => navigation.navigate("Orders", { user_id: user_id, restaurant_id: restaurant_id })} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgYellow500, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
                             Ver órdenes
                         </Text>
                     </TouchableHighlight>
     
-                    <TouchableHighlight underlayColor="#DDFFDD" onPress={() => navigation.navigate("Menu", { creator_id: creator_id, restaurant_id: restaurant_id })} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgGreen400, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
+                    <TouchableHighlight underlayColor="#CCE5FF" onPress={() => navigation.navigate("Menu", { user_id: user_id, restaurant_id: restaurant_id })} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgBlue400, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
                             Ver Menú
                         </Text>
                     </TouchableHighlight>
 
-                    <TouchableHighlight underlayColor="#CCE5FF" onPress={() => navigation.navigate("Menu", { creator_id: creator_id, restaurant_id: restaurant_id })} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgBlue400, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
+                    <TouchableHighlight underlayColor="#DDFFDD" onPress={() => navigation.navigate("Team", { restaurant_id: restaurant_id })} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgGreen400, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
-                            Ver Empleados
+                            Ver Equipo
                         </Text>
                     </TouchableHighlight>
     
@@ -99,8 +103,8 @@ export default function RestaurantPage ({ route, navigation }) {
                         </Text>
                     </TouchableHighlight>
     
-                    <NewItem dishesToUpdate={null} isUpdating={false} isVisible={newItemVisibility} itemId={null} itemToAdd="order" itemToUpdate={null} onClose={() => setNewItemVisibility(false)} restaurantId={restaurant_id} textForAddButton="AGREGAR" topText="Nueva orden" updateFetchedData={fetchAgain} userId={creator_id} />
-                    <NewItem dishesToUpdate={null} isUpdating={true} isVisible={updateRestaurantVisibility} itemId={restaurant_id} itemToAdd="restaurant" itemToUpdate={route.params} onClose={() => setUpdateRestaurantVisibility(false)} restaurantId={restaurant_id} textForAddButton="ACTUALIZAR" topText="Modificar restaurante" updateFetchedData={fetchAgain} userId={creator_id} />
+                    <NewItem dishesToUpdate={null} isUpdating={false} isVisible={newItemVisibility} itemId={null} itemToAdd="order" itemToUpdate={null} onClose={() => setNewItemVisibility(false)} restaurantId={restaurant_id} textForAddButton="AGREGAR" topText="Nueva orden" updateFetchedData={fetchAgain} userId={user_id} />
+                    <NewItem dishesToUpdate={null} isUpdating={true} isVisible={updateRestaurantVisibility} itemId={restaurant_id} itemToAdd="restaurant" itemToUpdate={route.params} onClose={() => setUpdateRestaurantVisibility(false)} restaurantId={restaurant_id} textForAddButton="ACTUALIZAR" topText="Modificar restaurante" updateFetchedData={fetchAgain} userId={user_id} />
                     <ModalTemplate isVisible={modalVisibility} onClose={() => setModalVisibility(false)} onPressingRedButton={deleteRestaurantHandle} textForButton="Eliminar" textForModal="¿Quieres eliminar este restaurante? Esto es permanente." />
                 </View>
             </ScrollView>

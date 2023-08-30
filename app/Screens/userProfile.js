@@ -14,9 +14,9 @@ export default function UserProfile ({ navigation, route }) {
     const [restaurants, setRestaurants] = useState();
 
     let email = "manuelaag99@gmail.com";
-    // let user_id = "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22";
+    let user_id = "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22";
 
-    const { user_id } = route.params;
+    // const { user_id } = route.params;
 
     async function fetchData () {
         try {
@@ -81,7 +81,7 @@ export default function UserProfile ({ navigation, route }) {
                             </View>
                             {restaurants && restaurants.map((restaurant, index) => {
                                 return (
-                                    <TouchableHighlight underlayColor="#ccc" key={index} onPress={() => navigation.navigate("Restaurant", { creator_id: restaurant.creator_id, restaurant_id: restaurant.restaurant_id, restaurant_name: restaurant.restaurant_name, creator_name: user.user_display_name })} style={[ tw.flex, tw.flexRow, tw.wFull ]}>
+                                    <TouchableHighlight underlayColor="#ccc" key={index} onPress={() => navigation.navigate("Restaurant", { user_id: user_id, restaurant_id: restaurant.restaurant_id, restaurant_name: restaurant.restaurant_name, creator_name: user.user_display_name })} style={[ tw.flex, tw.flexRow, tw.wFull ]}>
                                         <Text style={[ t.textCenter, tw.wFull, tw.mY4 ]}>
                                             {restaurant.restaurant_name}
                                         </Text>
