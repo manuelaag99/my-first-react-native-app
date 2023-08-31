@@ -4,7 +4,7 @@ import { t, tw } from "react-native-tailwindcss";
 import { supabase } from "../supabase/client";
 
 export default function RestaurantTeamScreen ({ navigation, route }) {
-    const [restaurantManager, setRestaurantManager] = useState();
+    const [restaurantManager, setRestaurantManager] = useState({ manager_id: "", manager_name: "" });
     const [restaurantEmployeesArray, setRestaurantEmployeesArray] = useState();
     const [restaurantEmployeesWithNamesArray, setRestaurantEmployeesWithNamesArray] = useState();
     const [allUsers, setAllUsers] = useState();
@@ -15,7 +15,7 @@ export default function RestaurantTeamScreen ({ navigation, route }) {
         try {
             const { data, error } = await supabase.from("ALO-restaurants").select("*").eq("restaurant_id", restaurant_id);
             if (error) console.log(error);
-            setRestaurantManager(data[0].creator_id);
+            setRestaurantManager({ ...restaurantManager, manager_id: data[0].creator_id});
         } catch (err) {
             console.log(err);
         }
@@ -47,7 +47,12 @@ export default function RestaurantTeamScreen ({ navigation, route }) {
             })
             setRestaurantEmployeesWithNamesArray(restaurantEmployeesArray);
         }
+        if (restaurantManager && allUsers) {
+            setRestaurantManager({ ...restaurantManager, manager_name: allUsers.filter(user => user.user_id === restaurantManager.manager_id)[0].user_display_name})
+        }
     }
+
+    console.log(restaurantManager)
 
     useEffect(() => {
         fetchRestaurantTeam();
@@ -57,22 +62,29 @@ export default function RestaurantTeamScreen ({ navigation, route }) {
         populateEmployeesArray();
     }, [allUsers])
 
+    console.log(restaurantEmployeesWithNamesArray)
+
     if (!restaurantManager || !restaurantEmployeesWithNamesArray) {
         return <ActivityIndicator style={[ tw.mT10]} size="large" color="#000" />
     } else if (restaurantManager && restaurantEmployeesWithNamesArray) {
         return (
             <ScrollView>
                 <View style={[ t.flex, t.flexCol, tw.mY2, tw.pX6, tw.wFull ]}>
-                    {restaurantManager && <View style={[ t.flex, t.flexCol, tw.wFull, tw.pY2, tw.mY4 ]}>
-                        <Text style={[ tw.h6, t.textLeft, t.textBlack, t.fontBold ]}>NOMBRE</Text>
+                    {restaurantManager && <View style={[ t.flex, t.flexCol, tw.wFull, tw.pY2, tw.pX1, tw.mY4 ]}>
+                        <Text style={[ tw.h6, t.textLeft, t.textBlack, t.fontBold ]}>{restaurantManager.manager_name}</Text>
                         <Text style={[ tw.h6, t.textLeft, t.textGray600, t.italic ]}>Administrador</Text>
                     </View>}
 
                     {restaurantEmployeesWithNamesArray.map((employee, index) => {
                         return (
-                            <View key={index} style={[ t.flex, t.flexCol, tw.wFull, tw.pY2, t.borderT, t.borderGray400 ]}>
-                                <Text style={[ tw.h6, t.textLeft, t.textBlack, t.fontBold ]}>{employee.employee_name}</Text>
-                                <Text style={[ tw.h6, t.textLeft, t.textGray600, t.italic ]}>Empleado</Text>
+                            <View key={index} style={[ t.flex, t.flexCol, tw.wFull, tw.pY2, tw.pX1, t.borderT, t.borderGray400 ]}>
+                                <View style={[ t.flex, t.flexRow, tw.wFull ]}>
+                                    <Text style={[ tw.h6, t.textLeft, t.textBlack, t.fontBold ]}>{employee.employee_name}</Text>
+                                </View>
+                                <View style={[ t.flex, t.flexRow, tw.wFull ]}>
+                                    <Text style={[ tw.h6, t.textLeft, t.textGray600, t.italic ]}>Empleado</Text>
+                                    {employee.employee_position && <Text style={[ tw.h6, t.textLeft, t.textGray600, t.italic ]}> ({employee.employee_position})</Text>}
+                                </View>
                             </View>
                         )
                     })}
