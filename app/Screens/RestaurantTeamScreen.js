@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { ActivityIndicator, ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, ScrollView, Text, TouchableHighlight, View } from "react-native";
 import { t, tw } from "react-native-tailwindcss";
 import { supabase } from "../supabase/client";
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default function RestaurantTeamScreen ({ navigation, route }) {
     const [restaurantManager, setRestaurantManager] = useState({ manager_id: "", manager_name: "" });
@@ -77,14 +78,22 @@ export default function RestaurantTeamScreen ({ navigation, route }) {
 
                     {restaurantEmployeesWithNamesArray.map((employee, index) => {
                         return (
-                            <View key={index} style={[ t.flex, t.flexCol, tw.wFull, tw.pY2, tw.pX1, t.borderT, t.borderGray400 ]}>
-                                <View style={[ t.flex, t.flexRow, tw.wFull ]}>
-                                    <Text style={[ tw.h6, t.textLeft, t.textBlack, t.fontBold ]}>{employee.employee_name}</Text>
+                            <View key={index} style={[ t.flex, t.flexRow, tw.wFull, tw.pX1, t.borderT, t.borderGray400 ]}>
+                                <View style={[ t.flex, t.flexCol, tw.w4_6, tw.pY2 ]}>
+                                    <View style={[ t.flex, t.flexRow, tw.wFull ]}>
+                                        <Text style={[ tw.h6, t.textLeft, t.textBlack, t.fontBold ]}>{employee.employee_name}</Text>
+                                    </View>
+                                    <View style={[ t.flex, t.flexRow, tw.wFull ]}>
+                                        <Text style={[ tw.h6, t.textLeft, t.textGray600, t.italic ]}>Empleado</Text>
+                                        {employee.employee_position && <Text style={[ tw.h6, t.textLeft, t.textGray600, t.italic ]}> ({employee.employee_position})</Text>}
+                                    </View>
                                 </View>
-                                <View style={[ t.flex, t.flexRow, tw.wFull ]}>
-                                    <Text style={[ tw.h6, t.textLeft, t.textGray600, t.italic ]}>Empleado</Text>
-                                    {employee.employee_position && <Text style={[ tw.h6, t.textLeft, t.textGray600, t.italic ]}> ({employee.employee_position})</Text>}
-                                </View>
+                                <TouchableHighlight onPress={() => console.log("delete")} style={[ t.flex, t.justifyCenter, t.itemsCenter, tw.w1_6]} underlayColor="#99f">
+                                    <Icon name="clipboard" size={25} />
+                                </TouchableHighlight>
+                                <TouchableHighlight onPress={() => console.log("delete")} style={[ t.flex, t.justifyCenter, t.itemsCenter, tw.w1_6]} underlayColor="#f99">
+                                    <Icon name="user" size={25} />
+                                </TouchableHighlight>
                             </View>
                         )
                     })}
