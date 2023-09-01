@@ -70,7 +70,7 @@ export default function RestaurantsSearchScreen () {
                                                     <Text style={[ tw.h6, t.textLeft, t.textBlack, t.fontBold ]}>{restaurant.restaurant_name}</Text>
                                                 </View>
                                             </TouchableHighlight>
-                                            <TouchableHighlight onPress={() => console.log("delete")} style={[[ t.flex, t.justifyCenter, t.itemsCenter, tw.w1_5, tailwind.roundedLg ], { width: "10%" }]} underlayColor="#f99">
+                                            <TouchableHighlight onPress={() => console.log("delete")} style={[[ t.flex, t.justifyCenter, t.itemsCenter, tw.w1_5, tailwind.roundedLg ], { width: "10%" }]} underlayColor="#ffdd88">
                                                 <Icon name="plus" size={20} />
                                             </TouchableHighlight>
                                         </View>

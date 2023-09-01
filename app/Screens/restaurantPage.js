@@ -67,6 +67,12 @@ export default function RestaurantPage ({ route, navigation }) {
                         </Text>
                     </View>
     
+                    <TouchableHighlight underlayColor="#ffdd88" onPress={() => console.log("send employee request")} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgOrange400, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
+                        <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
+                            Soy empleado
+                        </Text>
+                    </TouchableHighlight>
+
                     <TouchableHighlight underlayColor="#ccc" onPress={() => setNewItemVisibility(true)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgWhite, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textBlack ]}>
                             + Agregar orden
