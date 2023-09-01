@@ -109,8 +109,8 @@ export default function UserProfile ({ navigation, route }) {
                                     </TouchableHighlight>
                                 )
                             })}
-                            {restaurants && <TouchableHighlight underlayColor="#ccc" onPress={() => console.log("search restaurant")} style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
-                                <Text style={[ t.textCenter, tw.mXAuto, tw.mY5, tw.wFull, t.fontBold ]}>Agregar otro restaurante</Text>
+                            {restaurants && <TouchableHighlight underlayColor="#ccc" onPress={() => navigation.navigate("Search Restaurant")} style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
+                                <Text style={[ t.textCenter, tw.mXAuto, tw.mY5, tw.wFull, t.fontBold ]}>Buscar otro restaurante</Text>
                             </TouchableHighlight>}
                             {!restaurants && <TouchableHighlight underlayColor="#ccc" onPress={() => console.log("search restaurant")} style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
                                 <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold ]}>Aún no tienes restaurantes. Haz clic aquí para agregar uno</Text>

@@ -16,6 +16,7 @@ import Orders from './app/Screens/orders';
 import LoginOrRegister from './app/Screens/loginOrRegister';
 import ProfileSettings from './app/Screens/profileSettings';
 import RestaurantTeamScreen from './app/Screens/RestaurantTeamScreen';
+import RestaurantsSearchScreen from './app/Screens/RestaurantsSearchScreen';
 
 export default function App() {
   let colorScheme = useColorScheme();
@@ -52,6 +53,7 @@ export default function App() {
             <Stack.Screen name="Orders" component={Orders} options={{ title: "Órdenes" }} />
             <Stack.Screen name="Settings" component={ProfileSettings} options={{ title: "Ajustes" }} />
             <Stack.Screen name="Team" component={RestaurantTeamScreen} options={{ title: "Equipo" }} />
+            <Stack.Screen name="Search Restaurant" component={RestaurantsSearchScreen} options={{ title: "Buscar restaurante" }} />
             
             
             {/* <View  style={styles.container}> */}
