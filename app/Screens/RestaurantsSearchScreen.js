@@ -37,6 +37,8 @@ export default function RestaurantsSearchScreen () {
             }))
         }
     }, [searchQuery])
+
+    const [searchButtonPressStatus, setSearchButtonPressStatus] = useState(false);
     
     if (!allRestaurantsArray) {
         return <ActivityIndicator style={[ tw.mT10]} size="large" color="#000" />
@@ -44,11 +46,13 @@ export default function RestaurantsSearchScreen () {
         return (
             <ScrollView>
                     <View style={[ t.flex, t.flexCol, tw.mY2, tw.pX4, tw.wFull ]}>
-                        <View style={[ t.flex, t.flexRow, t.justifyCenter, t.itemsCenter, t.bgWhite, tw.wFull, tw.pX2, tw.pY3, tailwind.roundedLg, tw.mY3 ]}>
-                            <TextInput onChangeText={searchInputHandle} style={[[ ], { width: "90%" }]} value={searchQuery} />
-                            <TouchableHighlight style={[[ t.flex, t.justifyCenter, t.itemsCenter ], { width: "10%" }]}>
-                                <Icon name="search" size={25} />
-                            </TouchableHighlight>
+                        <View style={[ t.flex, t.flexRow, t.justifyCenter, t.itemsCenter, t.bgWhite, tw.wFull, tw.pX2, tailwind.roundedLg, tw.mY3 ]}>
+                            <TextInput onChangeText={searchInputHandle} placeholder="Escribe aquí el nombre de un restaurante..." style={[[ tw.pX2, tw.pY3, tw.h12 ], { width: "90%" }]} value={searchQuery} />
+                            <View style={[[ t.flex, t.justifyCenter, t.itemsCenter, tw.h12 ], { width: "10%" }]}>
+                                <Text style={[[ t.textCenter ], { color: searchButtonPressStatus ? "#222" : "#999" }]} onPressIn={() => setSearchButtonPressStatus(true)} onPressOut={() => setSearchButtonPressStatus(false)} >
+                                    <Icon name="search" size={25} />
+                                </Text>
+                            </View>
                         </View>
     
                         {!searchQuery && <View>
@@ -60,13 +64,13 @@ export default function RestaurantsSearchScreen () {
                             {restaurantsToDisplay && restaurantsToDisplay.map((restaurant, index) => {
                                 if (restaurant.restaurant_name.includes(searchQuery)) {
                                     return (
-                                        <View key={index} style={[ t.flex, t.flexRow, tw.wFull, tw.pX1, t.borderT, t.borderGray400 ]}>
-                                            <View style={[[ t.flex, t.flexCol, tw.w4_5, tw.pY4 ], { width: "90%" }]}>
+                                        <View key={index} style={[ t.flex, t.flexRow, tw.wFull, t.borderT, t.borderGray400 ]}>
+                                            <TouchableHighlight onPress={() => console.log("press")} style={[[ t.flex, t.flexCol, tw.w4_5, tw.pY4, tw.pX1, tailwind.roundedLg ], { width: "90%" }]} underlayColor="#ccc">
                                                 <View style={[ t.flex, t.flexRow, tw.wFull ]}>
                                                     <Text style={[ tw.h6, t.textLeft, t.textBlack, t.fontBold ]}>{restaurant.restaurant_name}</Text>
                                                 </View>
-                                            </View>
-                                            <TouchableHighlight onPress={() => console.log("delete")} style={[[ t.flex, t.justifyCenter, t.itemsCenter, tw.w1_5 ], { width: "10%" }]} underlayColor="#f99">
+                                            </TouchableHighlight>
+                                            <TouchableHighlight onPress={() => console.log("delete")} style={[[ t.flex, t.justifyCenter, t.itemsCenter, tw.w1_5, tailwind.roundedLg ], { width: "10%" }]} underlayColor="#f99">
                                                 <Icon name="plus" size={20} />
                                             </TouchableHighlight>
                                         </View>
