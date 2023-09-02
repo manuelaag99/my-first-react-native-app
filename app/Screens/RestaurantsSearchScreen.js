@@ -3,6 +3,7 @@ import { ActivityIndicator, ScrollView, Text, TextInput, TouchableHighlight, Vie
 import { t, tailwind, tw } from "react-native-tailwindcss";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { supabase } from "../supabase/client";
+import ModalTemplate from "../Components/ModalTemplate";
 
 export default function RestaurantsSearchScreen () {
     const [searchQuery, setSearchQuery] = useState();
@@ -39,6 +40,8 @@ export default function RestaurantsSearchScreen () {
     }, [searchQuery])
 
     const [searchButtonPressStatus, setSearchButtonPressStatus] = useState(false);
+
+    const [modalVisibility, setModalVisibility] = useState(false);
     
     if (!allRestaurantsArray) {
         return <ActivityIndicator style={[ tw.mT10]} size="large" color="#000" />
@@ -70,7 +73,7 @@ export default function RestaurantsSearchScreen () {
                                                     <Text style={[ tw.h6, t.textLeft, t.textBlack, t.fontBold ]}>{restaurant.restaurant_name}</Text>
                                                 </View>
                                             </TouchableHighlight>
-                                            <TouchableHighlight onPress={() => console.log("delete")} style={[[ t.flex, t.justifyCenter, t.itemsCenter, tw.w1_5, tailwind.roundedLg ], { width: "10%" }]} underlayColor="#ffdd88">
+                                            <TouchableHighlight onPress={() => setModalVisibility(true)} style={[[ t.flex, t.justifyCenter, t.itemsCenter, tw.w1_5, tailwind.roundedLg ], { width: "10%" }]} underlayColor="#ffdd88">
                                                 <Icon name="plus" size={20} />
                                             </TouchableHighlight>
                                         </View>
@@ -84,6 +87,8 @@ export default function RestaurantsSearchScreen () {
                             </View>}
                         </View>}
                     </View>
+
+                    <ModalTemplate actionButtonBorder={tw.borderRed700} actionButtonColor={tw.bgRed700} animationForModal="fade" isVisible={modalVisibility} onClose={() => setModalVisibility(false)} textForButton="Enviar" textForModal="¿Quieres solicitar unirte a este restaurante?" />
             </ScrollView>
         )
     }

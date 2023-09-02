@@ -1,7 +1,7 @@
 import { Modal, Pressable, Text, TouchableHighlight, View } from "react-native";
 import { t, tailwind, tw } from "react-native-tailwindcss";
 
-export default function ModalTemplate ({ animationForModal, isVisible, onClose, onPressingRedButton, textForButton, textForModal }) {
+export default function ModalTemplate ({ actionButtonBorder, actionButtonColor, animationForModal, isVisible, onClose, onPressingRedButton, textForButton, textForModal }) {
     return (
         <Modal animationType={animationForModal || "fade"} onRequestClose={onClose} transparent={true} visible={isVisible}>
             <View style={[[ t.flex, t.flexCol, tw.justifyCenter, tw.pX6, tw.wFull, tw.hFull ], { backgroundColor: "#00000075"}]}>
@@ -12,7 +12,7 @@ export default function ModalTemplate ({ animationForModal, isVisible, onClose, 
                         </Text>
                     </View>
                     <View style={[ t.flex, t.flexRow, tw.wFull, tw.h12, tw.justifyAround, tw.mT3 ]}>
-                        <TouchableHighlight underlayColor="#ff6666" style={[ tw.w1_3, t.flex, t.flexCol, tw.justifyCenter, tw.border, tw.borderRed700, tailwind.roundedLg, tw.bgRed700 ]} onPress={onPressingRedButton}>
+                        <TouchableHighlight underlayColor="#ff6666" style={[ tw.w1_3, t.flex, t.flexCol, tw.justifyCenter, tw.border, tailwind.roundedLg, actionButtonColor, actionButtonBorder ]} onPress={onPressingRedButton}>
                             <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>{textForButton}</Text>
                         </TouchableHighlight>
                         <TouchableHighlight underlayColor="#ccc" style={[ tw.w1_3, t.flex, t.flexCol, tw.justifyCenter, tw.border, tw.borderGray200, tailwind.roundedLg ]} onPress={onClose}>
