@@ -4,11 +4,9 @@ import { t, tailwind, tw } from "react-native-tailwindcss";
 import { v4 as uuidv4 } from "uuid";
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-
 import Input from "./Input";
 import { supabase } from "../supabase/client";
 import { useForm } from "../Custom-Hooks";
-
 
 export default function AuthForm ({ initialAction, isSettingsScreen, justify, navigation, paddingX, route, userId }) {
     const [logInAction, setLogInAction] = useState(initialAction);
@@ -22,12 +20,10 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
         isFormValid: false
     };
 
-
     async function fetchUserInfo () {
         try {
             const { data, error } = await supabase.from("ALO-users-db").select("*").eq("user_id", userId);
             console.log(error);
-            console.log(data)
         } catch (err) {
             Alert(err);
         }
@@ -36,8 +32,6 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
     useEffect(() => {
         if (isSettingsScreen) fetchUserInfo();
     }, [])
-
-    
 
     const [stateOfForm, formHandler] = useForm(initialFormState);
 

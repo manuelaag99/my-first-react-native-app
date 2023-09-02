@@ -139,7 +139,7 @@ export default function UserProfile ({ navigation, route }) {
                 </View>
                 
                 <NewItem creatorId={user_id} dishesToUpdate={null} isUpdating={false} isVisible={newRestaurantVisibility} itemToAdd="restaurant" onClose={() => setNewRestaurantVisibility(false)} textForAddButton="AGREGAR" topText="Nuevo restaurante" updateFetchedData={fetchAgain} userId={user_id} />
-                <ModalTemplate actionButtonBorder={tw.borderRed700} actionButtonColor={tw.bgRed700} animationForModal="fade" isVisible={modalVisibility} onClose={() => setModalVisibility(false)} textForButton="Eliminar" textForModal="¿Quieres eliminar tu cuenta? Esto es permanente."  userId={user_id} />
+                <ModalTemplate actionButtonBorder={tw.borderRed700} actionButtonColor={tw.bgRed700} animationForModal="fade" isVisible={modalVisibility} onClose={() => setModalVisibility(false)} restaurantId={null} textForButton="Eliminar" textForModal="¿Quieres eliminar tu cuenta? Esto es permanente." userId={user_id} />
             </ScrollView>
         )
     }

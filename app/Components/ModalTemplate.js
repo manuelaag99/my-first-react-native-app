@@ -1,7 +1,20 @@
 import { Modal, Pressable, Text, TouchableHighlight, View } from "react-native";
 import { t, tailwind, tw } from "react-native-tailwindcss";
+import { supabase } from "../supabase/client";
+import { v4 as uuidv4 } from "uuid";
 
 export default function ModalTemplate ({ actionButtonBorder, actionButtonColor, animationForModal, isVisible, onClose, onPressingRedButton, textForButton, textForModal }) {
+
+    let request_id;
+    async function sendRequest () {
+        request_id = uuidv4();
+        try {
+            const { data, error } = await supabase.from("ALO-request").insert({ user_id: user_id, restaurant_id: restaurant_id, request_id: request_id });
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     return (
         <Modal animationType={animationForModal || "fade"} onRequestClose={onClose} transparent={true} visible={isVisible}>
             <View style={[[ t.flex, t.flexCol, tw.justifyCenter, tw.pX6, tw.wFull, tw.hFull ], { backgroundColor: "#00000075"}]}>

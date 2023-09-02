@@ -166,7 +166,7 @@ export default function Orders ({ navigation, route }) {
                 
                 <NewItem dishesToUpdate={orderToUpdateDishes} isUpdating={true} isVisible={updateOrderVisibility} itemToAdd="order" itemToUpdate={orderToUpdate} onClose={() => setUpdateOrderVisibility(false)} restaurantId={restaurant_id} textForAddButton="ACTUALIZAR" topText="Actualizar orden" updateFetchedData={fetchAgain} userId={creator_id} />
                 <NewItem dishesToUpdate={null} isUpdating={false} isVisible={newOrderVisibility} itemToAdd="order" itemToUpdate={null} onClose={() => setNewOrderVisibility(false)} restaurantId={restaurant_id} textForAddButton="AGREGAR" topText="Nueva orden" updateFetchedData={fetchAgain} userId={creator_id} />
-                <ModalTemplate actionButtonBorder={tw.borderRed700} actionButtonColor={tw.bgRed700} isVisible={modalVisibility} onClose={() => setModalVisibility(false)} onPressingRedButton={clearOrdersArray} textForButton="Borrar" textForModal="¿Quieres borrar la lista de órdenes? Esto es permanente." userId={user_id} />
+                <ModalTemplate actionButtonBorder={tw.borderRed700} actionButtonColor={tw.bgRed700} isVisible={modalVisibility} onClose={() => setModalVisibility(false)} onPressingRedButton={clearOrdersArray} restaurantId={restaurant_id} textForButton="Borrar" textForModal="¿Quieres borrar la lista de órdenes? Esto es permanente." userId={user_id} />
             </View>
         </ScrollView>
     )
