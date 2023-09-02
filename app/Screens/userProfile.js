@@ -109,10 +109,10 @@ export default function UserProfile ({ navigation, route }) {
                                     </TouchableHighlight>
                                 )
                             })}
-                            {restaurants && <TouchableHighlight underlayColor="#ccc" onPress={() => navigation.navigate("Search Restaurant")} style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
+                            {restaurants && <TouchableHighlight underlayColor="#ccc" onPress={() => navigation.navigate("Search Restaurant", { user_id: user_id })} style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
                                 <Text style={[ t.textCenter, tw.mXAuto, tw.mY5, tw.wFull, t.fontBold ]}>Buscar otro restaurante</Text>
                             </TouchableHighlight>}
-                            {!restaurants && <TouchableHighlight underlayColor="#ccc" onPress={() => console.log("search restaurant")} style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
+                            {!restaurants && <TouchableHighlight underlayColor="#ccc" onPress={() => navigation.navigate("Search Restaurant", { user_id: user_id })} style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
                                 <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold ]}>Aún no tienes restaurantes. Haz clic aquí para agregar uno</Text>
                             </TouchableHighlight>}
                         </View>
@@ -139,7 +139,7 @@ export default function UserProfile ({ navigation, route }) {
                 </View>
                 
                 <NewItem creatorId={user_id} dishesToUpdate={null} isUpdating={false} isVisible={newRestaurantVisibility} itemToAdd="restaurant" onClose={() => setNewRestaurantVisibility(false)} textForAddButton="AGREGAR" topText="Nuevo restaurante" updateFetchedData={fetchAgain} userId={user_id} />
-                <ModalTemplate actionButtonBorder={tw.borderRed700} actionButtonColor={tw.bgRed700} animationForModal="fade" isVisible={modalVisibility} onClose={() => setModalVisibility(false)} textForButton="Eliminar" textForModal="¿Quieres eliminar tu cuenta? Esto es permanente." />
+                <ModalTemplate actionButtonBorder={tw.borderRed700} actionButtonColor={tw.bgRed700} animationForModal="fade" isVisible={modalVisibility} onClose={() => setModalVisibility(false)} textForButton="Eliminar" textForModal="¿Quieres eliminar tu cuenta? Esto es permanente."  userId={user_id} />
             </ScrollView>
         )
     }

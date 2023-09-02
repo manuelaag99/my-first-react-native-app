@@ -5,10 +5,12 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { supabase } from "../supabase/client";
 import ModalTemplate from "../Components/ModalTemplate";
 
-export default function RestaurantsSearchScreen () {
+export default function RestaurantsSearchScreen ({ navigation, route }) {
     const [searchQuery, setSearchQuery] = useState();
     const [allRestaurantsArray, setAllRestaurantsArray] = useState();
     const [restaurantsToDisplay, setRestaurantsToDisplay] = useState();
+
+    const { user_id } = route.params;
 
     async function fetchAllRestaurants () {
         try {
@@ -74,7 +76,7 @@ export default function RestaurantsSearchScreen () {
                                                 </View>
                                             </TouchableHighlight>
                                             <TouchableHighlight onPress={() => setModalVisibility(true)} style={[[ t.flex, t.justifyCenter, t.itemsCenter, tw.w1_5, tailwind.roundedLg ], { width: "10%" }]} underlayColor="#ffdd88">
-                                                <Icon name="plus" size={20} />
+                                                {(user_id !== restaurant.creator_id) && <Icon name="plus" size={20} />}
                                             </TouchableHighlight>
                                         </View>
                                     )
@@ -88,7 +90,7 @@ export default function RestaurantsSearchScreen () {
                         </View>}
                     </View>
 
-                    <ModalTemplate actionButtonBorder={tw.borderRed700} actionButtonColor={tw.bgRed700} animationForModal="fade" isVisible={modalVisibility} onClose={() => setModalVisibility(false)} textForButton="Enviar" textForModal="¿Quieres solicitar unirte a este restaurante?" />
+                    <ModalTemplate actionButtonBorder={tw.borderRed700} actionButtonColor={tw.bgRed700} animationForModal="fade" isVisible={modalVisibility} onClose={() => setModalVisibility(false)} textForButton="Enviar" textForModal="¿Quieres solicitar unirte a este restaurante?" userId={user_id} />
             </ScrollView>
         )
     }
