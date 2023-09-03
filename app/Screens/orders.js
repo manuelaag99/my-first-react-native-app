@@ -159,7 +159,7 @@ export default function Orders ({ navigation, route }) {
                 </TouchableHighlight>
 
                 <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.mXAuto, tw.mY4, tw.pX6 ]}>
-                    <Text style={[ t.textCenter, t.textGray600  ]}>
+                    <Text style={[ t.textCenter, t.textGray600 ]}>
                         Se recomienda borrar la lista de órdenes al final de cada día, por motivos de espacio en la base de datos
                     </Text>
                 </View>

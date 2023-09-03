@@ -44,6 +44,12 @@ export default function RestaurantsSearchScreen ({ navigation, route }) {
     const [searchButtonPressStatus, setSearchButtonPressStatus] = useState(false);
 
     const [modalVisibility, setModalVisibility] = useState(false);
+    const [restaurantIdToSendRequestTo, setRestaurantIdToSendRequestTo] = useState();
+    function openModalAndSendRestaurant (restaurant) {
+        console.log(restaurant)
+        setRestaurantIdToSendRequestTo(restaurant.restaurant_id);
+        setModalVisibility();
+    }
     
     if (!allRestaurantsArray) {
         return <ActivityIndicator style={[ tw.mT10]} size="large" color="#000" />
@@ -69,15 +75,22 @@ export default function RestaurantsSearchScreen ({ navigation, route }) {
                             {restaurantsToDisplay && restaurantsToDisplay.map((restaurant, index) => {
                                 if (restaurant.restaurant_name.includes(searchQuery)) {
                                     return (
-                                        <View key={index} style={[ t.flex, t.flexRow, tw.wFull, t.borderT, t.borderGray400 ]}>
-                                            <TouchableHighlight onPress={() => console.log("press")} style={[[ t.flex, t.flexCol, tw.w4_5, tw.pY4, tw.pX1, tailwind.roundedLg ], { width: "90%" }]} underlayColor="#ccc">
-                                                <View style={[ t.flex, t.flexRow, tw.wFull ]}>
-                                                    <Text style={[ tw.h6, t.textLeft, t.textBlack, t.fontBold ]}>{restaurant.restaurant_name}</Text>
-                                                </View>
-                                            </TouchableHighlight>
-                                            <TouchableHighlight onPress={() => setModalVisibility(true)} style={[[ t.flex, t.justifyCenter, t.itemsCenter, tw.w1_5, tailwind.roundedLg ], { width: "10%" }]} underlayColor="#ffdd88">
-                                                {(user_id !== restaurant.creator_id) && <Icon name="plus" size={20} />}
-                                            </TouchableHighlight>
+                                        <View key={index} style={[ t.flex, t.flexRow, tw.wFull, t.borderGray400, t.borderT ]}>
+
+                                            <View style={[[ t.flex, t.flexCol, t.justifyCenter, t.itemsCenter ], { width: "90%" }]} >
+                                                <TouchableHighlight onPress={() => console.log("press")} style={[ t.flex, t.justifyCenter, tw.wFull, tailwind.roundedLg, tw.pY4 ]} underlayColor="#ccc">
+                                                    <Text style={[ tw.h6, t.textLeft, t.textBlack, t.fontBold, tw.pX4 ]}>{restaurant.restaurant_name}</Text>
+                                                </TouchableHighlight>
+                                            </View>
+    
+                                            <View style={[[ t.flex, t.flexCol, t.justifyCenter, t.itemsCenter ], { width: "10%" }]}>
+                                                <TouchableHighlight style={[[ t.flex, t.justifyCenter, t.itemsCenter, tw.wFull, tailwind.roundedLg, tw.pY4 ]]} onPress={() => openModalAndSendRestaurant(restaurant)} underlayColor="#ffdd88">
+                                                    <Text style={[ tw.h6, t.textCenter, t.textBlack ]}>
+                                                        {/* {(user_id !== restaurant.creator_id) && <Icon name="plus" size={20} />} */}
+                                                        <Icon name="plus" size={20} />
+                                                    </Text>
+                                                </TouchableHighlight>
+                                            </View>
                                         </View>
                                     )
                                 }
@@ -90,7 +103,7 @@ export default function RestaurantsSearchScreen ({ navigation, route }) {
                         </View>}
                     </View>
 
-                    <ModalTemplate actionButtonBorder={tw.borderRed700} actionButtonColor={tw.bgRed700} animationForModal="fade" isVisible={modalVisibility} onClose={() => setModalVisibility(false)} textForButton="Enviar" textForModal="¿Quieres solicitar unirte a este restaurante?" userId={user_id} />
+                    <ModalTemplate actionButtonBorder={tw.borderOrange400} actionButtonColor={tw.bgOrange400} animationForModal="fade" isVisible={modalVisibility} onClose={() => setModalVisibility(false)} restaurantId={restaurantIdToSendRequestTo} textForButton="Enviar" textForModal="¿Quieres solicitar unirte a este restaurante?" userId={user_id} />
             </ScrollView>
         )
     }
