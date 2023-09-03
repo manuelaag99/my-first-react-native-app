@@ -5,7 +5,7 @@ import ModalTemplate from "../Components/ModalTemplate";
 import NewItem from "../Components/newItem";
 import { supabase } from "../supabase/client";
 
-export default function RestaurantPage ({ route, navigation }) {
+export default function RestaurantScreen ({ route, navigation }) {
     const [modalVisibility, setModalVisibility] = useState(false);
     const [newItemVisibility, setNewItemVisibility] = useState(false);
     const [updateRestaurantVisibility, setUpdateRestaurantVisibility] = useState(false);

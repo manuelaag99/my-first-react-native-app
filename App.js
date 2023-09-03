@@ -9,12 +9,12 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import HomeScreen from './app/homescreen';
-import UserProfile from './app/Screens/userProfile';
-import RestaurantPage from './app/Screens/restaurantPage';
-import Menu from './app/Screens/menu';
-import Orders from './app/Screens/orders';
-import LoginOrRegister from './app/Screens/loginOrRegister';
-import ProfileSettings from './app/Screens/profileSettings';
+import UserProfileScreen from './app/Screens/UserProfileScreen';
+import RestaurantScreen from './app/Screens/RestaurantScreen';
+import MenuScreen from './app/Screens/MenuScreen';
+import OrdersScreen from './app/Screens/OrdersScreen';
+import LoginOrRegisterScreen from './app/Screens/LoginOrRegisterScreen';
+import ProfileSettingsScreen from './app/Screens/ProfileSettingsScreen';
 import RestaurantTeamScreen from './app/Screens/RestaurantTeamScreen';
 import RestaurantsSearchScreen from './app/Screens/RestaurantsSearchScreen';
 
@@ -46,12 +46,12 @@ export default function App() {
       <Stack.Navigator>
         {/* <SafeAreaProvider>
           <SafeAreaView style={[styles.container, containerTheme]}> */}
-            {/* <Stack.Screen name="LoginOrRegister" component={LoginOrRegister} options={{ title: "Iniciar sesión o registrarse" }} /> */}
-            <Stack.Screen name="User" component={UserProfile} options={{ title: "Mi Perfil" }} />
-            <Stack.Screen name="Restaurant" component={RestaurantPage} />
-            <Stack.Screen name="Menu" component={Menu} options={{ title: "Menú" }} />
-            <Stack.Screen name="Orders" component={Orders} options={{ title: "Órdenes" }} />
-            <Stack.Screen name="Settings" component={ProfileSettings} options={{ title: "Ajustes" }} />
+            {/* <Stack.Screen name="LoginOrRegisterScreen" component={LoginOrRegisterScreen} options={{ title: "Iniciar sesión o registrarse" }} /> */}
+            <Stack.Screen name="User" component={UserProfileScreen} options={{ title: "Mi Perfil" }} />
+            <Stack.Screen name="Restaurant" component={RestaurantScreen} />
+            <Stack.Screen name="Menu" component={MenuScreen} options={{ title: "Menú" }} />
+            <Stack.Screen name="Orders" component={OrdersScreen} options={{ title: "Órdenes" }} />
+            <Stack.Screen name="Settings" component={ProfileSettingsScreen} options={{ title: "Ajustes" }} />
             <Stack.Screen name="Team" component={RestaurantTeamScreen} options={{ title: "Equipo" }} />
             <Stack.Screen name="Search Restaurant" component={RestaurantsSearchScreen} options={{ title: "Buscar restaurante" }} />
             
@@ -60,8 +60,8 @@ export default function App() {
               {/* <Text style={textTheme}>Open up App.js to start working on your app!</Text> */}
               {/* <Link href="/about">About</Link> */}
               {/* <StatusBar style="auto" />
-              <UserProfile /> */}
-              {/* <RestaurantPage /> */}
+              <UserProfileScreen /> */}
+              {/* <RestaurantScreen /> */}
             {/* </View> */}
           {/* </SafeAreaView>
         </SafeAreaProvider> */}

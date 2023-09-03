@@ -4,7 +4,7 @@ import { t, tw } from "react-native-tailwindcss";
 import { useEffect, useState } from "react";
 import { supabase } from "../supabase/client";
 
-export default function ProfileSettings ({ navigation, route }) {
+export default function ProfileSettingsScreen ({ navigation, route }) {
     const [user, setUser] = useState();
 
     const { user_id } = route.params;

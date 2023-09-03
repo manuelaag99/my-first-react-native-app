@@ -7,7 +7,7 @@ import ModalTemplate from "../Components/ModalTemplate";
 import NewItem from "../Components/newItem";
 import { supabase } from "../supabase/client";
 
-export default function Orders ({ navigation, route }) {
+export default function OrdersScreen ({ navigation, route }) {
     const [newOrderVisibility, setNewOrderVisibility] = useState(false);
 
     const { user_id, restaurant_id } = route.params;
