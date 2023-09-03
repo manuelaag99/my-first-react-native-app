@@ -23,29 +23,12 @@ export default function Orders ({ navigation, route }) {
             console.log(err);
         }
     }
-    async function clearOrdersData () {
-        try {
-            const { error } = await supabase.from("ALO-restaurant-orders").delete("*").eq("restaurant_id", restaurant_id);
-            if (error) console.log(error);
-        } catch (err) {
-            console.log(err);
-        }
-    }
 
     const [dishesArray, setDishesArray] = useState();
     async function fetchDishesData () {
         try {
             const { data, error } = await supabase.from("ALO-orders-dishes").select("*").eq("restaurant_id", restaurant_id);
             setDishesArray(data);
-            if (error) console.log(error);
-        } catch (err) {
-            console.log(err);
-        }
-
-    }
-    async function clearDishesData () {
-        try {
-            const { error } = await supabase.from("ALO-orders-dishes").delete("*").eq("restaurant_id", restaurant_id);
             if (error) console.log(error);
         } catch (err) {
             console.log(err);
@@ -62,7 +45,12 @@ export default function Orders ({ navigation, route }) {
         fetchDishesData();
     }
 
+    const [actionForModal, setActionForModal] = useState();
     const [modalVisibility, setModalVisibility] = useState(false);
+    function deleteAllOrders () {
+        setActionForModal("¿Quieres borrar la lista de órdenes? Esto es permanente.");
+        setModalVisibility(true);
+    }
     function clearOrdersArray () {
         setOrdersArray();
         setDishesArray();
@@ -152,7 +140,7 @@ export default function Orders ({ navigation, route }) {
                     })}
                 </View>
 
-                <TouchableHighlight underlayColor="#ff6666" onPress={() => setModalVisibility(true)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgRed700, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
+                <TouchableHighlight underlayColor="#ff6666" onPress={deleteAllOrders} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgRed700, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
                     <Text style={[ t.textCenter, t.fontBold, t.textWhite  ]}>
                         Borrar lista de órdenes
                     </Text>
@@ -166,7 +154,7 @@ export default function Orders ({ navigation, route }) {
                 
                 <NewItem dishesToUpdate={orderToUpdateDishes} isUpdating={true} isVisible={updateOrderVisibility} itemToAdd="order" itemToUpdate={orderToUpdate} onClose={() => setUpdateOrderVisibility(false)} restaurantId={restaurant_id} textForAddButton="ACTUALIZAR" topText="Actualizar orden" updateFetchedData={fetchAgain} userId={user_id} />
                 <NewItem dishesToUpdate={null} isUpdating={false} isVisible={newOrderVisibility} itemToAdd="order" itemToUpdate={null} onClose={() => setNewOrderVisibility(false)} restaurantId={restaurant_id} textForAddButton="AGREGAR" topText="Nueva orden" updateFetchedData={fetchAgain} userId={user_id} />
-                <ModalTemplate actionButtonBorder={tw.borderRed700} actionButtonColor={tw.bgRed700} isVisible={modalVisibility} onClose={() => setModalVisibility(false)} onTasksAfterAction={clearOrdersArray} orderToDelete={orderToDelete} restaurantId={restaurant_id} textForButton="Borrar" textForModal="¿Quieres borrar la lista de órdenes? Esto es permanente." userId={user_id} />
+                <ModalTemplate actionButtonBorder={tw.borderRed700} actionButtonColor={tw.bgRed700} isVisible={modalVisibility} onClose={() => setModalVisibility(false)} onTasksAfterAction={clearOrdersArray} orderToDelete={orderToDelete} restaurantId={restaurant_id} textForButton="Borrar" textForModal={actionForModal} userId={user_id} />
             </View>
         </ScrollView>
     )
