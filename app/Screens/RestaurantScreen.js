@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ActivityIndicator, ScrollView, Text, TouchableHighlight, View } from "react-native";
 import { t, tw, tailwind } from "react-native-tailwindcss";
 import ModalTemplate from "../Components/ModalTemplate";
-import NewItem from "../Components/newItem";
+import NewItem from "../Components/NewItem";
 import { supabase } from "../supabase/client";
 
 export default function RestaurantScreen ({ route, navigation }) {

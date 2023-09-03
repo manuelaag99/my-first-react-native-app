@@ -3,7 +3,7 @@ import { ScrollView, Text, TouchableHighlight, View } from "react-native";
 import { t, tw, tailwind } from "react-native-tailwindcss";
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import NewItem from "../Components/newItem";
+import NewItem from "../Components/NewItem";
 import ModalTemplate from "../Components/ModalTemplate";
 import { supabase } from "../supabase/client";
 

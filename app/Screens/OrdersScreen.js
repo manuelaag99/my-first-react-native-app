@@ -4,7 +4,7 @@ import { t, tw, tailwind } from "react-native-tailwindcss";
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import ModalTemplate from "../Components/ModalTemplate";
-import NewItem from "../Components/newItem";
+import NewItem from "../Components/NewItem";
 import { supabase } from "../supabase/client";
 
 export default function OrdersScreen ({ navigation, route }) {

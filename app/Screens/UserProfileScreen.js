@@ -5,7 +5,7 @@ import { t, tw, tailwind } from "react-native-tailwindcss";
 import { supabase } from "../supabase/client";
 
 import ModalTemplate from "../Components/ModalTemplate";
-import NewItem from "../Components/newItem";
+import NewItem from "../Components/NewItem";
 
 export default function UserProfileScreen ({ navigation, route }) {
     const [newRestaurantVisibility, setNewRestaurantVisibility] = useState(false);
