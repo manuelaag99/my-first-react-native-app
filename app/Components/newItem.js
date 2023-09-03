@@ -97,6 +97,9 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
         if (order.tableNumber === null || order.tableNumber.trim() === "" ) {
             setErrorMessage("Debes incluir número de mesa.");
             setErrorModalVisibility(true);
+        } else if (!storedDishes || storedDishes.length < 1) {
+            setErrorMessage("Debes incluir platillos.");
+            setErrorModalVisibility(true);
         } else {
             console.log("worked")
             try {
