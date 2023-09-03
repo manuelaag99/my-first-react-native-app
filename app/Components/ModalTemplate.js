@@ -1,17 +1,24 @@
-import { Modal, Pressable, Text, TouchableHighlight, View } from "react-native";
+import { Modal, Text, TouchableHighlight, View } from "react-native";
 import { t, tailwind, tw } from "react-native-tailwindcss";
 import { supabase } from "../supabase/client";
 import { v4 as uuidv4 } from "uuid";
 
-export default function ModalTemplate ({ actionButtonBorder, actionButtonColor, animationForModal, isVisible, onClose, onPressingRedButton, textForButton, textForModal }) {
+export default function ModalTemplate ({ actionButtonBorder, actionButtonColor, animationForModal, isVisible, onClose, onNavigateAfterAction, onPressingRedButton, restaurantId, textForButton, textForModal, userId }) {
 
     let request_id;
     async function sendRequest () {
         request_id = uuidv4();
         try {
-            const { data, error } = await supabase.from("ALO-request").insert({ user_id: user_id, restaurant_id: restaurant_id, request_id: request_id });
+            const { data, error } = await supabase.from("ALO-request").insert({ user_id: userId, restaurant_id: restaurantId, request_id: request_id });
+            onNavigateAfterAction();
         } catch (err) {
             console.log(err);
+        }
+    }
+
+    function actionButtonHandle () {
+        if (textForModal === "") {
+            sendRequest();
         }
     }
 
