@@ -17,7 +17,7 @@ export default function ModalTemplate ({ actionButtonBorder, actionButtonColor, 
         }
     }
 
-    async function deleteRestaurantHandle () {
+    async function deleteRestaurant () {
         try {
             const { error } = await supabase.from("ALO-restaurants").delete().eq("restaurant_id", restaurantId);
             if (error) console.log(error);
@@ -28,7 +28,7 @@ export default function ModalTemplate ({ actionButtonBorder, actionButtonColor, 
         }
     }
 
-    async function deleteMenuHandle () {
+    async function deleteMenu () {
         try {
             const { data, error } = await supabase.from("ALO-restaurant-menu-items").delete("*").eq("restaurant_id", restaurantId);
             if (error) console.log(error)
@@ -59,16 +59,36 @@ export default function ModalTemplate ({ actionButtonBorder, actionButtonColor, 
         }
     }
 
+    async function deleteSpecificOrder () {
+        console.log(orderToDelete)
+        try {
+            const { error } = await supabase.from("ALO-orders-dishes").delete("*").eq("order_id", orderToDelete.order_id);
+            if (error) console.log(error);
+        } catch (err) {
+            console.log(err);
+        }
+        try {
+            const { error } = await supabase.from("ALO-restaurant-orders").delete("*").eq("order_id", orderToDelete.order_id);
+            if (error) console.log(error);
+            onClose();
+            onTasksAfterAction();
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     function actionButtonHandle () {
         if (textForModal === "¿Quieres solicitar unirte a este restaurante?") {
             sendRequest();
         } else if (textForModal === "¿Quieres eliminar este restaurante? Esto es permanente.") {
-            deleteRestaurantHandle();
+            deleteRestaurant();
         } else if (textForModal === "¿Quieres borrar el menú? Esto es permanente.") {
-            deleteMenuHandle();
+            deleteMenu();
         } else if (textForModal === "¿Quieres borrar la lista de órdenes? Esto es permanente.") {
             clearDishesData();
             clearOrdersData();
+        } else if (textForModal === "¿Quieres borrar esta orden? Esto es permanente.") {
+            deleteSpecificOrder();
         } else if (textForModal === "¿Quieres eliminar tu cuenta? Esto es permanente.") {
             console.log("delete account")
         }

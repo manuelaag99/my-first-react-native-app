@@ -51,15 +51,16 @@ export default function Orders ({ navigation, route }) {
         setActionForModal("¿Quieres borrar la lista de órdenes? Esto es permanente.");
         setModalVisibility(true);
     }
-    function clearOrdersArray () {
-        setOrdersArray();
-        setDishesArray();
+    function clearOrdersArray () { 
+        fetchAgain();
     }
 
     const [orderToDelete, setOrderToDelete] = useState();
     function deleteOrder (order) {
         console.log(order)
         setOrderToDelete(order);
+        setActionForModal("¿Quieres borrar esta orden? Esto es permanente.");
+        setModalVisibility(true);
         // try {
         //     const { error } = await supabase.from("ALO-orders-dishes").delete("*").eq("order_id", order.order_id);
         //     if (error) console.log(error);
@@ -72,7 +73,6 @@ export default function Orders ({ navigation, route }) {
         // } catch (err) {
         //     console.log(err);
         // }
-        fetchAgain();
     }
 
 
