@@ -15,7 +15,7 @@ export default function Orders ({ navigation, route }) {
     const [updateItemVisibility, setUpdateItemVisibility] = useState(false);
     const [menuItemToUpdate, setMenuItemToUpdate] = useState();
 
-    const { creator_id, restaurant_id } = route.params
+    const { user_id, restaurant_id } = route.params
 
     async function fetchMenuData () {
         try {
@@ -65,12 +65,12 @@ export default function Orders ({ navigation, route }) {
                 </TouchableHighlight>
 
                 <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.mXAuto, tailwind.roundedLg, tw.mY6 ]}>
-                    {(menuItemsArray === null || menuItemsArray.length === 0) && <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgBlue400, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tailwind.roundedLg ]}>
+                    {(!menuItemsArray || menuItemsArray.length === 0) && <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgBlue400, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textWhite  ]}>
                             No hay platillos
                         </Text>
                     </View>}
-                    {(menuItemsArray.length > 0) && <TouchableHighlight underlayColor="#CCE5FF" onPress={() => setMenuItemsArrayVisibility(!menuItemsArrayVisibility)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgBlue400, tw.mXAuto, tw.pY6, tailwind.roundedLg ]}>
+                    {(menuItemsArray) && (menuItemsArray.length > 0) && <TouchableHighlight underlayColor="#CCE5FF" onPress={() => setMenuItemsArrayVisibility(!menuItemsArrayVisibility)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgBlue400, tw.mXAuto, tw.pY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textWhite  ]}>
                             Platillos
                         </Text>
@@ -100,9 +100,9 @@ export default function Orders ({ navigation, route }) {
                     </Text>
                 </TouchableHighlight>
                 
-                <NewItem itemToUpdate={menuItemToUpdate} isUpdating={true} isVisible={updateItemVisibility} itemToAdd="menuItem" onClose={() => setUpdateItemVisibility(false)} restaurantId={restaurant_id} textForAddButton="ACTUALIZAR" topText="Actualizar platillo" updateFetchedData={fetchAgain} userId={creator_id} />
-                <NewItem itemToUpdate={null} isUpdating={false} isVisible={newItemVisibility} itemToAdd="menuItem" onClose={() => setNewItemVisibility(false)} restaurantId={restaurant_id} textForAddButton="AGREGAR" topText="Nuevo platillo" updateFetchedData={fetchAgain} userId={creator_id} />
-                <ModalTemplate actionButtonBorder={tw.borderRed700} actionButtonColor={tw.bgRed700} isVisible={modalVisibility} onClose={() => setModalVisibility(false)} onPressingRedButton={clearMenuHandle} restaurantId={restaurant_id} textForButton="Borrar" textForModal="¿Quieres borrar el menú? Esto es permanente." userId={user_id} />
+                <NewItem itemToUpdate={menuItemToUpdate} isUpdating={true} isVisible={updateItemVisibility} itemToAdd="menuItem" onClose={() => setUpdateItemVisibility(false)} restaurantId={restaurant_id} textForAddButton="ACTUALIZAR" topText="Actualizar platillo" updateFetchedData={fetchAgain} userId={user_id} />
+                <NewItem itemToUpdate={null} isUpdating={false} isVisible={newItemVisibility} itemToAdd="menuItem" onClose={() => setNewItemVisibility(false)} restaurantId={restaurant_id} textForAddButton="AGREGAR" topText="Nuevo platillo" updateFetchedData={fetchAgain} userId={user_id} />
+                <ModalTemplate actionButtonBorder={tw.borderRed700} actionButtonColor={tw.bgRed700} isVisible={modalVisibility} onClose={() => setModalVisibility(false)} onTasksAfterAction={() => setMenuItemsArray()} restaurantId={restaurant_id} textForButton="Borrar" textForModal="¿Quieres borrar el menú? Esto es permanente." userId={user_id} />
             </View>
         </ScrollView>
     )

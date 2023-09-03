@@ -10,7 +10,7 @@ import { supabase } from "../supabase/client";
 export default function Orders ({ navigation, route }) {
     const [newOrderVisibility, setNewOrderVisibility] = useState(false);
 
-    const { creator_id, restaurant_id } = route.params;
+    const { user_id, restaurant_id } = route.params;
 
     const [ordersArray, setOrdersArray] = useState();
     const [ordersArrayVisibility, setOrdersArrayVisibility] = useState(false);
@@ -37,7 +37,6 @@ export default function Orders ({ navigation, route }) {
         try {
             const { data, error } = await supabase.from("ALO-orders-dishes").select("*").eq("restaurant_id", restaurant_id);
             setDishesArray(data);
-
             if (error) console.log(error);
         } catch (err) {
             console.log(err);
@@ -66,24 +65,25 @@ export default function Orders ({ navigation, route }) {
     const [modalVisibility, setModalVisibility] = useState(false);
     function clearOrdersArray () {
         setOrdersArray();
-        clearOrdersData();
-        clearDishesData();
-        setModalVisibility(false);
+        setDishesArray();
     }
 
-    async function deleteOrder (order) {
-        try {
-            const { error } = await supabase.from("ALO-orders-dishes").delete("*").eq("order_id", order.order_id);
-            if (error) console.log(error);
-        } catch (err) {
-            console.log(err);
-        }
-        try {
-            const { error } = await supabase.from("ALO-restaurant-orders").delete("*").eq("order_id", order.order_id);
-            if (error) console.log(error);
-        } catch (err) {
-            console.log(err);
-        }
+    const [orderToDelete, setOrderToDelete] = useState();
+    function deleteOrder (order) {
+        console.log(order)
+        setOrderToDelete(order);
+        // try {
+        //     const { error } = await supabase.from("ALO-orders-dishes").delete("*").eq("order_id", order.order_id);
+        //     if (error) console.log(error);
+        // } catch (err) {
+        //     console.log(err);
+        // }
+        // try {
+        //     const { error } = await supabase.from("ALO-restaurant-orders").delete("*").eq("order_id", order.order_id);
+        //     if (error) console.log(error);
+        // } catch (err) {
+        //     console.log(err);
+        // }
         fetchAgain();
     }
 
@@ -164,9 +164,9 @@ export default function Orders ({ navigation, route }) {
                     </Text>
                 </View>
                 
-                <NewItem dishesToUpdate={orderToUpdateDishes} isUpdating={true} isVisible={updateOrderVisibility} itemToAdd="order" itemToUpdate={orderToUpdate} onClose={() => setUpdateOrderVisibility(false)} restaurantId={restaurant_id} textForAddButton="ACTUALIZAR" topText="Actualizar orden" updateFetchedData={fetchAgain} userId={creator_id} />
-                <NewItem dishesToUpdate={null} isUpdating={false} isVisible={newOrderVisibility} itemToAdd="order" itemToUpdate={null} onClose={() => setNewOrderVisibility(false)} restaurantId={restaurant_id} textForAddButton="AGREGAR" topText="Nueva orden" updateFetchedData={fetchAgain} userId={creator_id} />
-                <ModalTemplate actionButtonBorder={tw.borderRed700} actionButtonColor={tw.bgRed700} isVisible={modalVisibility} onClose={() => setModalVisibility(false)} onPressingRedButton={clearOrdersArray} restaurantId={restaurant_id} textForButton="Borrar" textForModal="¿Quieres borrar la lista de órdenes? Esto es permanente." userId={user_id} />
+                <NewItem dishesToUpdate={orderToUpdateDishes} isUpdating={true} isVisible={updateOrderVisibility} itemToAdd="order" itemToUpdate={orderToUpdate} onClose={() => setUpdateOrderVisibility(false)} restaurantId={restaurant_id} textForAddButton="ACTUALIZAR" topText="Actualizar orden" updateFetchedData={fetchAgain} userId={user_id} />
+                <NewItem dishesToUpdate={null} isUpdating={false} isVisible={newOrderVisibility} itemToAdd="order" itemToUpdate={null} onClose={() => setNewOrderVisibility(false)} restaurantId={restaurant_id} textForAddButton="AGREGAR" topText="Nueva orden" updateFetchedData={fetchAgain} userId={user_id} />
+                <ModalTemplate actionButtonBorder={tw.borderRed700} actionButtonColor={tw.bgRed700} isVisible={modalVisibility} onClose={() => setModalVisibility(false)} onTasksAfterAction={clearOrdersArray} orderToDelete={orderToDelete} restaurantId={restaurant_id} textForButton="Borrar" textForModal="¿Quieres borrar la lista de órdenes? Esto es permanente." userId={user_id} />
             </View>
         </ScrollView>
     )

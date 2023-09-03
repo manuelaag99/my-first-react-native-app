@@ -3,7 +3,7 @@ import { t, tailwind, tw } from "react-native-tailwindcss";
 import { supabase } from "../supabase/client";
 import { v4 as uuidv4 } from "uuid";
 
-export default function ModalTemplate ({ actionButtonBorder, actionButtonColor, animationForModal, isVisible, onClose, onNavigateAfterAction, onPressingRedButton, restaurantId, textForButton, textForModal, underlayColor, userId }) {
+export default function ModalTemplate ({ actionButtonBorder, actionButtonColor, animationForModal, isVisible, onClose, onTasksAfterAction, orderToDelete, restaurantId, textForButton, textForModal, underlayColor, userId }) {
 
     let request_id;
     async function sendRequest () {
@@ -22,7 +22,38 @@ export default function ModalTemplate ({ actionButtonBorder, actionButtonColor, 
             const { error } = await supabase.from("ALO-restaurants").delete().eq("restaurant_id", restaurantId);
             if (error) console.log(error);
             onClose();
-            onNavigateAfterAction();
+            onTasksAfterAction();
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    async function deleteMenuHandle () {
+        try {
+            const { data, error } = await supabase.from("ALO-restaurant-menu-items").delete("*").eq("restaurant_id", restaurantId);
+            if (error) console.log(error)
+            onClose();
+            onTasksAfterAction();
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    async function clearDishesData () {
+        try {
+            const { error } = await supabase.from("ALO-orders-dishes").delete("*").eq("restaurant_id", restaurantId);
+            if (error) console.log(error);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    async function clearOrdersData () {
+        try {
+            const { error } = await supabase.from("ALO-restaurant-orders").delete("*").eq("restaurant_id", restaurantId);
+            if (error) console.log(error);
+            onClose();
+            onTasksAfterAction();
         } catch (err) {
             console.log(err);
         }
@@ -33,6 +64,13 @@ export default function ModalTemplate ({ actionButtonBorder, actionButtonColor, 
             sendRequest();
         } else if (textForModal === "¿Quieres eliminar este restaurante? Esto es permanente.") {
             deleteRestaurantHandle();
+        } else if (textForModal === "¿Quieres borrar el menú? Esto es permanente.") {
+            deleteMenuHandle();
+        } else if (textForModal === "¿Quieres borrar la lista de órdenes? Esto es permanente.") {
+            clearDishesData();
+            clearOrdersData();
+        } else if (textForModal === "¿Quieres eliminar tu cuenta? Esto es permanente.") {
+            console.log("delete account")
         }
     }
 
