@@ -9,10 +9,10 @@ export default function RestaurantScreen ({ route, navigation }) {
     const [modalVisibility, setModalVisibility] = useState(false);
     const [newItemVisibility, setNewItemVisibility] = useState(false);
     const [updateRestaurantVisibility, setUpdateRestaurantVisibility] = useState(false);
+
+    const { user_id, restaurant_id } = route.params
+
     const [restaurantInfo, setRestaurantInfo] = useState();
-
-    const { user_id, restaurant_id, restaurant_name, creator_name } = route.params
-
     async function fetchRestaurantInfo () {
         try {
             const { data, error } = await supabase.from("ALO-restaurants").select("*").eq("restaurant_id", restaurant_id);
@@ -24,9 +24,25 @@ export default function RestaurantScreen ({ route, navigation }) {
         }
     }
 
+    const [restaurantCreatorInfo, setRestaurantCreatorInfo] = useState();
+    async function fetchRestaurantCreatorInfo() {
+        try {
+            const { data, error } = await supabase.from("ALO-users-db").select("*").eq("user_id", restaurantInfo.creator_id);
+            if (error) console.log(error);
+            console.log(data)
+            setRestaurantCreatorInfo(data[0]);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     useEffect(() => {
         fetchRestaurantInfo();
     }, [])
+
+    useEffect(() => {
+        if (restaurantInfo) fetchRestaurantCreatorInfo();
+    }, [restaurantInfo])
 
     function navigateAfterDeletingRestaurant () {
         navigation.navigate("User");
@@ -36,11 +52,13 @@ export default function RestaurantScreen ({ route, navigation }) {
         fetchRestaurantInfo();
     }
 
-    if (!restaurantInfo) {
+    console.log(restaurantCreatorInfo)
+
+    if (!restaurantInfo || !restaurantCreatorInfo) {
         return (
             <ActivityIndicator style={[ tw.mT10]} size="large" color="#000" />
         )
-    } else if (restaurantInfo) {
+    } else if (restaurantInfo && restaurantCreatorInfo) {
         return (
             <ScrollView style={[ t.bgGray200 ]}>
                 <View style={[ t.flex, t.flexCol, tw.justifyStart, t.pX5, tw.hFull, tw.wFull, tw.overflowHidden, tw.pY5 ]}>
@@ -52,7 +70,7 @@ export default function RestaurantScreen ({ route, navigation }) {
                             {restaurantInfo.restaurant_description}
                         </Text>}
                         <Text style={[ tw.wFull, t.textCenter, t.fontBold, t.textGray500, t.textBase ]}>
-                            creado por {creator_name}
+                            creado por {restaurantCreatorInfo.user_display_name}
                         </Text>
                         <Text style={[ tw.wFull, t.textCenter, t.fontBold, t.textGray500, t.textBase, tw.mY2 ]}>
                             {(user_id === restaurantInfo.user_id) && "Eres administrador."}
