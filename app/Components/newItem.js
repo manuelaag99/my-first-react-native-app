@@ -175,7 +175,7 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
     useEffect(() => {
         if (itemToUpdate) {
             if (itemToAdd === "restaurant") {
-                setRestaurantInfo({ restaurant_name: itemToUpdate.restaurant_name });
+                setRestaurantInfo({ restaurant_name: itemToUpdate.restaurant_name, restaurant_description: itemToUpdate.restaurant_description });
             } else if (itemToAdd === "menuItem") {
                 setMenuItems({ menu_item_name: itemToUpdate.menu_item_name , menu_item_description: itemToUpdate.menu_item_description });
             } else if (itemToAdd === "order") {
@@ -203,7 +203,7 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
 
     function closeNewItemWindowHandle () {
         onClose();
-        if (itemToAdd === "restaurant") setRestaurantInfo({ restaurant_name: "" });
+        if (itemToAdd === "restaurant") setRestaurantInfo({ restaurant_name: "", restaurant_description: "" });
         else if (itemToAdd === "menuItem") setMenuItems({ menuItem: "", notes: "" });
         else if (itemToAdd === "order")  {
             setDish({ menuItem: "", notes: "" });
