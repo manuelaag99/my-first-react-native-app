@@ -18,10 +18,11 @@ export default function ProfileSettingsScreen ({ navigation, route }) {
             console.log(err)
         }
     }
-
     useEffect(() => {
         fetchData()
     }, [])
+
+    console.log(user)
 
     if (!user) {
         return (

@@ -36,10 +36,12 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
     const [stateOfForm, formHandler] = useForm(initialFormState);
 
     useEffect(() => {
-        if (logInAction === "register" || logInAction === "update") {
+        if (logInAction === "register") {
             setPlaceholderText({ forEmail: "Escribe tu e-mail..." , forDisplayName: "Escribe tu nombre...", forPassword: "Crea una contraseña...", forUsername: "Crea un usuario" });
         } else if (logInAction === "signIn") {
             setPlaceholderText({ forEmail: "Escribe tu e-mail..." , forDisplayName: null, forPassword: "Escribe tu contraseña...", forUsername: null });
+        } else if (logInAction === "update") {
+            setPlaceholderText({ forEmail: "Actualiza tu e-mail..." , forDisplayName: "Actualiza tu nombre...", forPassword: "Actualiza tu contraseña...", forUsername: "Actualiza tu nombre de usuario..." });
         }
     }, [logInAction]);
 
@@ -62,6 +64,8 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
             registerUser();
         } else if (stateOfForm.isFormValid && logInAction === "signIn") {
             console.log("sign in");
+        } else if (stateOfForm.isFormValid && logInAction === "update") {
+            console.log("update profile")
         }
     }
 
