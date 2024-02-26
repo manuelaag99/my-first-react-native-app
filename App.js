@@ -17,6 +17,8 @@ import LoginOrRegisterScreen from './app/Screens/LoginOrRegisterScreen';
 import ProfileSettingsScreen from './app/Screens/ProfileSettingsScreen';
 import RestaurantTeamScreen from './app/Screens/RestaurantTeamScreen';
 import RestaurantsSearchScreen from './app/Screens/RestaurantsSearchScreen';
+import { useEffect, useState } from 'react';
+import { supabase } from './app/supabase/client';
 
 export default function App() {
   let colorScheme = useColorScheme();
@@ -35,6 +37,20 @@ export default function App() {
     textTheme = styles.lightThemeText
   }
 
+  const [session, setSession] = useState();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session }}) => {
+      setSession(session);
+    })
+
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    })
+  }, [])
+
+  console.log(session)
+
   // const [fontsLoaded] = useFonts({
   //     'Anton': require('../assets/fonts/Anton-Regular.ttf'),
   // });
@@ -43,7 +59,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      {session && <Stack.Navigator>
         {/* <SafeAreaProvider>
           <SafeAreaView style={[styles.container, containerTheme]}> */}
             {/* <Stack.Screen name="LoginOrRegisterScreen" component={LoginOrRegisterScreen} options={{ title: "Iniciar sesión o registrarse" }} /> */}
@@ -65,7 +81,10 @@ export default function App() {
             {/* </View> */}
           {/* </SafeAreaView>
         </SafeAreaProvider> */}
-      </Stack.Navigator>
+      </Stack.Navigator>}
+      {!session && <Stack.Navigator>
+        {<Stack.Screen name="Sign in or Sign up" component={LoginOrRegisterScreen} options={{ title: "Iniciar Sesion" }} /> }
+      </Stack.Navigator>}
     </NavigationContainer>
   );
 }
