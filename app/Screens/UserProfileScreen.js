@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ActivityIndicator, ScrollView, Text, TouchableHighlight, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { t, tw, tailwind } from "react-native-tailwindcss";
@@ -6,8 +6,11 @@ import { supabase } from "../supabase/client";
 
 import ModalTemplate from "../Components/ModalTemplate";
 import NewItem from "../Components/NewItem";
+import { AuthContext } from "../Context/AuthContext";
 
 export default function UserProfileScreen ({ navigation, route }) {
+    const auth = useContext(AuthContext);
+    console.log(auth)
     const [newRestaurantVisibility, setNewRestaurantVisibility] = useState(false);
     const [modalVisibility, setModalVisibility] = useState(false);
     const [user, setUser] = useState();
@@ -20,14 +23,14 @@ export default function UserProfileScreen ({ navigation, route }) {
 
     async function fetchData () {
         try {
-            const { data, error } = await supabase.from("ALO-users-db").select("*").eq("user_id", user_id);
+            const { data, error } = await supabase.from("ALO-users-db").select("*").eq("user_id", auth.userId);
             setUser(data[0]);
             if (error) console.log(error);
         } catch (err) {
             console.log(err);
         }
         try {
-            const { data, error } = await supabase.from("ALO-restaurants").select("*").eq("creator_id", user_id);
+            const { data, error } = await supabase.from("ALO-restaurants").select("*").eq("creator_id", auth.userId);
             setRestaurants(data);
             if (error) console.log(error);
         } catch (err) {
@@ -54,20 +57,6 @@ export default function UserProfileScreen ({ navigation, route }) {
     }
 
     const insets = useSafeAreaInsets();
-
-
-    async function createUserInDatabase () {
-        if (newUserId) {
-            try {
-                const { error } = await supabase.from("ALO-users-db").insert({ user_id: newUserId, user_username: stateOfForm.inputs.username.value, user_email: stateOfForm.inputs.email.value, user_display_name: stateOfForm.inputs.displayName.value, user_password: stateOfForm.inputs.password.value });
-                if (error) setErrorWithSignInOrSignUp(error);
-            } catch (err) {
-                setErrorWithSignInOrSignUp(err);
-            }
-            if (errorWithSignInOrSignUp) Alert.alert(errorWithSignInOrSignUp);
-            if (!errorWithSignInOrSignUp) navigation.navigate("User", { user_id: newUserId });
-        }
-    }
     
     async function logout () {
         try {
@@ -75,6 +64,7 @@ export default function UserProfileScreen ({ navigation, route }) {
         } catch (err) {
             console.log(err)
         }
+        auth.logout()
     }
 
     if (!user) {
@@ -111,7 +101,7 @@ export default function UserProfileScreen ({ navigation, route }) {
                             </View>
                             {restaurants && restaurants.map((restaurant, index) => {
                                 return (
-                                    <TouchableHighlight underlayColor="#ccc" key={index} onPress={() => navigation.navigate("Restaurant", { user_id: user_id, restaurant_id: restaurant.restaurant_id, restaurant_name: restaurant.restaurant_name, creator_name: user.user_display_name })} style={[ tw.flex, tw.flexRow, tw.wFull ]}>
+                                    <TouchableHighlight underlayColor="#ccc" key={index} onPress={() => navigation.navigate("Restaurant", { user_id: auth.userId, restaurant_id: restaurant.restaurant_id, restaurant_name: restaurant.restaurant_name, creator_name: user.user_display_name })} style={[ tw.flex, tw.flexRow, tw.wFull ]}>
                                         <Text style={[ t.textCenter, tw.wFull, tw.mY4 ]}>
                                             {restaurant.restaurant_name}
                                         </Text>
@@ -132,22 +122,22 @@ export default function UserProfileScreen ({ navigation, route }) {
                             </View>
                             {restaurants && restaurants.map((restaurant, index) => {
                                 return (
-                                    <TouchableHighlight underlayColor="#ccc" key={index} onPress={() => navigation.navigate("Restaurant", { user_id: user_id, restaurant_id: restaurant.restaurant_id })} style={[ tw.flex, tw.flexRow, tw.wFull ]}>
+                                    <TouchableHighlight underlayColor="#ccc" key={index} onPress={() => navigation.navigate("Restaurant", { user_id: auth.userId, restaurant_id: restaurant.restaurant_id })} style={[ tw.flex, tw.flexRow, tw.wFull ]}>
                                         <Text style={[ t.textCenter, tw.wFull, tw.mY4 ]}>
                                             {restaurant.restaurant_name}
                                         </Text>
                                     </TouchableHighlight>
                                 )
                             })}
-                            {restaurants && <TouchableHighlight underlayColor="#ccc" onPress={() => navigation.navigate("Search Restaurant", { user_id: user_id })} style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull, tailwind.roundedLg ]}>
+                            {restaurants && <TouchableHighlight underlayColor="#ccc" onPress={() => navigation.navigate("Search Restaurant", { user_id: auth.userId })} style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull, tailwind.roundedLg ]}>
                                 <Text style={[ t.textCenter, tw.mXAuto, tw.mY5, tw.wFull, t.fontBold ]}>Buscar otro restaurante</Text>
                             </TouchableHighlight>}
-                            {!restaurants && <TouchableHighlight underlayColor="#ccc" onPress={() => navigation.navigate("Search Restaurant", { user_id: user_id })} style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull, tailwind.roundedLg ]}>
+                            {!restaurants && <TouchableHighlight underlayColor="#ccc" onPress={() => navigation.navigate("Search Restaurant", { user_id: auth.userId })} style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull, tailwind.roundedLg ]}>
                                 <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold ]}>Aún no tienes restaurantes. Haz clic aquí para agregar uno</Text>
                             </TouchableHighlight>}
                         </View>
 
-                        <TouchableHighlight underlayColor="#ccc" onPress={() => navigation.navigate("Settings", { user_id: user_id })} style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgWhite, tw.border, tw.borderGray300, tailwind.roundedLg, tw.mY5 ]}>
+                        <TouchableHighlight underlayColor="#ccc" onPress={() => navigation.navigate("Settings", { user_id: auth.userId })} style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgWhite, tw.border, tw.borderGray300, tailwind.roundedLg, tw.mY5 ]}>
                             <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
                                 <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold, t.textBlack ]}>Ajustes de perfil</Text>
                             </View>

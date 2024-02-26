@@ -1,14 +1,16 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Alert, Keyboard, KeyboardAvoidingView, Text,TouchableHighlight, TouchableWithoutFeedback, View } from "react-native";
 import { t, tailwind, tw } from "react-native-tailwindcss";
 import { v4 as uuidv4 } from "uuid";
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import Input from "./Input";
+import { AuthContext } from "../Context/AuthContext";
 import { supabase } from "../supabase/client";
 import { useForm } from "../Custom-Hooks";
 
 export default function AuthForm ({ initialAction, isSettingsScreen, justify, navigation, paddingX, route, userId }) {
+    const auth = useContext(AuthContext);
     const [logInAction, setLogInAction] = useState(initialAction);
     const [placeholderText, setPlaceholderText] = useState({ forEmail: "Escribe tu e-mail..." , forPassword: "Crea una contraseña..." });
     const [errorWithSignInOrSignUp, setErrorWithSignInOrSignUp] = useState();
@@ -64,11 +66,12 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
                 password: stateOfForm.inputs.password.value
             })
             if (error) setErrorWithSignInOrSignUp(error);
+            if (data) auth.login(new_user_id, data.session.access_token);
         } catch (err) {
             setErrorWithSignInOrSignUp(err);
         }
         if (errorWithSignInOrSignUp) Alert.alert(errorWithSignInOrSignUp);
-        if (!errorWithSignInOrSignUp) navigation.navigate("User", { user_id: new_user_id });
+        if (!errorWithSignInOrSignUp) navigation.navigate("User");
     }
 
     function submitButtonHandler () {
