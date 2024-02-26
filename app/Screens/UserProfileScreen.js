@@ -14,7 +14,7 @@ export default function UserProfileScreen ({ navigation, route }) {
     const [restaurants, setRestaurants] = useState();
 
     let email = "manuelaag99@gmail.com";
-    let user_id = "4ff038cb-0fe5-494b-80fe-89bbc5cdeb22";
+    let user_id = "17c5650b-53f7-4f1f-a5bc-640636f288c";
 
     // const { user_id } = route.params;
 
@@ -55,9 +55,39 @@ export default function UserProfileScreen ({ navigation, route }) {
 
     const insets = useSafeAreaInsets();
 
+
+    async function createUserInDatabase () {
+        if (newUserId) {
+            try {
+                const { error } = await supabase.from("ALO-users-db").insert({ user_id: newUserId, user_username: stateOfForm.inputs.username.value, user_email: stateOfForm.inputs.email.value, user_display_name: stateOfForm.inputs.displayName.value, user_password: stateOfForm.inputs.password.value });
+                if (error) setErrorWithSignInOrSignUp(error);
+            } catch (err) {
+                setErrorWithSignInOrSignUp(err);
+            }
+            if (errorWithSignInOrSignUp) Alert.alert(errorWithSignInOrSignUp);
+            if (!errorWithSignInOrSignUp) navigation.navigate("User", { user_id: newUserId });
+        }
+    }
+    
+    async function logout () {
+        try {
+            const { error } = await supabase.auth.signOut();
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
     if (!user) {
         return (
-            <ActivityIndicator style={[ tw.mT10]} size="large" color="#000" />
+            <View>
+                <ActivityIndicator style={[ tw.mT10]} size="large" color="#000" />
+                <TouchableHighlight onPress={logout}>
+                    <Text>
+                        Log out
+                    </Text>
+                </TouchableHighlight>
+            </View>
+            
         )
     } else if (user && restaurants) {
         return (

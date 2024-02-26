@@ -1,6 +1,6 @@
 {
   "expo": {
-    "scheme": "myapp",
+    "scheme": "com.supabase",
     "name": "my-first-react-native-app",
     "slug": "my-first-react-native-app",
     "version": "1.0.0",
