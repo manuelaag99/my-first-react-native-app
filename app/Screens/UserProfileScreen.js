@@ -20,7 +20,7 @@ export default function UserProfileScreen ({ navigation, route }) {
     let user_id = "17c5650b-53f7-4f1f-a5bc-640636f288c";
 
     // const { user_id } = route.params;
-
+    // useEffect(() => auth.logout(), [])
     async function fetchData () {
         try {
             const { data, error } = await supabase.from("ALO-users-db").select("*").eq("user_id", auth.userId);
@@ -66,6 +66,8 @@ export default function UserProfileScreen ({ navigation, route }) {
         }
         auth.logout()
     }
+
+
 
     if (!user) {
         return (
@@ -143,11 +145,11 @@ export default function UserProfileScreen ({ navigation, route }) {
                             </View>
                         </TouchableHighlight>
 
-                        <View style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgRed600, tailwind.roundedLg, tw.mY5 ]}>
+                        <TouchableHighlight underlayColor="#ff7777" onPress={() => auth.logout()} style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgRed600, tailwind.roundedLg, tw.mY5 ]}>
                             <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
                                 <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold, t.textWhite ]}>Cerrar sesión</Text>
                             </View>
-                        </View>
+                        </TouchableHighlight>
 
                         <TouchableHighlight underlayColor="#ff0000" onPress={() => setModalVisibility(true)} style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgRed800, tailwind.roundedLg, tw.mY5 ]}>
                             <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>

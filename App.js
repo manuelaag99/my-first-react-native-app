@@ -23,7 +23,7 @@ import { AuthContext } from './app/Context/AuthContext';
 
 export default function App() {
 	let colorScheme = useColorScheme();
-	let containerTheme
+	let containerTheme;
 	if (colorScheme === "dark") {
 		containerTheme = styles.darkContainer
 	} else {
@@ -41,11 +41,11 @@ export default function App() {
 
 	useEffect(() => {
 		supabase.auth.getSession().then(({ data: { session }}) => {
-		setSession(session);
+			setSession(session);
 		})
 
 		supabase.auth.onAuthStateChange((_event, session) => {
-		setSession(session);
+			setSession(session);
 		})
 	}, [])
 
@@ -67,6 +67,7 @@ export default function App() {
 	// });
 
 	const Stack = createNativeStackNavigator()
+
 
 	if (token) {
 		return <>
@@ -100,7 +101,7 @@ export default function App() {
 		return <>
 			<NavigationContainer>
 				<AuthContext.Provider value={{ isLoggedIn: token, token: token, userId: userId, login: logIn, logout: logOut }}>
-					{!session && <Stack.Navigator>
+					{!token && <Stack.Navigator>
 						<Stack.Screen name='Sign in or Sign up' component={LoginOrRegisterScreen} options={{ title: "Iniciar Sesion" }} /> 
 					</Stack.Navigator>}
 				</AuthContext.Provider>

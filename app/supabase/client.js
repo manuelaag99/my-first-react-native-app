@@ -12,8 +12,8 @@ import { AppState } from "react-native";
 export const supabase = createClient(API_URL, API_KEY, {
     auth: {
 		storage: AsyncStorage,
-		autoRefreshToken: true,
-		persistSession: true,
+		autoRefreshToken: false,  //eventually should be true
+		persistSession: false, //eventually should be true
 		detectSessionInUrl: false
     }
 });
@@ -23,10 +23,10 @@ export const supabase = createClient(API_URL, API_KEY, {
 // to receive `onAuthStateChange` events with the `TOKEN_REFRESHED` or
 // `SIGNED_OUT` event if the user's session is terminated. This should
 // only be registered once.
-AppState.addEventListener('change', (state) => {
-	if (state === 'active') {
-		supabase.auth.startAutoRefresh()
-	} else {
-		supabase.auth.stopAutoRefresh()
-	}
-})
+// AppState.addEventListener('change', (state) => {
+// 	if (state === 'active') {
+// 		supabase.auth.startAutoRefresh()
+// 	} else {
+// 		supabase.auth.stopAutoRefresh()
+// 	}
+// })

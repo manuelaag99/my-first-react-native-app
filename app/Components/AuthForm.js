@@ -50,23 +50,58 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
     }, [logInAction]);
 
 
-    let new_user_id;
+    const [signUpData, setSignUpData] = useState();
     async function registerUser () {
-        setLoading(true);
-        new_user_id = uuidv4();
-        try {
-            const { error } = await supabase.from("ALO-users-db").insert({ user_id: new_user_id, user_username: stateOfForm.inputs.username.value, user_email: stateOfForm.inputs.email.value, user_display_name: stateOfForm.inputs.displayName.value, user_password: stateOfForm.inputs.password.value });
-            if (error) setErrorWithSignInOrSignUp(error);
-        } catch (err) {
-            setErrorWithSignInOrSignUp(err);
-        }
         try {
             const { data, error } = await supabase.auth.signUp({
                 email: stateOfForm.inputs.email.value,
                 password: stateOfForm.inputs.password.value
             })
             if (error) setErrorWithSignInOrSignUp(error);
-            if (data) auth.login(new_user_id, data.session.access_token);
+            setSignUpData(data);
+            // if (data) auth.login(new_user_id, data.session.access_token);
+        } catch (err) {
+            setErrorWithSignInOrSignUp(err);
+        }
+        if (errorWithSignInOrSignUp) Alert.alert(errorWithSignInOrSignUp);
+        
+    }
+    console.log(signUpData)
+
+    async function createUserInDatabase () {
+        try {
+            const { error } = await supabase.from("ALO-users-db").insert({ user_id: signUpData.user.id, user_username: stateOfForm.inputs.username.value, user_email: stateOfForm.inputs.email.value, user_display_name: stateOfForm.inputs.displayName.value, user_password: stateOfForm.inputs.password.value });
+            if (error) setErrorWithSignInOrSignUp(error);
+            if (!error) auth.login(signUpData.user.id, signUpData.session.access_token);
+        } catch (err) {
+            setErrorWithSignInOrSignUp(err);
+        }
+    }
+    useEffect(() => {
+        if (signUpData) createUserInDatabase();
+    }, [signUpData])
+
+    const [userIdForSignIn, setUserIdForSignIn] = useState();
+    async function getUserId () {
+        try {
+            const { data, error } = await supabase.from("ALO-users-db").select("user_id").eq("user_email", stateOfForm.inputs.email.value);
+            if (error) setErrorWithSignInOrSignUp(error);
+            console.log(data.user_id);
+            setUserIdForSignIn(data.user_id);
+        } catch (err) {
+            setErrorWithSignInOrSignUp(err);
+        }
+    }
+
+    async function signInUser () {
+        setLoading(true);
+        try {
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: stateOfForm.inputs.email.value,
+                password: stateOfForm.inputs.password.value
+            })
+            if (error) setErrorWithSignInOrSignUp(error);
+            if (data) auth.login(userIdForSignIn, data.session.access_token);
         } catch (err) {
             setErrorWithSignInOrSignUp(err);
         }
@@ -76,10 +111,9 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
 
     function submitButtonHandler () {
         if (stateOfForm.isFormValid && logInAction === "register") {
-            console.log("register");
             registerUser();
         } else if (stateOfForm.isFormValid && logInAction === "signIn") {
-            console.log("sign in");
+            signInUser();
         } else if (stateOfForm.isFormValid && logInAction === "update") {
             console.log("update profile")
         }
