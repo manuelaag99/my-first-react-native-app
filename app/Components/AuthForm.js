@@ -101,12 +101,11 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
                 password: stateOfForm.inputs.password.value
             })
             if (error) setErrorWithSignInOrSignUp(error);
-            if (data) auth.login(userIdForSignIn, data.session.access_token);
+            if (!error) auth.login(data.user.id, data.session.access_token);
         } catch (err) {
             setErrorWithSignInOrSignUp(err);
         }
         if (errorWithSignInOrSignUp) Alert.alert(errorWithSignInOrSignUp);
-        if (!errorWithSignInOrSignUp) navigation.navigate("User");
     }
 
     function submitButtonHandler () {
