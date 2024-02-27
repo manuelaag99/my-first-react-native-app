@@ -73,11 +73,6 @@ export default function UserProfileScreen ({ navigation, route }) {
         return (
             <View>
                 <ActivityIndicator style={[ tw.mT10]} size="large" color="#000" />
-                <TouchableHighlight onPress={logout}>
-                    <Text>
-                        Log out
-                    </Text>
-                </TouchableHighlight>
             </View>
             
         )

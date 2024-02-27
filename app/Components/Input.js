@@ -31,7 +31,7 @@ export default function Input ({ autoCapitalize, errorMessage, field, individual
             {isPasswordField && <View style={[ tw.w5_6, tw.mY2, tw.h12 ]}>
                 <View style={[ tw.flex, tw.flexRow, tw.itemsCenter ]}>
                     <View style={[ tw.w4_5 ]}>
-                        <TextInput autoCapitalize={autoCapitalize || "none"} autoComplete="off" onBlur={individualInputBlurHandler} onChangeText={(text) => individualInputChangeHandler(text)} onFocus={individualInputFocusHandler} placeholder={placeholderText} style={[[ tw.wFull, tw.pY2, tw.pX2, tw.hFull, tailwind.roundedLg]]} secureTextEntry={ ((field === "password") && isPasswordVisible) ? true : false } value={value} />
+                        <TextInput autoCapitalize={autoCapitalize || "none"} autoComplete="off" onBlur={individualInputBlurHandler} onChangeText={(text) => individualInputChangeHandler(text)} onFocus={individualInputFocusHandler} placeholder={placeholderText} style={[[ tw.wFull, tw.pY2, tw.pX2, tw.hFull, tailwind.roundedLg]]} secureTextEntry={ ((field === "password") && !isPasswordVisible) ? true : false } value={value} />
                     </View>
                     <TouchableOpacity onPress={() => setIsPasswordVisible((prevValue) => !prevValue)} style={[ tw.w1_5, tw.justifyCenter, tw.itemsCenter ]}>
                         <Text>
