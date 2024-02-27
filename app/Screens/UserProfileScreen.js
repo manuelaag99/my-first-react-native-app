@@ -15,12 +15,9 @@ export default function UserProfileScreen ({ navigation, route }) {
     const [modalVisibility, setModalVisibility] = useState(false);
     const [user, setUser] = useState();
     const [restaurants, setRestaurants] = useState();
+    const [restaurantsThatTheUserIsAnEmployeeOf, setRestaurantsThatTheUserIsAnEmployeeOf] = useState();
+    const [restaurantsThatTheUserIsAnEmployeeOfWithNames, setRestaurantsThatTheUserIsAnEmployeeOfWithNames] = useState();
 
-    let email = "manuelaag99@gmail.com";
-    let user_id = "17c5650b-53f7-4f1f-a5bc-640636f288c";
-
-    // const { user_id } = route.params;
-    // useEffect(() => auth.logout(), [])
     async function fetchData () {
         try {
             const { data, error } = await supabase.from("ALO-users-db").select("*").eq("user_id", auth.userId);
@@ -36,7 +33,27 @@ export default function UserProfileScreen ({ navigation, route }) {
         } catch (err) {
             console.log(err);
         }
+        try {
+            const { data, error } = await supabase.from("ALO-employees").select("*").eq("user_id", auth.userId);
+            setRestaurantsThatTheUserIsAnEmployeeOf(data);
+            if (error) console.log(error);
+        } catch (err) {
+            console.log(err);
+        }
     }
+    console.log(restaurantsThatTheUserIsAnEmployeeOf)
+
+    useEffect(() => {
+        if (restaurantsThatTheUserIsAnEmployeeOf) {
+            restaurantsThatTheUserIsAnEmployeeOf.map((restaurantThatTheUserIsAnEmployeeOf) => {
+                restaurants.map((restaurant) => {
+                    if (restaurantThatTheUserIsAnEmployeeOf.restaurant_id === restaurant.restaurant_id) {
+                        setRestaurantsThatTheUserIsAnEmployeeOfWithNames({ restaurant_id: restaurant.restaurant_id, restaurant_name: restaurant.restaurant_name })
+                    } 
+                })
+            })
+        }
+    }, [restaurantsThatTheUserIsAnEmployeeOf])
 
     useEffect(() => {
         fetchData();
@@ -76,7 +93,7 @@ export default function UserProfileScreen ({ navigation, route }) {
             </View>
             
         )
-    } else if (user && restaurants) {
+    } else if (user && restaurants && restaurantsThatTheUserIsAnEmployeeOf) {
         return (
             <ScrollView>
                 <View style={[[ tw.flex, tw.flexCol, t.pX5, t.pB10, tw.hScreen, tw.wScreen, t.bgWhite ], { paddingTop: insets.top }]}>
@@ -99,7 +116,7 @@ export default function UserProfileScreen ({ navigation, route }) {
                             {restaurants && restaurants.map((restaurant, index) => {
                                 return (
                                     <TouchableHighlight underlayColor="#ccc" key={index} onPress={() => navigation.navigate("Restaurant", { user_id: auth.userId, restaurant_id: restaurant.restaurant_id, restaurant_name: restaurant.restaurant_name, creator_name: user.user_display_name })} style={[ tw.flex, tw.flexRow, tw.wFull ]}>
-                                        <Text style={[ t.textCenter, tw.wFull, tw.mY4 ]}>
+                                        <Text style={[ t.textCenter, tw.wFull, tw.mY4, tw.pX4 ]}>
                                             {restaurant.restaurant_name}
                                         </Text>
                                     </TouchableHighlight>
@@ -109,7 +126,7 @@ export default function UserProfileScreen ({ navigation, route }) {
                                 <Text style={[ t.textCenter, tw.mXAuto, tw.mY5, tw.wFull, t.fontBold ]}>Agregar otro restaurante</Text>
                             </TouchableHighlight>}
                             {!restaurants && <TouchableHighlight underlayColor="#ccc" onPress={() => setNewRestaurantVisibility(true)} style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull, tailwind.roundedLg ]}>
-                                <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold ]}>Aún no tienes restaurantes. Haz clic aquí para agregar uno</Text>
+                                <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold, t.pX4 ]}>Aún no tienes restaurantes. Haz clic aquí para agregar uno</Text>
                             </TouchableHighlight>}
                         </View>
 
@@ -117,20 +134,20 @@ export default function UserProfileScreen ({ navigation, route }) {
                             <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
                                 <Text onPress={refreshHandle} style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold ]}>RESTAURANTES DONDE TRABAJO</Text>
                             </View>
-                            {restaurants && restaurants.map((restaurant, index) => {
+                            {restaurantsThatTheUserIsAnEmployeeOfWithNames && restaurantsThatTheUserIsAnEmployeeOfWithNames.map((restaurant, index) => {
                                 return (
                                     <TouchableHighlight underlayColor="#ccc" key={index} onPress={() => navigation.navigate("Restaurant", { user_id: auth.userId, restaurant_id: restaurant.restaurant_id })} style={[ tw.flex, tw.flexRow, tw.wFull ]}>
-                                        <Text style={[ t.textCenter, tw.wFull, tw.mY4 ]}>
+                                        <Text style={[ t.textCenter, tw.wFull, tw.mY4, tw.pX4 ]}>
                                             {restaurant.restaurant_name}
                                         </Text>
                                     </TouchableHighlight>
                                 )
                             })}
-                            {restaurants && <TouchableHighlight underlayColor="#ccc" onPress={() => navigation.navigate("Search Restaurant", { user_id: auth.userId })} style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull, tailwind.roundedLg ]}>
+                            {(restaurantsThatTheUserIsAnEmployeeOf && restaurantsThatTheUserIsAnEmployeeOf.length > 1) && <TouchableHighlight underlayColor="#ccc" onPress={() => navigation.navigate("Search Restaurant", { user_id: auth.userId })} style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull, tailwind.roundedLg ]}>
                                 <Text style={[ t.textCenter, tw.mXAuto, tw.mY5, tw.wFull, t.fontBold ]}>Buscar otro restaurante</Text>
                             </TouchableHighlight>}
-                            {!restaurants && <TouchableHighlight underlayColor="#ccc" onPress={() => navigation.navigate("Search Restaurant", { user_id: auth.userId })} style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull, tailwind.roundedLg ]}>
-                                <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold ]}>Aún no tienes restaurantes. Haz clic aquí para agregar uno</Text>
+                            {(!restaurantsThatTheUserIsAnEmployeeOf || restaurantsThatTheUserIsAnEmployeeOf.length < 1) && <TouchableHighlight underlayColor="#ccc" onPress={() => navigation.navigate("Search Restaurant", { user_id: auth.userId })} style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull, tailwind.roundedLg ]}>
+                                <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold, t.pX4 ]}>Aún no trabajas en ningun restaurante. Haz clic aquí para buscar uno.</Text>
                             </TouchableHighlight>}
                         </View>
 
@@ -155,7 +172,7 @@ export default function UserProfileScreen ({ navigation, route }) {
                     </View>
                 </View>
                 
-                <NewItem creatorId={user_id} dishesToUpdate={null} isUpdating={false} isVisible={newRestaurantVisibility} itemToAdd="restaurant" onClose={() => setNewRestaurantVisibility(false)} textForAddButton="AGREGAR" topText="Nuevo restaurante" updateFetchedData={fetchAgain} userId={auth.userId} />
+                <NewItem creatorId={auth.userId} dishesToUpdate={null} isUpdating={false} isVisible={newRestaurantVisibility} itemToAdd="restaurant" onClose={() => setNewRestaurantVisibility(false)} textForAddButton="AGREGAR" topText="Nuevo restaurante" updateFetchedData={fetchAgain} userId={auth.userId} />
                 <ModalTemplate actionButtonBorder={tw.borderRed700} actionButtonColor={tw.bgRed700} animationForModal="fade" isVisible={modalVisibility} onClose={() => setModalVisibility(false)} restaurantId={null} textForButton="Eliminar" textForModal="¿Quieres eliminar tu cuenta? Esto es permanente." userId={auth.userId} />
             </ScrollView>
         )
