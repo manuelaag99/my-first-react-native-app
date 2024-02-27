@@ -5,11 +5,12 @@ import MessageBox from "./MessageBox";
 import { inputReducer } from "../Reducers";
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-export default function Input ({ autoCapitalize, errorMessage, field, individualInputAction, instructionMessage, isPasswordField, placeholderText }) {
-    const initialValues = { value: "", isValid: true }
+export default function Input ({ autoCapitalize, errorMessage, field, individualInputAction, initialInputValue, instructionMessage, isPasswordField, placeholderText }) {
+    const initialValues = { value: initialInputValue ? initialInputValue : "", isValid: true }
     const [individualInputState, dispatch] = useReducer(inputReducer, initialValues);
     const {value, isValid} = individualInputState;
 
+    console.log(initialInputValue)
     function individualInputBlurHandler () {
         dispatch({ type: "blur" })
     }

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Alert, Keyboard, KeyboardAvoidingView, Text,TouchableHighlight, TouchableWithoutFeedback, View } from "react-native";
+import { ActivityIndicator, Alert, Keyboard, KeyboardAvoidingView, Text,TouchableHighlight, TouchableWithoutFeedback, View } from "react-native";
 import { t, tailwind, tw } from "react-native-tailwindcss";
 import { v4 as uuidv4 } from "uuid";
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -9,7 +9,7 @@ import { AuthContext } from "../Context/AuthContext";
 import { supabase } from "../supabase/client";
 import { useForm } from "../Custom-Hooks";
 
-export default function AuthForm ({ initialAction, isSettingsScreen, justify, navigation, paddingX, route, userId }) {
+export default function AuthForm ({ initialAction, isSettingsScreen, justify, navigation, paddingX, route, userId, userInfo }) {
     const auth = useContext(AuthContext);
     const [logInAction, setLogInAction] = useState(initialAction);
     const [placeholderText, setPlaceholderText] = useState({ forEmail: "Escribe tu e-mail..." , forPassword: "Crea una contraseña..." });
@@ -23,19 +23,6 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
         },
         isFormValid: false
     };
-
-    async function fetchUserInfo () {
-        try {
-            const { data, error } = await supabase.from("ALO-users-db").select("*").eq("user_id", userId);
-            console.log(error);
-        } catch (err) {
-            Alert(err);
-        }
-    }
-
-    useEffect(() => {
-        if (isSettingsScreen) fetchUserInfo();
-    }, [])
 
     const [stateOfForm, formHandler] = useForm(initialFormState);
 
@@ -59,14 +46,12 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
             })
             if (error) setErrorWithSignInOrSignUp(error);
             setSignUpData(data);
-            // if (data) auth.login(new_user_id, data.session.access_token);
         } catch (err) {
             setErrorWithSignInOrSignUp(err);
         }
         if (errorWithSignInOrSignUp) Alert.alert(errorWithSignInOrSignUp);
         
     }
-    console.log(signUpData)
 
     async function createUserInDatabase () {
         try {
@@ -80,18 +65,6 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
     useEffect(() => {
         if (signUpData) createUserInDatabase();
     }, [signUpData])
-
-    const [userIdForSignIn, setUserIdForSignIn] = useState();
-    async function getUserId () {
-        try {
-            const { data, error } = await supabase.from("ALO-users-db").select("user_id").eq("user_email", stateOfForm.inputs.email.value);
-            if (error) setErrorWithSignInOrSignUp(error);
-            console.log(data.user_id);
-            setUserIdForSignIn(data.user_id);
-        } catch (err) {
-            setErrorWithSignInOrSignUp(err);
-        }
-    }
 
     async function signInUser () {
         setLoading(true);
@@ -118,9 +91,13 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
         }
     }
 
-    if (loading) {
-        return null;
-    } else {
+    if (userInfo) console.log(userInfo)
+
+    if ((isSettingsScreen && !userInfo) || (!isSettingsScreen && loading)) {
+        return (
+            <ActivityIndicator style={[ tw.mT10]} size="large" color="#000" />
+        )
+    } else if ((isSettingsScreen && userInfo) || (!isSettingsScreen && !loading)) {
         return (
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={[ t.flex, t.flexCol, tw.itemsCenter, tw.hFull, tw.wFull, paddingX, justify ]}>
@@ -128,10 +105,10 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
                         <Text style={[ t.textCenter, tw.mXAuto, tw.wFull, t.fontBold, t.text2xl, t.italic ]}>A LA ORDEN</Text>
                     </View>}
                     <View style={[ t.flex, tw.justifyCenter, tw.itemsCenter, tw.wFull, tw.bgWhite, tw.pX4, tw.pY4, tailwind.roundedLg, (!isSettingsScreen && tailwind.shadow2xl) ]}>
-                        {(logInAction !== "signIn") && <Input isPasswordField={false} autoCapitalize="words" errorMessage="Escribe un nombre válido." field="displayName" individualInputAction={formHandler} instructionMessage={null} placeholderText={ placeholderText.forDisplayName } />}
-                        {(logInAction !== "signIn") && <Input isPasswordField={false} errorMessage="Escribe un usuario válido." field="username" individualInputAction={formHandler} instructionMessage="Escribe al menos 6 caracteres, sin espacios." placeholderText={ placeholderText.forUsername } />}
-                        <Input isPasswordField={false} errorMessage="Escribe un correo electrónico válido." field="email" individualInputAction={formHandler} instructionMessage={null} placeholderText={placeholderText.forEmail} />
-                        <Input isPasswordField={true} errorMessage="Escribe una contraseña válida" field="password" individualInputAction={formHandler} instructionMessage="Escribe al menos 10 caracteres, mayúsculas y minúsculas, y símbolos especiales (@, #, etc.)." placeholderText={placeholderText.forPassword} />
+                        {(logInAction !== "signIn") && <Input isPasswordField={false} autoCapitalize="words" errorMessage="Escribe un nombre válido." field="displayName" individualInputAction={formHandler} initialInputValue={userInfo ? userInfo.user_display_name : null} instructionMessage={null} placeholderText={ placeholderText.forDisplayName } />}
+                        {(logInAction !== "signIn") && <Input isPasswordField={false} errorMessage="Escribe un usuario válido." field="username" individualInputAction={formHandler} initialInputValue={userInfo ? userInfo.user_username : null} instructionMessage="Escribe al menos 6 caracteres, sin espacios." placeholderText={ placeholderText.forUsername } />}
+                        <Input isPasswordField={false} errorMessage="Escribe un correo electrónico válido." field="email" individualInputAction={formHandler} initialInputValue={userInfo ? userInfo.user_email : null} instructionMessage={null} placeholderText={placeholderText.forEmail} />
+                        <Input isPasswordField={true} errorMessage="Escribe una contraseña válida" field="password" individualInputAction={formHandler} initialInputValue={userInfo ? userInfo.user_password : null} instructionMessage="Escribe al menos 10 caracteres, mayúsculas y minúsculas, y símbolos especiales (@, #, etc.)." placeholderText={placeholderText.forPassword} />
                         <TouchableHighlight onPress={submitButtonHandler} style={[[ tw.pY4, tw.mY3, tw.pX3, tw.bgBlue400, tailwind.roundedLg, tailwind.shadow2xl ], { width: "95%" }]} underlayColor="#ccddff">
                             <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
                                 {(logInAction === "register") && "Registrarse"}
@@ -177,11 +154,8 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
                         </Text>}
     
                     </View>
-    
-                    
                 </View>
             </TouchableWithoutFeedback>
         )
     }
-    
 }

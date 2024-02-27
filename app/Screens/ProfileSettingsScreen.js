@@ -1,10 +1,12 @@
 import { ActivityIndicator, Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback, View } from "react-native";
 import AuthForm from "../Components/AuthForm";
 import { t, tw } from "react-native-tailwindcss";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { supabase } from "../supabase/client";
+import { AuthContext } from "../Context/AuthContext";
 
 export default function ProfileSettingsScreen ({ navigation, route }) {
+    const auth = useContext(AuthContext);
     const [user, setUser] = useState();
 
     const { user_id } = route.params;
@@ -22,8 +24,6 @@ export default function ProfileSettingsScreen ({ navigation, route }) {
         fetchData()
     }, [])
 
-    console.log(user)
-
     if (!user) {
         return (
             <ActivityIndicator style={[ tw.mT10]} size="large" color="#000" />
@@ -32,7 +32,7 @@ export default function ProfileSettingsScreen ({ navigation, route }) {
         return (
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <KeyboardAvoidingView style={[ t.flex, t.flexCol, t.justifyStart, t.bgWhite, tw.itemsCenter, tw.hFull, tw.wScreen, tw.pB10 ]}>
-                    <AuthForm initialAction="update" isSettingsScreen={true} justify={t.justifyStart} navigation={navigation} paddingX={tw.pX0} />
+                    <AuthForm initialAction="update" isSettingsScreen={true} justify={t.justifyStart} navigation={navigation} paddingX={tw.pX0} userInfo={user} />
                 </KeyboardAvoidingView>
             </TouchableWithoutFeedback>
         )
