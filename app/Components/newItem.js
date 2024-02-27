@@ -38,6 +38,15 @@ export default function NewItem ({ dishesToUpdate, isUpdating, isVisible, itemId
         } catch (err) {
             console.log(err);
         }
+        let generated_administrator_id = uuidv4();
+        if (!isUpdating) {
+            try {
+                const { error } = await supabase.from("ALO-admins").insert({ administrator_id: generated_administrator_id, user_id: userId, restaurant_id: generated_restaurant_id });
+                if (error) console.log(error)
+            } catch (err) {
+                console.log(err);
+            }   
+        }
         onClose();
         updateFetchedData();
         setRestaurantInfo({ restaurant_name: "" });
