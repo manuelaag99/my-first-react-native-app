@@ -20,6 +20,7 @@ import RestaurantsSearchScreen from './app/Screens/RestaurantsSearchScreen';
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from './app/supabase/client';
 import { AuthContext } from './app/Context/AuthContext';
+import RequestsScreen from './app/Screens/RequestsScreen';
 
 export default function App() {
 	let colorScheme = useColorScheme();
@@ -83,6 +84,7 @@ export default function App() {
 							<Stack.Screen name='Settings' component={ProfileSettingsScreen} options={{ title: "Ajustes" }} />
 							<Stack.Screen name='Team' component={RestaurantTeamScreen} options={{ title: "Equipo" }} />
 							<Stack.Screen name='Search Restaurant' component={RestaurantsSearchScreen} options={{ title: "Buscar restaurante" }} />
+							<Stack.Screen name='Requests' component={RequestsScreen} options={{ title: "Solicitudes" }} />
 								
 							{/* <View  style={styles.container}> */}
 							{/* <Text style={textTheme}>Open up App.js to start working on your app!</Text> */}

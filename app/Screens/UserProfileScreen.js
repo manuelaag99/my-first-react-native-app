@@ -151,6 +151,12 @@ export default function UserProfileScreen ({ navigation, route }) {
                             </TouchableHighlight>}
                         </View>
 
+                        <TouchableHighlight underlayColor="#ccc" onPress={() => navigation.navigate("Requests", { user_id: auth.userId })} style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgWhite, tw.border, tw.borderGray300, tailwind.roundedLg, tw.mY5 ]}>
+                            <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
+                                <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold, t.textBlack ]}>Solicitudes</Text>
+                            </View>
+                        </TouchableHighlight>
+
                         <TouchableHighlight underlayColor="#ccc" onPress={() => navigation.navigate("Settings", { user_id: auth.userId })} style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgWhite, tw.border, tw.borderGray300, tailwind.roundedLg, tw.mY5 ]}>
                             <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
                                 <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold, t.textBlack ]}>Ajustes de perfil</Text>
