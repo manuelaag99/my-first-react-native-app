@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ActivityIndicator, ScrollView, Text, TextInput, TouchableHighlight, View } from "react-native";
 import { t, tailwind, tw } from "react-native-tailwindcss";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { supabase } from "../supabase/client";
 import ModalTemplate from "../Components/ModalTemplate";
+import { AuthContext } from "../Context/AuthContext";
 
 export default function RestaurantsSearchScreen ({ navigation, route }) {
+    const auth = useContext(AuthContext);
     const [searchQuery, setSearchQuery] = useState();
     const [allRestaurantsArray, setAllRestaurantsArray] = useState();
     const [restaurantsToDisplay, setRestaurantsToDisplay] = useState();
@@ -78,7 +80,7 @@ export default function RestaurantsSearchScreen ({ navigation, route }) {
                                         <View key={index} style={[ t.flex, t.flexRow, tw.wFull, t.borderGray400, t.borderT ]}>
 
                                             <View style={[[ t.flex, t.flexCol, t.justifyCenter, t.itemsCenter ], { width: "90%" }]} >
-                                                <TouchableHighlight onPress={() => console.log("press")} style={[ t.flex, t.justifyCenter, tw.wFull, tailwind.roundedLg, tw.pY4 ]} underlayColor="#ccc">
+                                                <TouchableHighlight onPress={() => navigation.navigate("Restaurant", { user_id: auth.userId, restaurant_id: restaurant.restaurant_id })} style={[ t.flex, t.justifyCenter, tw.wFull, tailwind.roundedLg, tw.pY4 ]} underlayColor="#ccc">
                                                     <Text style={[ tw.h6, t.textLeft, t.textBlack, t.fontBold, tw.pX4 ]}>{restaurant.restaurant_name}</Text>
                                                 </TouchableHighlight>
                                             </View>
