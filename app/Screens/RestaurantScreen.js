@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ActivityIndicator, ScrollView, Text, TouchableHighlight, View } from "react-native";
 import { t, tw, tailwind } from "react-native-tailwindcss";
 import ModalTemplate from "../Components/ModalTemplate";
 import NewItem from "../Components/NewItem";
 import { supabase } from "../supabase/client";
+import { AuthContext } from "../Context/AuthContext";
 
 export default function RestaurantScreen ({ route, navigation }) {
+    const auth = useContext(AuthContext);
     const [modalVisibility, setModalVisibility] = useState(false);
     const [newItemVisibility, setNewItemVisibility] = useState(false);
     const [updateRestaurantVisibility, setUpdateRestaurantVisibility] = useState(false);
@@ -37,10 +39,17 @@ export default function RestaurantScreen ({ route, navigation }) {
     }
 
     const [restaurantEmployees, setRestaurantEmployees] = useState();
-    async function fetchRestaurantEmployees() {
+    const [restaurantAdministratorsArray, setRestaurantAdministratorsArray] = useState();
+    async function fetchRestaurantEmployeesAndAdministrators() {
         try {
-            const { data, error } = await supabase.from("ALO-employees").select("employee_id")
-            // const { data, error } = await supabase.from("ALO-employees").select("*").eq("restaurant_id", restaurant_id);
+            const { data, error } = await supabase.from("ALO-admins").select("*").eq("restaurant_id", restaurant_id);
+            if (error) console.log(error);
+            setRestaurantAdministratorsArray(data);
+        } catch (err) {
+            console.log(err);
+        }
+        try {
+            const { data, error } = await supabase.from("ALO-employees").select("*").eq("restaurant_id", restaurant_id);
             if (error) console.log(error);
             console.log(data)
             setRestaurantEmployees(data);
@@ -56,7 +65,7 @@ export default function RestaurantScreen ({ route, navigation }) {
     useEffect(() => {
         if (restaurantInfo) {
             fetchRestaurantCreatorInfo();
-            fetchRestaurantEmployees();
+            fetchRestaurantEmployeesAndAdministrators();
         }
     }, [restaurantInfo])
 
@@ -71,7 +80,19 @@ export default function RestaurantScreen ({ route, navigation }) {
                 }
             })
         }
-    }, [restaurantEmployees])
+    }, [restaurantEmployees, ])
+    const [isUserAnAdministrator, setIsUserAnAdministrator] = useState();
+    useEffect(() => {
+        if (restaurantAdministratorsArray && restaurantAdministratorsArray.length > 0) {
+            restaurantAdministratorsArray.map((administrator) => {
+                if (administrator.user_id === auth.userId) {
+                    setIsUserAnAdministrator(true);
+                } else {
+                    setIsUserAnAdministrator(false);
+                }
+            })
+        }
+    }, [restaurantAdministratorsArray])
 
     function navigateAfterDeletingRestaurant () {
         navigation.navigate("User");
@@ -100,48 +121,48 @@ export default function RestaurantScreen ({ route, navigation }) {
                             creado por {restaurantCreatorInfo.user_display_name}
                         </Text>
                         <Text style={[ tw.wFull, t.textCenter, t.fontBold, t.textGray500, t.textBase, tw.mY2 ]}>
-                            {(user_id === restaurantInfo.creator_id) && "Eres administrador."}
+                            {isUserAnAdministrator && "Eres administrador."}
                             {isUserEmployee && "Eres empleado."}
                         </Text>
                     </View>
     
-                    {(user_id !== restaurantInfo.creator_id) && <TouchableHighlight underlayColor="#ffdd88" onPress={() => console.log("send employee request")} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgOrange400, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
+                    {(!isUserAnAdministrator) && <TouchableHighlight underlayColor="#ffdd88" onPress={() => console.log("send employee request")} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgOrange400, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
                             Soy empleado
                         </Text>
                     </TouchableHighlight>}
 
-                    {((user_id === restaurantInfo.creator_id) || (isUserEmployee)) && <TouchableHighlight underlayColor="#ccc" onPress={() => setNewItemVisibility(true)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgWhite, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
+                    {((isUserAnAdministrator) || (isUserEmployee)) && <TouchableHighlight underlayColor="#ccc" onPress={() => setNewItemVisibility(true)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgWhite, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textBlack ]}>
                             + Agregar orden
                         </Text>
                     </TouchableHighlight>}
     
-                    {((user_id === restaurantInfo.creator_id) || (isUserEmployee)) && <TouchableHighlight underlayColor="#ffeebb" onPress={() => navigation.navigate("Orders", { user_id: user_id, restaurant_id: restaurant_id })} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgYellow500, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
+                    {((isUserAnAdministrator) || (isUserEmployee)) && <TouchableHighlight underlayColor="#ffeebb" onPress={() => navigation.navigate("Orders", { user_id: user_id, restaurant_id: restaurant_id })} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgYellow500, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
                             Ver órdenes
                         </Text>
                     </TouchableHighlight>}
     
-                    {((user_id === restaurantInfo.creator_id) || (isUserEmployee)) && <TouchableHighlight underlayColor="#CCE5FF" onPress={() => navigation.navigate("Menu", { user_id: user_id, restaurant_id: restaurant_id })} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgBlue400, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
+                    {((isUserAnAdministrator) || (isUserEmployee)) && <TouchableHighlight underlayColor="#CCE5FF" onPress={() => navigation.navigate("Menu", { user_id: user_id, restaurant_id: restaurant_id })} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgBlue400, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
                             Ver Menú
                         </Text>
                     </TouchableHighlight>}
 
-                    {(user_id === restaurantInfo.creator_id) && <TouchableHighlight underlayColor="#DDFFDD" onPress={() => navigation.navigate("Team", { restaurant_id: restaurant_id })} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgGreen400, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
+                    {(isUserAnAdministrator) && <TouchableHighlight underlayColor="#DDFFDD" onPress={() => navigation.navigate("Team", { restaurant_id: restaurant_id })} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgGreen400, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
                             Ver Equipo
                         </Text>
                     </TouchableHighlight>}
     
-                    {(user_id === restaurantInfo.creator_id) && <TouchableHighlight underlayColor="#ccc" onPress={() => setUpdateRestaurantVisibility(true)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgWhite, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mT20, tw.mB6, tailwind.roundedLg ]}>
+                    {(isUserAnAdministrator) && <TouchableHighlight underlayColor="#ccc" onPress={() => setUpdateRestaurantVisibility(true)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgWhite, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mT20, tw.mB6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textBlack ]}>
                             Modificar restaurante
                         </Text>
                     </TouchableHighlight>}
                     
-                    {(user_id === restaurantInfo.creator_id) && <TouchableHighlight underlayColor="#ff6666" onPress={() => setModalVisibility(true)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgRed700, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
+                    {(isUserAnAdministrator) && <TouchableHighlight underlayColor="#ff6666" onPress={() => setModalVisibility(true)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgRed700, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
                             Eliminar restaurante
                         </Text>
