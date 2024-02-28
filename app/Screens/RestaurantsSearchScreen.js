@@ -81,17 +81,16 @@ export default function RestaurantsSearchScreen ({ navigation, route }) {
 
                                             <View style={[[ t.flex, t.flexCol, t.justifyCenter, t.itemsCenter ], { width: "90%" }]} >
                                                 <TouchableHighlight onPress={() => navigation.navigate("Restaurant", { user_id: auth.userId, restaurant_id: restaurant.restaurant_id })} style={[ t.flex, t.justifyCenter, tw.wFull, tailwind.roundedLg, tw.pY4 ]} underlayColor="#ccc">
-                                                    <Text style={[ tw.h6, t.textLeft, t.textBlack, t.fontBold, tw.pX4 ]}>{restaurant.restaurant_name}</Text>
+                                                    <Text style={[ tw.h6, t.textLeft, t.textBlack, t.fontBold, tw.pX4 ]}>{restaurant.restaurant_name} {(auth.userId === restaurant.creator_id) && "(eres administrador)"}</Text>
                                                 </TouchableHighlight>
                                             </View>
     
                                             <View style={[[ t.flex, t.flexCol, t.justifyCenter, t.itemsCenter ], { width: "10%" }]}>
-                                                <TouchableHighlight style={[[ t.flex, t.justifyCenter, t.itemsCenter, tw.wFull, tailwind.roundedLg, tw.pY4 ]]} onPress={() => openModalAndSendRestaurant(restaurant)} underlayColor="#ffdd88">
+                                                {(auth.userId !== restaurant.creator_id) &&  <TouchableHighlight style={[[ t.flex, t.justifyCenter, t.itemsCenter, tw.wFull, tailwind.roundedLg, tw.pY4 ]]} onPress={() => openModalAndSendRestaurant(restaurant)} underlayColor="#ffdd88">
                                                     <Text style={[ tw.h6, t.textCenter, t.textBlack ]}>
-                                                        {/* {(user_id !== restaurant.creator_id) && <Icon name="plus" size={20} />} */}
                                                         <Icon name="plus" size={20} />
                                                     </Text>
-                                                </TouchableHighlight>
+                                                </TouchableHighlight>}
                                             </View>
                                         </View>
                                     )
