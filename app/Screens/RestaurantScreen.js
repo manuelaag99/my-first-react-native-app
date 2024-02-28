@@ -25,6 +25,7 @@ export default function RestaurantScreen ({ route, navigation }) {
             console.log(err);
         }
     }
+    console.log(restaurantInfo)
 
     const [restaurantCreatorInfo, setRestaurantCreatorInfo] = useState();
     async function fetchRestaurantCreatorInfo() {
@@ -102,6 +103,13 @@ export default function RestaurantScreen ({ route, navigation }) {
         fetchRestaurantInfo();
     }
 
+    const [restaurantIdToSendRequestTo, setRestaurantIdToSendRequestTo] = useState();
+    function openModalAndSendRestaurant (restaurant_id) {
+        console.log(restaurant_id)
+        setRestaurantIdToSendRequestTo(restaurant_id);
+        setModalVisibility(true);
+    }
+
     if (!restaurantInfo || !restaurantCreatorInfo || !restaurantEmployees) {
         return (
             <ActivityIndicator style={[ tw.mT10]} size="large" color="#000" />
@@ -126,7 +134,7 @@ export default function RestaurantScreen ({ route, navigation }) {
                         </Text>
                     </View>
     
-                    {(!isUserAnAdministrator) && <TouchableHighlight underlayColor="#ffdd88" onPress={() => console.log("send employee request")} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgOrange400, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
+                    {(!isUserAnAdministrator) && <TouchableHighlight underlayColor="#ffdd88" onPress={() => openModalAndSendRestaurant(restaurant_id)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgOrange400, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
                             Soy empleado
                         </Text>
@@ -171,6 +179,7 @@ export default function RestaurantScreen ({ route, navigation }) {
                     <NewItem dishesToUpdate={null} isUpdating={false} isVisible={newItemVisibility} itemId={null} itemToAdd="order" itemToUpdate={null} onClose={() => setNewItemVisibility(false)} restaurantId={restaurant_id} textForAddButton="AGREGAR" topText="Nueva orden" updateFetchedData={fetchAgain} userId={auth.userId} />
                     <NewItem dishesToUpdate={null} isUpdating={true} isVisible={updateRestaurantVisibility} itemId={restaurant_id} itemToAdd="restaurant" itemToUpdate={restaurantInfo} onClose={() => setUpdateRestaurantVisibility(false)} restaurantId={restaurant_id} textForAddButton="ACTUALIZAR" topText="Modificar restaurante" updateFetchedData={fetchAgain} userId={auth.userId} />
                     <ModalTemplate actionButtonBorder={tw.borderRed700} actionButtonColor={tw.bgRed700} isVisible={modalVisibility} onClose={() => setModalVisibility(false)} onTasksAfterAction={navigateAfterDeletingRestaurant} restaurantId={restaurant_id} textForButton="Eliminar" textForModal="¿Quieres eliminar este restaurante? Esto es permanente." userId={auth.userId} />
+                    <ModalTemplate actionButtonBorder={tw.borderOrange400} actionButtonColor={tw.bgOrange400} animationForModal="fade" isVisible={modalVisibility} onClose={() => setModalVisibility(false)} onTasksAfterAction={null} restaurantId={restaurantIdToSendRequestTo} textForButton="Enviar" textForModal="¿Quieres solicitar unirte a este restaurante?" underlayColor="#fc5" userId={auth.userId} />
                 </View>
             </ScrollView>
         )
