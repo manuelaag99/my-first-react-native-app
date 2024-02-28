@@ -14,8 +14,10 @@ export default function UserProfileScreen ({ navigation, route }) {
     const [modalVisibility, setModalVisibility] = useState(false);
     const [user, setUser] = useState();
     const [restaurants, setRestaurants] = useState();
+    const [allRestaurants, setAllRestaurants] = useState();
     const [restaurantsThatTheUserIsAnEmployeeOf, setRestaurantsThatTheUserIsAnEmployeeOf] = useState();
-    const [restaurantsThatTheUserIsAnEmployeeOfWithNames, setRestaurantsThatTheUserIsAnEmployeeOfWithNames] = useState();
+    const [restaurantsThatTheUserIsAnEmployeeOfWithNames, setRestaurantsThatTheUserIsAnEmployeeOfWithNames] = useState([]);
+    const [restaurantsThatTheUserIsAnEmployeeOfWithNamesToDisplay, setRestaurantsThatTheUserIsAnEmployeeOfWithNamesToDisplay] = useState([]);
 
     async function fetchData () {
         try {
@@ -33,6 +35,13 @@ export default function UserProfileScreen ({ navigation, route }) {
             console.log(err);
         }
         try {
+            const { data, error } = await supabase.from("ALO-restaurants").select("*");
+            setAllRestaurants(data);
+            if (error) console.log(error);
+        } catch (err) {
+            console.log(err);
+        }
+        try {
             const { data, error } = await supabase.from("ALO-employees").select("*").eq("user_id", auth.userId);
             setRestaurantsThatTheUserIsAnEmployeeOf(data);
             if (error) console.log(error);
@@ -41,17 +50,35 @@ export default function UserProfileScreen ({ navigation, route }) {
         }
     }
 
+
+
     useEffect(() => {
-        if (restaurantsThatTheUserIsAnEmployeeOf) {
+        if (restaurantsThatTheUserIsAnEmployeeOf && allRestaurants) {
             restaurantsThatTheUserIsAnEmployeeOf.map((restaurantThatTheUserIsAnEmployeeOf) => {
-                restaurants.map((restaurant) => {
+                allRestaurants.map((restaurant) => {
                     if (restaurantThatTheUserIsAnEmployeeOf.restaurant_id === restaurant.restaurant_id) {
-                        setRestaurantsThatTheUserIsAnEmployeeOfWithNames({ restaurant_id: restaurant.restaurant_id, restaurant_name: restaurant.restaurant_name })
-                    } 
+                        setRestaurantsThatTheUserIsAnEmployeeOfWithNames((prevArray) => [...prevArray, { restaurant_id: restaurant.restaurant_id, restaurant_name: restaurant.restaurant_name }])
+                    }
                 })
             })
         }
-    }, [restaurantsThatTheUserIsAnEmployeeOf])
+    }, [restaurantsThatTheUserIsAnEmployeeOf, allRestaurants])
+
+    useEffect(() => {
+        function removeDuplicates() {
+            const uniqueArray = restaurantsThatTheUserIsAnEmployeeOfWithNames.reduce((acc, currentObj) => {
+                const isDuplicate = acc.some(existingObj => existingObj.user_id === currentObj.user_id);
+                if (!isDuplicate) {
+                    acc.push(currentObj);
+                }
+                return acc;
+            }, []);
+            setRestaurantsThatTheUserIsAnEmployeeOfWithNamesToDisplay(uniqueArray);
+        }
+        removeDuplicates();
+    }, [restaurantsThatTheUserIsAnEmployeeOfWithNames])
+
+    console.log
 
     useEffect(() => {
         fetchData();
@@ -81,8 +108,6 @@ export default function UserProfileScreen ({ navigation, route }) {
         }
         auth.logout()
     }
-
-
 
     if (!user) {
         return (
@@ -119,10 +144,10 @@ export default function UserProfileScreen ({ navigation, route }) {
                                     </TouchableHighlight>
                                 )
                             })}
-                            {restaurants && <TouchableHighlight underlayColor="#ccc" onPress={() => setNewRestaurantVisibility(true)} style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull, tailwind.roundedLg ]}>
+                            {(restaurants && restaurants.length > 0) && <TouchableHighlight underlayColor="#ccc" onPress={() => setNewRestaurantVisibility(true)} style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull, tailwind.roundedLg ]}>
                                 <Text style={[ t.textCenter, tw.mXAuto, tw.mY5, tw.wFull, t.fontBold ]}>Agregar otro restaurante</Text>
                             </TouchableHighlight>}
-                            {!restaurants && <TouchableHighlight underlayColor="#ccc" onPress={() => setNewRestaurantVisibility(true)} style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull, tailwind.roundedLg ]}>
+                            {(!restaurants || (restaurants && restaurants.length < 1)) && <TouchableHighlight underlayColor="#ccc" onPress={() => setNewRestaurantVisibility(true)} style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull, tailwind.roundedLg ]}>
                                 <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold, t.pX4 ]}>Aún no tienes restaurantes. Haz clic aquí para agregar uno</Text>
                             </TouchableHighlight>}
                         </View>
@@ -131,7 +156,8 @@ export default function UserProfileScreen ({ navigation, route }) {
                             <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
                                 <Text onPress={refreshHandle} style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold ]}>RESTAURANTES DONDE TRABAJO</Text>
                             </View>
-                            {restaurantsThatTheUserIsAnEmployeeOfWithNames && restaurantsThatTheUserIsAnEmployeeOfWithNames.map((restaurant, index) => {
+                            {restaurantsThatTheUserIsAnEmployeeOfWithNamesToDisplay && (restaurantsThatTheUserIsAnEmployeeOfWithNamesToDisplay.length > 0) && restaurantsThatTheUserIsAnEmployeeOfWithNames.map((restaurant, index) => {
+                                console.log(restaurant);
                                 return (
                                     <TouchableHighlight underlayColor="#ccc" key={index} onPress={() => navigation.navigate("Restaurant", { user_id: auth.userId, restaurant_id: restaurant.restaurant_id })} style={[ tw.flex, tw.flexRow, tw.wFull ]}>
                                         <Text style={[ t.textCenter, tw.wFull, tw.mY4, tw.pX4 ]}>
@@ -140,10 +166,10 @@ export default function UserProfileScreen ({ navigation, route }) {
                                     </TouchableHighlight>
                                 )
                             })}
-                            {(restaurantsThatTheUserIsAnEmployeeOf && restaurantsThatTheUserIsAnEmployeeOf.length > 1) && <TouchableHighlight underlayColor="#ccc" onPress={() => navigation.navigate("Search Restaurant", { user_id: auth.userId })} style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull, tailwind.roundedLg ]}>
+                            {(restaurantsThatTheUserIsAnEmployeeOfWithNamesToDisplay && restaurantsThatTheUserIsAnEmployeeOfWithNamesToDisplay.length > 0) && <TouchableHighlight underlayColor="#ccc" onPress={() => navigation.navigate("Search Restaurant", { user_id: auth.userId })} style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull, tailwind.roundedLg ]}>
                                 <Text style={[ t.textCenter, tw.mXAuto, tw.mY5, tw.wFull, t.fontBold ]}>Buscar otro restaurante</Text>
                             </TouchableHighlight>}
-                            {(!restaurantsThatTheUserIsAnEmployeeOf || restaurantsThatTheUserIsAnEmployeeOf.length < 1) && <TouchableHighlight underlayColor="#ccc" onPress={() => navigation.navigate("Search Restaurant", { user_id: auth.userId })} style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull, tailwind.roundedLg ]}>
+                            {(!restaurantsThatTheUserIsAnEmployeeOfWithNamesToDisplay || (restaurantsThatTheUserIsAnEmployeeOfWithNamesToDisplay && restaurantsThatTheUserIsAnEmployeeOfWithNamesToDisplay.length < 1)) && <TouchableHighlight underlayColor="#ccc" onPress={() => navigation.navigate("Search Restaurant", { user_id: auth.userId })} style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull, tailwind.roundedLg ]}>
                                 <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold, t.pX4 ]}>Aún no trabajas en ningun restaurante. Haz clic aquí para buscar uno.</Text>
                             </TouchableHighlight>}
                         </View>
