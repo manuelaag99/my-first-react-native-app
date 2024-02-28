@@ -10,7 +10,6 @@ import { AuthContext } from "../Context/AuthContext";
 
 export default function UserProfileScreen ({ navigation, route }) {
     const auth = useContext(AuthContext);
-    console.log(auth)
     const [newRestaurantVisibility, setNewRestaurantVisibility] = useState(false);
     const [modalVisibility, setModalVisibility] = useState(false);
     const [user, setUser] = useState();
@@ -41,7 +40,6 @@ export default function UserProfileScreen ({ navigation, route }) {
             console.log(err);
         }
     }
-    console.log(restaurantsThatTheUserIsAnEmployeeOf)
 
     useEffect(() => {
         if (restaurantsThatTheUserIsAnEmployeeOf) {
@@ -91,9 +89,8 @@ export default function UserProfileScreen ({ navigation, route }) {
             <View>
                 <ActivityIndicator style={[ tw.mT10]} size="large" color="#000" />
             </View>
-            
         )
-    } else if (user && restaurants && restaurantsThatTheUserIsAnEmployeeOf) {
+    } else if (user && restaurants) {
         return (
             <ScrollView>
                 <View style={[[ tw.flex, tw.flexCol, t.pX5, t.pB10, tw.hScreen, tw.wScreen, t.bgWhite ], { paddingTop: insets.top }]}>
