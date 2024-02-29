@@ -25,7 +25,6 @@ export default function RestaurantScreen ({ route, navigation }) {
             console.log(err);
         }
     }
-    console.log(restaurantInfo)
 
     const [restaurantCreatorInfo, setRestaurantCreatorInfo] = useState();
     async function fetchRestaurantCreatorInfo() {
@@ -74,14 +73,14 @@ export default function RestaurantScreen ({ route, navigation }) {
     useEffect(() => {
         if (restaurantEmployees && restaurantEmployees.length > 0) {
             restaurantEmployees.map((employee) => {
-                if (employee.employee_id === user_id) {
+                if (employee.user_id === auth.userId) {
                     setIsUserEmployee(true);
                 } else {
                     setIsUserEmployee(false);
                 }
             })
         }
-    }, [restaurantEmployees, ])
+    }, [restaurantEmployees])
     const [isUserAnAdministrator, setIsUserAnAdministrator] = useState();
     useEffect(() => {
         if (restaurantAdministratorsArray && restaurantAdministratorsArray.length > 0) {
@@ -109,7 +108,6 @@ export default function RestaurantScreen ({ route, navigation }) {
         setRestaurantIdToSendRequestTo(restaurant_id);
         setModalVisibility(true);
     }
-
     if (!restaurantInfo || !restaurantCreatorInfo || !restaurantEmployees) {
         return (
             <ActivityIndicator style={[ tw.mT10]} size="large" color="#000" />
@@ -134,7 +132,7 @@ export default function RestaurantScreen ({ route, navigation }) {
                         </Text>
                     </View>
     
-                    {(!isUserAnAdministrator) && <TouchableHighlight underlayColor="#ffdd88" onPress={() => openModalAndSendRestaurant(restaurant_id)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgOrange400, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
+                    {(!isUserAnAdministrator) || (!isUserEmployee) && <TouchableHighlight underlayColor="#ffdd88" onPress={() => openModalAndSendRestaurant(restaurant_id)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgOrange400, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
                             Soy empleado
                         </Text>
