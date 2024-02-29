@@ -50,9 +50,10 @@ export default function RequestsScreen ({ navigation, route }) {
 
     function fetchAgain () {
         fetchAllRequests();
+        filterUserRequests();
     }
 
-    useEffect(() => {
+    function filterUserRequests () {
         if (userRestaurants && requests && allUsers) {
             requests.map((request) => {
                 userRestaurants.map((userRestaurant) => {
@@ -66,12 +67,16 @@ export default function RequestsScreen ({ navigation, route }) {
                 })
             })
         }
+    }
+
+    useEffect(() => {
+        filterUserRequests();
     }, [userRestaurants, requests, allUsers])
 
     useEffect(() => {
         function removeDuplicates() {
             const uniqueArray = userRequests.reduce((acc, currentObj) => {
-                const isDuplicate = acc.some(existingObj => existingObj.user_id === currentObj.user_id);
+                const isDuplicate = acc.some(existingObj => existingObj.request_id === currentObj.request_id);
                 if (!isDuplicate) {
                     acc.push(currentObj);
                 }
@@ -102,7 +107,9 @@ export default function RequestsScreen ({ navigation, route }) {
 
     if (!userRequests) {
         return (
-            <ActivityIndicator style={[ tw.mT10]} size="large" color="#000"  />
+            <View>
+                <ActivityIndicator style={[ tw.mT10]} size="large" color="#000" />
+            </View>
         )
     } else if (userRequests) {
         if (userRequests.length < 1) {
