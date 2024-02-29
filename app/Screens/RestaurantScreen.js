@@ -69,14 +69,15 @@ export default function RestaurantScreen ({ route, navigation }) {
         }
     }, [restaurantInfo])
 
+    console.log(auth.userId)
+    console.log(restaurantEmployees)
+
     const [isUserEmployee, setIsUserEmployee] = useState()
     useEffect(() => {
         if (restaurantEmployees && restaurantEmployees.length > 0) {
             restaurantEmployees.map((employee) => {
                 if (employee.user_id === auth.userId) {
                     setIsUserEmployee(true);
-                } else {
-                    setIsUserEmployee(false);
                 }
             })
         }
@@ -87,8 +88,6 @@ export default function RestaurantScreen ({ route, navigation }) {
             restaurantAdministratorsArray.map((administrator) => {
                 if (administrator.user_id === auth.userId) {
                     setIsUserAnAdministrator(true);
-                } else {
-                    setIsUserAnAdministrator(false);
                 }
             })
         }
@@ -102,6 +101,7 @@ export default function RestaurantScreen ({ route, navigation }) {
         fetchRestaurantInfo();
     }
 
+    console.log(isUserEmployee)
     const [restaurantIdToSendRequestTo, setRestaurantIdToSendRequestTo] = useState();
     function openModalAndSendRestaurant (restaurant_id) {
         console.log(restaurant_id)
@@ -132,7 +132,7 @@ export default function RestaurantScreen ({ route, navigation }) {
                         </Text>
                     </View>
     
-                    {(!isUserAnAdministrator) || (!isUserEmployee) && <TouchableHighlight underlayColor="#ffdd88" onPress={() => openModalAndSendRestaurant(restaurant_id)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgOrange400, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
+                    {(!isUserAnAdministrator) && (!isUserEmployee) && <TouchableHighlight underlayColor="#ffdd88" onPress={() => openModalAndSendRestaurant(restaurant_id)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgOrange400, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
                             Soy empleado
                         </Text>
