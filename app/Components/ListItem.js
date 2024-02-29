@@ -48,7 +48,7 @@ export default function ListItem ({ buttonOne, buttonTwo, index, item, itemClass
                     {restaurantAdmins.length} administradores.
                 </Text>}
                 {restaurantAdmins && (restaurantAdmins.length > 1) && <Text style={[ t.textGreen500 ]}>
-                    Si eliminas tu cuenta, aún existirá información de este restaurante.
+                    Si eliminas tu cuenta, aún existirá información de este restaurante porque hay al menos 1 administrador más.
                 </Text>}
             </View>
             {buttonOne && <TouchableHighlight onPress={() => navigation.navigate("Restaurant", { restaurant_id: restaurantInfo.restaurant_id, user_id: auth.userId })} underlayColor="#ccc" style={[ tw.w1_5, tw.itemsCenter, tw.justifyCenter ]}>
