@@ -50,6 +50,8 @@ export default function RequestsScreen ({ navigation, route }) {
     }, [])
 
     function fetchAgain () {
+        setRequests();
+        setUserRequests([])
         fetchAllRequests();
         filterUserRequests();
     }
@@ -103,6 +105,10 @@ export default function RequestsScreen ({ navigation, route }) {
         } catch (err) {
             console.log(err);
         }
+    }
+
+    function addEmployee (request) {
+        makeUserAnEmployee(request);
         fetchAgain();
     }
 
@@ -126,7 +132,7 @@ export default function RequestsScreen ({ navigation, route }) {
                 <View style={[ tw.mY3, tw.pX5 ]}>
                     {userRequestsToDisplay.map((request, index) => {
                         return (
-                            <ListItem buttonOne="check" buttonOneAction={() => makeUserAnEmployee(request)} buttonTwo="ban" buttonTwoAction={() => console.log("delete")} iconSize={20} index={index} item={request} itemClassnames={[ tw.borderT, tw.borderGray400 ]} itemElementAction={null} key={index} listName="users in 'requests' screen" />
+                            <ListItem buttonOne="check" buttonOneAction={() => addEmployee(request)} buttonTwo="ban" buttonTwoAction={() => console.log("delete")} iconSize={20} index={index} item={request} itemClassnames={[ tw.borderT, tw.borderGray400 ]} itemElementAction={null} key={index} listName="users in 'requests' screen" />
                         )
                     })}
                 </View>
