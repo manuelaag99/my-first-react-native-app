@@ -5,6 +5,7 @@ import { supabase } from "../supabase/client";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { AuthContext } from "../Context/AuthContext";
 import ListItem from "../Components/ListItem";
+import { v4 as uuidv4 } from "uuid";
 
 export default function RestaurantTeamScreen ({ navigation, route }) {
     const auth = useContext(AuthContext);
@@ -84,7 +85,32 @@ export default function RestaurantTeamScreen ({ navigation, route }) {
         populateEmployeesAndAdministratorsArray();
     }, [allUsers])
 
-    console.log(restaurantAdministratorsArray)
+    let newAdminId;
+    async function makeEmployeeAnAdministrator (employee) {
+        newAdminId = uuidv4();
+        try {
+            const { error } = await supabase.from("ALO-admins").insert({ administrator_id: newAdminId, restaurant_id: restaurant_id, user_id: employee.user_id });
+            if (error) console.log(error);
+        } catch (err) {
+            console.log(err);
+        }
+        try {
+            const { error } = await supabase.from("ALO-employees").delete().eq("user_id", employee.user_id).eq("restaurant_id", employee.restaurant_id);
+            if (error) console.log(error);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    async function deleteEmployee (employee) {
+        try {
+            const { error } = await supabase.from("ALO-employees").delete().eq("user_id", employee.user_id).eq("restaurant_id", employee.restaurant_id);
+            if (error) console.log(error);
+        } catch {
+            console.log(err);
+        }
+    }
+
+
     if (!restaurantEmployeesWithNamesArray || !restaurantEmployeesWithNamesArray) {
         return <ActivityIndicator style={[ tw.mT10]} size="large" color="#000" />
     } else if (restaurantEmployeesWithNamesArray && restaurantAdministratorsWithNamesArray) {
@@ -98,7 +124,7 @@ export default function RestaurantTeamScreen ({ navigation, route }) {
                     </View>
                     {restaurantAdministratorsWithNamesArray.map((administrator, index) => {
                         return (
-                            <ListItem buttonOne="clipboard" buttonOneAction={() => console.log("delete")} buttonTwo="user" buttonTwoAction={() => console.log("yeah")} iconSize={25} index={index} item={administrator} itemClassnames={[ tw.borderT, tw.borderGray400 ]} itemElementAction={() => console.log("yeah")} key={index} listName="admin users in 'restaurant team' screen" />
+                            <ListItem buttonOne="clipboard" buttonOneAction={() => makeEmployeeAnAdministrator(administrator)} buttonTwo="user" buttonTwoAction={() => console.log("yeah")} iconSize={25} index={index} item={administrator} itemClassnames={[ tw.borderT, tw.borderGray400 ]} itemElementAction={() => console.log("yeah")} key={index} listName="admin users in 'restaurant team' screen" />
                         )
                     })}
 
@@ -109,27 +135,8 @@ export default function RestaurantTeamScreen ({ navigation, route }) {
                     </View>
                     {restaurantEmployeesWithNamesArray.map((employee, index) => {
                         return (
-                            <ListItem buttonOne="clipboard" buttonOneAction={() => console.log("delete")} buttonTwo="user" buttonTwoAction={() => console.log("yeah")} iconSize={25} index={index} item={employee} itemClassnames={[ tw.borderT, tw.borderGray400 ]} itemElementAction={() => console.log("yeah")} key={index} listName="employee users in 'restaurant team' screen" />
+                            <ListItem buttonOne="clipboard" buttonOneAction={() => makeEmployeeAnAdministrator(employee)} buttonTwo="user" buttonTwoAction={() => deleteEmployee(employee)} iconSize={25} index={index} item={employee} itemClassnames={[ tw.borderT, tw.borderGray400 ]} itemElementAction={() => console.log("yeah")} key={index} listName="employee users in 'restaurant team' screen" />
                         )
-                        {/* return (
-                            <View key={index} style={[ t.flex, t.flexRow, tw.wFull, tw.pX1, t.borderT, t.borderGray400, tw.mB3 ]}>
-                                <View style={[ t.flex, t.flexCol, tw.w4_6, tw.pY2 ]}>
-                                    <View style={[ t.flex, t.flexRow, tw.wFull ]}>
-                                        <Text style={[ tw.h6, t.textLeft, t.textBlack, t.fontBold ]}>{employee.employee_name}</Text>
-                                    </View>
-                                    <View style={[ t.flex, t.flexRow, tw.wFull ]}>
-                                        <Text style={[ tw.h6, t.textLeft, t.textGray600, t.italic ]}>Empleado</Text>
-                                        {employee.employee_position && <Text style={[ tw.h6, t.textLeft, t.textGray600, t.italic ]}> ({employee.employee_position})</Text>}
-                                    </View>
-                                </View>
-                                {(isUserAnAdministrator) && <TouchableHighlight onPress={() => console.log("delete")} style={[ t.flex, t.justifyCenter, t.itemsCenter, tw.w1_6]} underlayColor="#99f">
-                                    <Icon name="clipboard" size={25} />
-                                </TouchableHighlight>}
-                                {(isUserAnAdministrator) && <TouchableHighlight onPress={() => console.log("delete")} style={[ t.flex, t.justifyCenter, t.itemsCenter, tw.w1_6]} underlayColor="#f99">
-                                    <Icon name="user" size={25} />
-                                </TouchableHighlight>}
-                            </View>
-                        ) */}
                     })}
                 </View>
             </ScrollView>
