@@ -124,7 +124,7 @@ export default function DeleteUserAccountScreen ({ navigation, route }) {
 
                         {allUserAdmins && (allUserAdmins.length > 0) && allUserAdmins.map((admin, index) => {
                             return (
-                                <ListItem buttonOne={"facebook"} buttonOneAction={() => navigation.navigate("Restaurant", { restaurant_id: admin.restaurant_id, user_id: auth.userId })} buttonOneClassnames={tw.w1_5} buttonTwo={false} buttonTwoClassnames={null} key={index} item={admin} index={index} itemClassnames={null} itemElementAction={() => navigation.navigate("Restaurant", { user_id: auth.userId, restaurant_id: admin.restaurant_id })} itemElementClassnames={[tw.w4_5, tw.pR5]} listName="restaurants in 'delete user account' screen" navigation={navigation} />
+                                <ListItem buttonOne={"facebook"} buttonOneAction={() => navigation.navigate("Restaurant", { restaurant_id: admin.restaurant_id, user_id: auth.userId })} buttonOneClassnames={tw.w1_5} buttonTwo={false} buttonTwoClassnames={null} iconSize={25} item={admin} index={index} itemClassnames={null} itemElementAction={() => navigation.navigate("Restaurant", { user_id: auth.userId, restaurant_id: admin.restaurant_id })} itemElementClassnames={[tw.w4_5, tw.pR5]} key={index} listName="restaurants in 'delete user account' screen" />
                             )
                         })}
 

@@ -5,7 +5,7 @@ import { t, tw } from "react-native-tailwindcss";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { AuthContext } from "../Context/AuthContext";
 
-export default function ListItem ({ buttonOne, buttonOneAction, buttonOneClassnames, buttonTwo, buttonTwoAction, buttonTwoClassnames, index, item, itemClassnames, itemElementAction, itemElementClassnames, listName }) {
+export default function ListItem ({ buttonOne, buttonOneAction, buttonOneClassnames, buttonTwo, buttonTwoAction, buttonTwoClassnames, iconSize, index, item, itemClassnames, itemElementAction, itemElementClassnames, listName }) {
     const auth = useContext(AuthContext);
     const [firstText, setFirstText] = useState({ content: "", style: "" });
     const [secondText, setSecondText] = useState({ content: "", style: "" });
@@ -51,7 +51,7 @@ export default function ListItem ({ buttonOne, buttonOneAction, buttonOneClassna
 
     // this section is for the list of restaurants when searching
     useEffect(() => {
-        if (item) {
+        if ((listName === "restaurants in 'restaurant search' screen") && (item)) {
             setFirstText({ content: item.restaurant_name , style: [  t.textLeft, t.fontBold, t.textBlack ]});
         }
     }, [item])
@@ -60,7 +60,7 @@ export default function ListItem ({ buttonOne, buttonOneAction, buttonOneClassna
 
     //
     useEffect(() => {
-        if (item) {
+        if ((listName === "users in 'requests' screen") && (item)) {
             setFirstText({ content: item.user_display_name , style: [  t.textLeft, t.fontBold, t.textBlack ]});
             setSecondText({ content: item.restaurant_name , style: [  t.textLeft, t.fontNormal, t.textGray500, t.italic ]});
         }
@@ -78,10 +78,10 @@ export default function ListItem ({ buttonOne, buttonOneAction, buttonOneClassna
                 </View>
             </TouchableHighlight>
             {buttonOne && <TouchableHighlight onPress={buttonOneAction} style={[[ tw.itemsCenter, tw.justifyCenter, tw.pY2 ], buttonOneClassnames ]} underlayColor="#ccc" >
-                <Text style={[ t.textBlack ]}><Icon name={buttonOne} size={15} /></Text>
+                <Text style={[ t.textBlack ]}><Icon name={buttonOne} size={iconSize} /></Text>
             </TouchableHighlight>}
             {buttonTwo && <TouchableHighlight onPress={buttonTwoAction} style={[[ tw.itemsCenter, tw.justifyCenter ], buttonTwoClassnames ]} underlayColor="#ccc" >
-                <Text style={[ t.textBlack ]}><Icon name={buttonTwo} size={15} /></Text>
+                <Text style={[ t.textBlack ]}><Icon name={buttonTwo} size={iconSize} /></Text>
             </TouchableHighlight>}
         </View>)
     }

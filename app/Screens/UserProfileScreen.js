@@ -191,13 +191,6 @@ export default function UserProfileScreen ({ navigation, route }) {
                                 <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold, t.textWhite ]}>Cerrar sesión</Text>
                             </View>
                         </TouchableHighlight>
-
-                        <TouchableHighlight underlayColor="#ff0000" onPress={() => setModalVisibility(true)} style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgRed800, tailwind.roundedLg, tw.mY5 ]}>
-                            <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
-                                <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold, t.textWhite ]}>Eliminar mi cuenta</Text>
-                            </View>
-                        </TouchableHighlight>
-
                     </View>
                 </View>
                 
