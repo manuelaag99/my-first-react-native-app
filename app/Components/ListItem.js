@@ -79,6 +79,33 @@ export default function ListItem ({ buttonOne, buttonOneAction, buttonOneClassna
 
     
     // this section is for the list of restaurants when searching
+    const [restaurantsThatTheUserIsAnEmployeeOf, setRestaurantsThatTheUserIsAnEmployeeOf] = useState();
+    async function fetchRestaurantsThatTheUserIsAnEmployeeOf () {
+        try {
+            const { data, error } = await supabase.from("ALO-employees").select("*").eq("user_id", auth.userId);
+            if (error) console.log(error);
+            setRestaurantsThatTheUserIsAnEmployeeOf(data);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    useEffect(() => {
+        if (listName === "restaurants in 'restaurant search' screen") {
+            fetchRestaurantsThatTheUserIsAnEmployeeOf();
+        }
+    }, [])
+
+    useEffect(() => {
+        if (restaurantsThatTheUserIsAnEmployeeOf && (restaurantsThatTheUserIsAnEmployeeOf.length > 0)) {
+            restaurantsThatTheUserIsAnEmployeeOf.map((restaurant) => {
+                if (restaurant.restaurant_id === item.restaurant_id) {
+                    setIsButtonOneVisible(false);
+                }
+            })
+        }
+    }, [restaurantsThatTheUserIsAnEmployeeOf])
+
     useEffect(() => {
         if ((listName === "restaurants in 'restaurant search' screen") && (item)) {
             setFirstText({ content: item.restaurant_name , style: [  t.textLeft, t.fontBold, t.textBlack ]});
