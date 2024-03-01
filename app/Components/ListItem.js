@@ -10,6 +10,8 @@ export default function ListItem ({ buttonOne, buttonOneAction, buttonOneClassna
     const [firstText, setFirstText] = useState({ content: "", style: "" });
     const [secondText, setSecondText] = useState({ content: "", style: "" });
     const [thirdText, setThirdText] = useState({ content: "", style: "" });
+    const [isButtonOneVisible, setIsButtonOneVisible] = useState(true);
+    const [isButtonTwoVisible, setIsButtonTwoVisible] = useState(true);
 
     // this section is for the list of restaurants for deleting user account 
     const [restaurantInfo, setRestaurantInfo] = useState();
@@ -49,16 +51,19 @@ export default function ListItem ({ buttonOne, buttonOneAction, buttonOneClassna
         }
     }, [restaurantAdmins, restaurantInfo])
 
-    // this section is for the list of restaurants when searching
-    useEffect(() => {
-        if ((listName === "restaurants in 'restaurant search' screen") && (item)) {
-            setFirstText({ content: item.restaurant_name , style: [  t.textLeft, t.fontBold, t.textBlack ]});
+
+    // this section is for the list of requests
+    const [userRequests, setUserRequests] = useState();
+    async function fetchUserRequests () {
+        try {
+            const { data, error } = await supabase.from("ALO-requests").select("*").eq("user_id", auth.userId).eq("request_status", "pending");
+            if (error) console.log(error);
+            setUserRequests(data);
+        } catch (err) {
+            console.log(err);
         }
-    }, [item])
-
-    console.log(item)
-
-    //
+    }
+    
     useEffect(() => {
         if ((listName === "users in 'requests' screen") && (item)) {
             setFirstText({ content: item.user_display_name , style: [  t.textLeft, t.fontBold, t.textBlack ]});
@@ -66,9 +71,34 @@ export default function ListItem ({ buttonOne, buttonOneAction, buttonOneClassna
         }
     }, [item])
 
-    console.log(item)
+    useEffect(() => {
+        if (listName === "users in 'requests' screen" || listName === "restaurants in 'restaurant search' screen") {
+            fetchUserRequests();
+        }
+    }, [])
 
-    if ((listName === "restaurants in 'delete user account' screen" && restaurantAdmins && restaurantInfo) || (listName === "restaurants in 'restaurant search' screen") || (listName === "users in 'requests' screen")) {
+    
+    // this section is for the list of restaurants when searching
+    useEffect(() => {
+        if ((listName === "restaurants in 'restaurant search' screen") && (item)) {
+            setFirstText({ content: item.restaurant_name , style: [  t.textLeft, t.fontBold, t.textBlack ]});
+        }
+    }, [item])
+
+    const [hasUserSentRequest, setHasUserSentRequest] = useState(false);
+    useEffect(() => {
+        if (userRequests && userRequests.length > 0) {
+            console.log("balls")
+            userRequests.map((request) => {
+                if (request.restaurant_id === item.restaurant_id) {
+                    setHasUserSentRequest(true);
+                    setIsButtonOneVisible(false);
+                }
+            })
+        }
+    }, [userRequests])
+
+    if ((listName === "restaurants in 'delete user account' screen" && restaurantAdmins && restaurantInfo) || ((listName === "restaurants in 'restaurant search' screen") && userRequests) || ((listName === "users in 'requests' screen") && userRequests)) {
         return (<View key={index} style={[[ tw.flex, tw.flexRow, tw.wFull ], itemClassnames]}>
             <TouchableHighlight onPress={itemElementAction} style={[[ tw.flex, tw.flexCol, tw.pY2, tw.pX2 ], itemElementClassnames]} underlayColor="#ccc" >
                 <View>
@@ -77,10 +107,10 @@ export default function ListItem ({ buttonOne, buttonOneAction, buttonOneClassna
                     {(thirdText.content !== "") && <Text style={ thirdText.style }>{thirdText.content}</Text>}
                 </View>
             </TouchableHighlight>
-            {buttonOne && <TouchableHighlight onPress={buttonOneAction} style={[[ tw.itemsCenter, tw.justifyCenter, tw.pY2 ], buttonOneClassnames ]} underlayColor="#ccc" >
+            {buttonOne && isButtonOneVisible && <TouchableHighlight onPress={buttonOneAction} style={[[ tw.itemsCenter, tw.justifyCenter, tw.pY2 ], buttonOneClassnames ]} underlayColor="#ccc" >
                 <Text style={[ t.textBlack ]}><Icon name={buttonOne} size={iconSize} /></Text>
             </TouchableHighlight>}
-            {buttonTwo && <TouchableHighlight onPress={buttonTwoAction} style={[[ tw.itemsCenter, tw.justifyCenter ], buttonTwoClassnames ]} underlayColor="#ccc" >
+            {buttonTwo && isButtonTwoVisible && <TouchableHighlight onPress={buttonTwoAction} style={[[ tw.itemsCenter, tw.justifyCenter ], buttonTwoClassnames ]} underlayColor="#ccc" >
                 <Text style={[ t.textBlack ]}><Icon name={buttonTwo} size={iconSize} /></Text>
             </TouchableHighlight>}
         </View>)

@@ -75,7 +75,7 @@ export default function RestaurantScreen ({ route, navigation }) {
                 }
             })
         }
-    })
+    }, [])
 
     useEffect(() => {
         fetchRestaurantInfo();
