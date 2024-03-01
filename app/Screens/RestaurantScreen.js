@@ -132,7 +132,7 @@ export default function RestaurantScreen ({ route, navigation }) {
     } else if (restaurantInfo && restaurantCreatorInfo && restaurantEmployees) {
         return (
             <ScrollView style={[ t.bgGray200 ]}>
-                <View style={[ t.flex, t.flexCol, tw.justifyStart, t.pX5, tw.hFull, tw.wFull, tw.overflowHidden, tw.pY5 ]}>
+                <View style={[ t.flex, t.flexCol, tw.justifyStart, t.pX5, tw.hFull, tw.wFull, tw.overflowHidden, tw.pT5, tw.pB20 ]}>
                     <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.mXAuto, tw.pY4, tw.mY4, tw.pX6 ]}>
                         <Text style={[ tw.wFull, t.textCenter, t.fontBold, t.text5xl, tw.pY4 ]}>
                             {restaurantInfo.restaurant_name}
@@ -184,8 +184,14 @@ export default function RestaurantScreen ({ route, navigation }) {
                             Ver Equipo
                         </Text>
                     </TouchableHighlight>}
+
+                    <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.mXAuto, tw.pY4, tw.mY4, tw.pX6 ]}>
+                        <Text style={[ tw.wFull, t.textCenter, t.fontBold, t.textGray500, t.textBase ]}>
+                            -- Opciones de restaurante --
+                        </Text>
+                    </View>
     
-                    {(isUserAnAdministrator) && <TouchableHighlight underlayColor="#ccc" onPress={() => setUpdateRestaurantVisibility(true)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgWhite, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mT20, tw.mB6, tailwind.roundedLg ]}>
+                    {(isUserAnAdministrator) && <TouchableHighlight underlayColor="#ccc" onPress={() => setUpdateRestaurantVisibility(true)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgWhite, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textBlack ]}>
                             Modificar restaurante
                         </Text>
