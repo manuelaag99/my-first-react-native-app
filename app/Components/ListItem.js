@@ -89,7 +89,6 @@ export default function ListItem ({ buttonOne, buttonOneAction, buttonOneClassna
             console.log(err);
         }
     }
-
     useEffect(() => {
         if (listName === "restaurants in 'restaurant search' screen") {
             fetchRestaurantsThatTheUserIsAnEmployeeOf();
@@ -106,11 +105,31 @@ export default function ListItem ({ buttonOne, buttonOneAction, buttonOneClassna
         }
     }, [restaurantsThatTheUserIsAnEmployeeOf])
 
-    useEffect(() => {
-        if ((listName === "restaurants in 'restaurant search' screen") && (item)) {
-            setFirstText({ content: item.restaurant_name , style: [  t.textLeft, t.fontBold, t.textBlack ]});
+    const [restaurantsThatTheUserIsAnAdminOf, setRestaurantsThatTheUserIsAnAdminOf] = useState();
+    async function fetchRestaurantsThatTheUserIsAnAdminOf () {
+        try {
+            const { data, error } = await supabase.from("ALO-admins").select("*").eq("user_id", auth.userId);
+            if (error) console.log(error);
+            setRestaurantsThatTheUserIsAnAdminOf(data);
+        } catch (err) {
+            console.log(err);
         }
-    }, [item])
+    }
+    useEffect(() => {
+        if (listName === "restaurants in 'restaurant search' screen") {
+            fetchRestaurantsThatTheUserIsAnAdminOf();
+        }
+    }, [])
+
+    useEffect(() => {
+        if (restaurantsThatTheUserIsAnAdminOf && (restaurantsThatTheUserIsAnAdminOf.length > 0)) {
+            restaurantsThatTheUserIsAnAdminOf.map((restaurant) => {
+                if (restaurant.restaurant_id === item.restaurant_id) {
+                    setIsButtonOneVisible(false);
+                }
+            })
+        }
+    }, [restaurantsThatTheUserIsAnAdminOf])
 
     const [hasUserSentRequest, setHasUserSentRequest] = useState(false);
     useEffect(() => {
@@ -124,6 +143,12 @@ export default function ListItem ({ buttonOne, buttonOneAction, buttonOneClassna
             })
         }
     }, [userRequests])
+
+    useEffect(() => {
+        if ((listName === "restaurants in 'restaurant search' screen") && (item)) {
+            setFirstText({ content: item.restaurant_name , style: [  t.textLeft, t.fontBold, t.textBlack ]});
+        }
+    }, [item])
 
     if ((listName === "restaurants in 'delete user account' screen" && restaurantAdmins && restaurantInfo) || ((listName === "restaurants in 'restaurant search' screen") && userRequests) || ((listName === "users in 'requests' screen") && userRequests)) {
         return (<View key={index} style={[[ tw.flex, tw.flexRow, tw.wFull ], itemClassnames]}>
