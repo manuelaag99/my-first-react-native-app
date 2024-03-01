@@ -4,6 +4,7 @@ import { t, tw } from "react-native-tailwindcss";
 import { supabase } from "../supabase/client";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { AuthContext } from "../Context/AuthContext";
+import ListItem from "../Components/ListItem";
 
 export default function RestaurantTeamScreen ({ navigation, route }) {
     const auth = useContext(AuthContext);
@@ -97,22 +98,7 @@ export default function RestaurantTeamScreen ({ navigation, route }) {
                     </View>
                     {restaurantAdministratorsWithNamesArray.map((administrator, index) => {
                         return (
-                            <View key={index} style={[ t.flex, t.flexRow, tw.wFull, tw.pX1, t.borderT, t.borderGray400, tw.mB3  ]}>
-                                <View style={[ t.flex, t.flexCol, tw.w4_6, tw.pY2 ]}>
-                                    <View style={[ t.flex, t.flexRow, tw.wFull ]}>
-                                        <Text style={[ tw.h6, t.textLeft, t.textBlack, t.fontBold ]}>{administrator.administrator_name}</Text>
-                                    </View>
-                                    <View style={[ t.flex, t.flexRow, tw.wFull ]}>
-                                        <Text style={[ tw.h6, t.textLeft, t.textGray600, t.italic ]}>Administrador</Text>
-                                    </View>
-                                </View>
-                                {(isUserAnAdministrator) && <TouchableHighlight onPress={() => console.log("delete")} style={[ t.flex, t.justifyCenter, t.itemsCenter, tw.w1_6]} underlayColor="#99f">
-                                    <Icon name="clipboard" size={25} />
-                                </TouchableHighlight>}
-                                {(isUserAnAdministrator) && <TouchableHighlight onPress={() => console.log("delete")} style={[ t.flex, t.justifyCenter, t.itemsCenter, tw.w1_6]} underlayColor="#f99">
-                                    <Icon name="user" size={25} />
-                                </TouchableHighlight>}
-                            </View>
+                            <ListItem buttonOne="clipboard" buttonOneAction={() => console.log("delete")} buttonTwo="user" buttonTwoAction={null} iconSize={25} index={index} item={administrator} itemClassnames={[ tw.borderT, tw.borderGray400 ]} itemElementAction={() => console.log("yeah")} key={index} listName="admin users in 'restaurant team' screen" />
                         )
                     })}
 

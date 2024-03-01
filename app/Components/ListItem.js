@@ -144,7 +144,17 @@ export default function ListItem ({ buttonOne, buttonOneAction, buttonTwo, butto
         }
     }, [item])
 
-    if ((listName === "restaurants in 'delete user account' screen" && restaurantAdmins && restaurantInfo) || ((listName === "restaurants in 'restaurant search' screen") && userRequests) || ((listName === "users in 'requests' screen") && userRequests)) {
+
+    // this section is for the restaurant team screen 
+    useEffect(() => {
+        if ((listName === "admin users in 'restaurant team' screen") && (item)) {
+            setFirstText({ content: item.administrator_name , style: [  t.textLeft, t.fontBold, t.textBlack ]});
+            setSecondText({ content: "Administrador" , style: [  t.textLeft, t.fontNormal, t.textGray500, t.italic ]});
+            setClassnames({ itemElementClassnames: [ tw.w4_6, tw.pY4, tw.pX3 ], buttonOneClassnames: [ tw.w1_6 ], buttonTwoClassnames: [ tw.w1_6 ] })
+        }
+    }, [item])
+
+    if ((listName === "restaurants in 'delete user account' screen" && restaurantAdmins && restaurantInfo) || ((listName === "restaurants in 'restaurant search' screen") && userRequests) || ((listName === "users in 'requests' screen") && userRequests) || (listName === "admin users in 'restaurant team' screen"))  {
         return (<View key={index} style={[[ tw.flex, tw.flexRow, tw.wFull ], itemClassnames]}>
             <TouchableHighlight onPress={itemElementAction} style={[[ tw.flex, tw.flexCol, tw.pY2, tw.pX2 ], classnames.itemElementClassnames]} underlayColor="#ccc" >
                 <View>
