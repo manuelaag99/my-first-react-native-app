@@ -110,6 +110,30 @@ export default function RestaurantTeamScreen ({ navigation, route }) {
         }
     }
 
+    let newEmployeeId;
+    async function makeAdministratorAnEmployee (administrator) {
+        newEmployeeId = uuidv4();
+        try {
+            const { error } = await supabase.from("ALO-employees").insert({ employee_id: newEmployeeId, restaurant_id: restaurant_id, user_id: administrator.user_id });
+            if (error) console.log(error);
+        } catch (err) {
+            console.log(err);
+        }
+        try {
+            const { error } = await supabase.from("ALO-admins").delete().eq("user_id", administrator.user_id).eq("restaurant_id", administrator.restaurant_id);
+            if (error) console.log(error);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    async function deleteAdmin (administrator) {
+        try {
+            const { error } = await supabase.from("ALO-admins").delete().eq("user_id", administrator.user_id).eq("restaurant_id", administrator.restaurant_id);
+            if (error) console.log(error);
+        } catch {
+            console.log(err);
+        }
+    }
 
     if (!restaurantEmployeesWithNamesArray || !restaurantEmployeesWithNamesArray) {
         return <ActivityIndicator style={[ tw.mT10]} size="large" color="#000" />
@@ -124,7 +148,7 @@ export default function RestaurantTeamScreen ({ navigation, route }) {
                     </View>
                     {restaurantAdministratorsWithNamesArray.map((administrator, index) => {
                         return (
-                            <ListItem buttonOne="clipboard" buttonOneAction={() => makeEmployeeAnAdministrator(administrator)} buttonTwo="user" buttonTwoAction={() => console.log("yeah")} iconSize={25} index={index} item={administrator} itemClassnames={[ tw.borderT, tw.borderGray400 ]} itemElementAction={() => console.log("yeah")} key={index} listName="admin users in 'restaurant team' screen" />
+                            <ListItem buttonOne="clipboard" buttonOneAction={() => makeAdministratorAnEmployee(administrator)} buttonTwo="user" buttonTwoAction={() => deleteAdmin(administrator)} iconSize={25} index={index} item={administrator} itemClassnames={[ tw.borderT, tw.borderGray400 ]} itemElementAction={() => console.log("yeah")} key={index} listName="admin users in 'restaurant team' screen" />
                         )
                     })}
 
