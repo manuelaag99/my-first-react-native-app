@@ -25,7 +25,6 @@ export default function RestaurantScreen ({ route, navigation }) {
             console.log(err);
         }
     }
-
     const [restaurantCreatorInfo, setRestaurantCreatorInfo] = useState();
     async function fetchRestaurantCreatorInfo() {
         try {
@@ -57,9 +56,30 @@ export default function RestaurantScreen ({ route, navigation }) {
             console.log(err);
         }
     }
+    const [userRequests, setUserRequests] = useState();
+    async function fetchUserRequests () {
+        try {
+            const { data, error } = await supabase.from("ALO-requests").select("*").eq("user_id", auth.userId).eq("request_status", "pending");
+            if (error) console.log(error);
+            setUserRequests(data);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    const [hasUserSentRequest, setHasUserSentRequest] = useState(false);
+    useEffect(() => {
+        if (userRequests && userRequests.length > 0) {
+            userRequests.map((request) => {
+                if (request.restaurant_id === restaurant_id) {
+                    setHasUserSentRequest(true);
+                }
+            })
+        }
+    })
 
     useEffect(() => {
         fetchRestaurantInfo();
+        fetchUserRequests();
     }, [])
 
     useEffect(() => {
@@ -68,9 +88,6 @@ export default function RestaurantScreen ({ route, navigation }) {
             fetchRestaurantEmployeesAndAdministrators();
         }
     }, [restaurantInfo])
-
-    console.log(auth.userId)
-    console.log(restaurantEmployees)
 
     const [isUserEmployee, setIsUserEmployee] = useState()
     useEffect(() => {
@@ -101,13 +118,13 @@ export default function RestaurantScreen ({ route, navigation }) {
         fetchRestaurantInfo();
     }
 
-    console.log(isUserEmployee)
     const [restaurantIdToSendRequestTo, setRestaurantIdToSendRequestTo] = useState();
     function openModalAndSendRestaurant (restaurant_id) {
         console.log(restaurant_id)
         setRestaurantIdToSendRequestTo(restaurant_id);
         setModalVisibility(true);
     }
+
     if (!restaurantInfo || !restaurantCreatorInfo || !restaurantEmployees) {
         return (
             <ActivityIndicator style={[ tw.mT10]} size="large" color="#000" />
@@ -132,11 +149,17 @@ export default function RestaurantScreen ({ route, navigation }) {
                         </Text>
                     </View>
     
-                    {(!isUserAnAdministrator) && (!isUserEmployee) && <TouchableHighlight underlayColor="#ffdd88" onPress={() => openModalAndSendRestaurant(restaurant_id)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgOrange400, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
+                    {(!isUserAnAdministrator) && (!isUserEmployee) && (!hasUserSentRequest) && <TouchableHighlight underlayColor="#ffdd88" onPress={() => openModalAndSendRestaurant(restaurant_id)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgOrange400, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
                             Soy empleado
                         </Text>
                     </TouchableHighlight>}
+
+                    {(hasUserSentRequest) && <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.mXAuto, tw.pY6, tw.mY6 ]}>
+                        <Text style={[ t.textCenter, t.fontBold, t.textBlack ]}>
+                            Ya enviaste solicitud para trabajar aquí.
+                        </Text>
+                    </View>}
 
                     {((isUserAnAdministrator) || (isUserEmployee)) && <TouchableHighlight underlayColor="#ccc" onPress={() => setNewItemVisibility(true)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgWhite, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textBlack ]}>
