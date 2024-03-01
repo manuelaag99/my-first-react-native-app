@@ -98,7 +98,7 @@ export default function RestaurantTeamScreen ({ navigation, route }) {
                     </View>
                     {restaurantAdministratorsWithNamesArray.map((administrator, index) => {
                         return (
-                            <ListItem buttonOne="clipboard" buttonOneAction={() => console.log("delete")} buttonTwo="user" buttonTwoAction={null} iconSize={25} index={index} item={administrator} itemClassnames={[ tw.borderT, tw.borderGray400 ]} itemElementAction={() => console.log("yeah")} key={index} listName="admin users in 'restaurant team' screen" />
+                            <ListItem buttonOne="clipboard" buttonOneAction={() => console.log("delete")} buttonTwo="user" buttonTwoAction={() => console.log("yeah")} iconSize={25} index={index} item={administrator} itemClassnames={[ tw.borderT, tw.borderGray400 ]} itemElementAction={() => console.log("yeah")} key={index} listName="admin users in 'restaurant team' screen" />
                         )
                     })}
 
@@ -109,6 +109,9 @@ export default function RestaurantTeamScreen ({ navigation, route }) {
                     </View>
                     {restaurantEmployeesWithNamesArray.map((employee, index) => {
                         return (
+                            <ListItem buttonOne="clipboard" buttonOneAction={() => console.log("delete")} buttonTwo="user" buttonTwoAction={() => console.log("yeah")} iconSize={25} index={index} item={employee} itemClassnames={[ tw.borderT, tw.borderGray400 ]} itemElementAction={() => console.log("yeah")} key={index} listName="employee users in 'restaurant team' screen" />
+                        )
+                        {/* return (
                             <View key={index} style={[ t.flex, t.flexRow, tw.wFull, tw.pX1, t.borderT, t.borderGray400, tw.mB3 ]}>
                                 <View style={[ t.flex, t.flexCol, tw.w4_6, tw.pY2 ]}>
                                     <View style={[ t.flex, t.flexRow, tw.wFull ]}>
@@ -126,7 +129,7 @@ export default function RestaurantTeamScreen ({ navigation, route }) {
                                     <Icon name="user" size={25} />
                                 </TouchableHighlight>}
                             </View>
-                        )
+                        ) */}
                     })}
                 </View>
             </ScrollView>

@@ -135,7 +135,6 @@ export default function ListItem ({ buttonOne, buttonOneAction, buttonTwo, butto
             })
         }
     }, [userRequests])
-
     useEffect(() => {
         if ((listName === "restaurants in 'restaurant search' screen") && (item)) {
             setFirstText({ content: item.restaurant_name , style: [ t.textLeft, t.fontBold, t.textBlack ]});
@@ -153,8 +152,16 @@ export default function ListItem ({ buttonOne, buttonOneAction, buttonTwo, butto
             setClassnames({ itemElementClassnames: [ tw.w4_6, tw.pY4, tw.pX3 ], buttonOneClassnames: [ tw.w1_6 ], buttonTwoClassnames: [ tw.w1_6 ] })
         }
     }, [item])
+    useEffect(() => {
+        if ((listName === "employee users in 'restaurant team' screen") && (item)) {
+            setFirstText({ content: item.employee_name , style: [  t.textLeft, t.fontBold, t.textBlack ]});
+            setSecondText({ content: "Empleado" , style: [  t.textLeft, t.fontNormal, t.textGray500, t.italic ]});
+            setClassnames({ itemElementClassnames: [ tw.w4_6, tw.pY4, tw.pX3 ], buttonOneClassnames: [ tw.w1_6 ], buttonTwoClassnames: [ tw.w1_6 ] })
+        }
+    }, [item])
 
-    if ((listName === "restaurants in 'delete user account' screen" && restaurantAdmins && restaurantInfo) || ((listName === "restaurants in 'restaurant search' screen") && userRequests) || ((listName === "users in 'requests' screen") && userRequests) || (listName === "admin users in 'restaurant team' screen"))  {
+
+    if ((listName === "restaurants in 'delete user account' screen" && restaurantAdmins && restaurantInfo) || ((listName === "restaurants in 'restaurant search' screen") && userRequests) || ((listName === "users in 'requests' screen") && userRequests) || (listName === "admin users in 'restaurant team' screen") || (listName === "employee users in 'restaurant team' screen"))  {
         return (<View key={index} style={[[ tw.flex, tw.flexRow, tw.wFull ], itemClassnames]}>
             <TouchableHighlight onPress={itemElementAction} style={[[ tw.flex, tw.flexCol, tw.pY2, tw.pX2 ], classnames.itemElementClassnames]} underlayColor="#ccc" >
                 <View>
