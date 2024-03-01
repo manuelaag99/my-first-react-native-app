@@ -5,6 +5,7 @@ import { ActivityIndicator, Text, TouchableHighlight, View } from "react-native"
 import { t, tw } from "react-native-tailwindcss";
 import { v4 as uuidv4 } from "uuid";
 import Icon from 'react-native-vector-icons/FontAwesome';
+import ListItem from "../Components/ListItem";
 
 export default function RequestsScreen ({ navigation, route }) {
     const auth = useContext(AuthContext);
@@ -125,23 +126,8 @@ export default function RequestsScreen ({ navigation, route }) {
                 <View style={[ tw.mY3, tw.pX5 ]}>
                     {userRequestsToDisplay.map((request, index) => {
                         return (
-                            <View key={index} style={[ t.flex, t.flexRow, tw.wFull, t.borderT, t.borderGray400  ]}>
-                                <View style={[ t.flex, t.flexCol, tw.w4_6, tw.pY2, tw.pR2 ]}>
-                                    <View style={[ t.flex, t.flexRow, tw.wFull ]}>
-                                        <Text style={[ tw.h6, t.textLeft, t.textBlack, t.fontBold ]}>{request.user_display_name}</Text>
-                                    </View>
-                                    <View style={[ t.flex, t.flexRow, tw.wFull ]}>
-                                        <Text style={[ tw.h6, t.textLeft, t.textGray600, t.italic ]}>{request.restaurant_name}</Text>
-                                    </View>
-                                </View>
-                                <TouchableHighlight onPress={() => makeUserAnEmployee(request)} style={[ t.flex, t.justifyCenter, t.itemsCenter, tw.w1_6]} underlayColor="#99f">
-                                    <Icon name="check" size={25} />
-                                </TouchableHighlight>
-                                <TouchableHighlight onPress={() => console.log("delete")} style={[ t.flex, t.justifyCenter, t.itemsCenter, tw.w1_6]} underlayColor="#f99">
-                                    <Icon name="ban" size={25} />
-                                </TouchableHighlight>
-                            </View>
-                        )    
+                            <ListItem buttonOne="check" buttonOneAction={() => makeUserAnEmployee(request)} buttonOneClassnames={[ tw.w1_6 ]} buttonTwo="ban" buttonTwoAction={() => console.log("delete")} buttonTwoClassnames={[ tw.w1_6 ]} item={request} itemClassnames={[ tw.borderT, tw.borderGray400 ]} itemElementAction={null} itemElementClassnames={[ tw.w2_3, tw.pY3 ]}  index={index} key={index} listName="users in 'requests' screen" />
+                        )
                     })}
                 </View>
             )

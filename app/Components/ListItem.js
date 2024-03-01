@@ -58,7 +58,17 @@ export default function ListItem ({ buttonOne, buttonOneAction, buttonOneClassna
 
     console.log(item)
 
-    if ((listName === "restaurants in 'delete user account' screen" && restaurantAdmins && restaurantInfo) || (listName === "restaurants in 'restaurant search' screen")) {
+    //
+    useEffect(() => {
+        if (item) {
+            setFirstText({ content: item.user_display_name , style: [  t.textLeft, t.fontBold, t.textBlack ]});
+            setSecondText({ content: item.restaurant_name , style: [  t.textLeft, t.fontNormal, t.textGray500, t.italic ]});
+        }
+    }, [item])
+
+    console.log(item)
+
+    if ((listName === "restaurants in 'delete user account' screen" && restaurantAdmins && restaurantInfo) || (listName === "restaurants in 'restaurant search' screen") || (listName === "users in 'requests' screen")) {
         return (<View key={index} style={[[ tw.flex, tw.flexRow, tw.wFull ], itemClassnames]}>
             <TouchableHighlight onPress={itemElementAction} style={[[ tw.flex, tw.flexCol, tw.pY2, tw.pX2 ], itemElementClassnames]} underlayColor="#ccc" >
                 <View>
@@ -71,7 +81,7 @@ export default function ListItem ({ buttonOne, buttonOneAction, buttonOneClassna
                 <Text style={[ t.textBlack ]}><Icon name={buttonOne} size={15} /></Text>
             </TouchableHighlight>}
             {buttonTwo && <TouchableHighlight onPress={buttonTwoAction} style={[[ tw.itemsCenter, tw.justifyCenter ], buttonTwoClassnames ]} underlayColor="#ccc" >
-                <Text style={[ t.textBlack ]}><Icon name={buttonTwo} size={25} /></Text>
+                <Text style={[ t.textBlack ]}><Icon name={buttonTwo} size={15} /></Text>
             </TouchableHighlight>}
         </View>)
     }
