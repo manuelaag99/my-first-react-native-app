@@ -5,8 +5,13 @@ import { t, tw } from "react-native-tailwindcss";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { AuthContext } from "../Context/AuthContext";
 
-export default function ListItem ({ buttonOne, buttonTwo, index, item, itemClassnames, itemElementClassnames, navigation }) {
+export default function ListItem ({ buttonOne, buttonOneAction, buttonOneClassnames, buttonTwo, buttonTwoAction, buttonTwoClassnames, index, item, itemClassnames, itemElementClassnames, listName, navigation }) {
     const auth = useContext(AuthContext);
+    const [firstText, setFirstText] = useState({ content: "", style: "" });
+    const [secondText, setSecondText] = useState({ content: "", style: "" });
+    const [thirdText, setThirdText] = useState({ content: "", style: "" });
+
+    // this section is for the list of restaurants for deleting user account 
     const [restaurantInfo, setRestaurantInfo] = useState();
     const [restaurantAdmins, setRestaurantAdmins] = useState();
     async function fetchRestaurantInfo () {
@@ -28,33 +33,35 @@ export default function ListItem ({ buttonOne, buttonTwo, index, item, itemClass
         }
     }
     useEffect(() => {
-        fetchRestaurantAdmins();
-        fetchRestaurantInfo();
+        if (listName === "restaurants in 'delete user account' screen") {
+            fetchRestaurantAdmins();
+            fetchRestaurantInfo();
+        }
     }, [])
+
+    useEffect(() => {
+        if (restaurantAdmins && restaurantInfo) {
+            setFirstText({ content: restaurantInfo.restaurant_name, style: [  t.textLeft, t.fontBold, t.textBlack ]});
+            restaurantAdmins && (restaurantAdmins.length = 1) && setSecondText({ content: restaurantAdmins.length + " administrador, eres tú.", style: [ t.textLeft, t.fontNormal, t.textGray600 ]});
+            restaurantAdmins && (restaurantAdmins.length > 1) && setSecondText({ content: restaurantAdmins.length + " administradores.", style: [ t.textLeft, t.fontNormal, t.textGray600 ]});
+            restaurantAdmins && (restaurantAdmins.length = 1) && setThirdText({ content: "Si no nombras a otro administrador, toda la información de este restaurante y lo asociado a él se eliminará permanentemente.", style: [t.textRed500] });
+            restaurantAdmins && (restaurantAdmins.length > 1) && setThirdText({ content: "Si eliminas tu cuenta, aún existirá información de este restaurante porque hay al menos 1 administrador más.", style: [t.textGreen500] });
+        }
+    }, [restaurantAdmins, restaurantInfo])
+
 
     if (restaurantAdmins && restaurantInfo) {
         return (<View key={index} style={[[ tw.flex, tw.flexRow, tw.pY2, tw.wFull ], itemClassnames]}>
             <View style={[[ tw.flex, tw.flexCol ], itemElementClassnames]}>
-                <Text style={[ tw.fontBold ]}>
-                    {restaurantInfo.restaurant_name}
-                </Text>
-                {restaurantAdmins && (restaurantAdmins.length = 1) && <Text style={[ t.textGray600 ]}>
-                    {restaurantAdmins.length} administrador, eres tú.
-                </Text>}
-                {restaurantAdmins && (restaurantAdmins.length = 1) && <Text style={[ t.textRed500 ]}>
-                    Si no nombras a otro administrador, toda la información de este restaurante y lo asociado a él se eliminará permanentemente.
-                </Text>}
-                {restaurantAdmins && (restaurantAdmins.length > 1) && <Text style={[ t.textGray600 ]}>
-                    {restaurantAdmins.length} administradores.
-                </Text>}
-                {restaurantAdmins && (restaurantAdmins.length > 1) && <Text style={[ t.textGreen500 ]}>
-                    Si eliminas tu cuenta, aún existirá información de este restaurante porque hay al menos 1 administrador más.
-                </Text>}
+                <Text style={ firstText.style }>{firstText.content}</Text>
+                <Text style={ secondText.style }>{secondText.content}</Text>
+                <Text style={ thirdText.style }>{thirdText.content}</Text>
             </View>
-            {buttonOne && <TouchableHighlight onPress={() => navigation.navigate("Restaurant", { restaurant_id: restaurantInfo.restaurant_id, user_id: auth.userId })} underlayColor="#ccc" style={[ tw.w1_5, tw.itemsCenter, tw.justifyCenter ]}>
-                <Text style={[ t.textBlack ]}>
-                    <Icon name="facebook" size={25} />
-                </Text>
+            {buttonOne && <TouchableHighlight onPress={buttonOneAction} underlayColor="#ccc" style={[[ tw.itemsCenter, tw.justifyCenter ], buttonOneClassnames ]}>
+                <Text style={[ t.textBlack ]}><Icon name={buttonOne} size={25} /></Text>
+            </TouchableHighlight>}
+            {buttonTwo && <TouchableHighlight onPress={buttonTwoAction} underlayColor="#ccc" style={[[ tw.itemsCenter, tw.justifyCenter ], buttonTwoClassnames ]}>
+                <Text style={[ t.textBlack ]}><Icon name={buttonTwo} size={25} /></Text>
             </TouchableHighlight>}
         </View>)
     }

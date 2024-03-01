@@ -36,10 +36,7 @@ export default function DeleteUserAccountScreen ({ navigation, route }) {
         fetchUserRestaurants();
     }, [])
 
-    console.log(userRestaurants)
-
     function deleteIndividualRestaurantInfoFromDataBase () {
-        console.log("yeah")
         // try {
         //     const { error } = await supabase.from("ALO-restaurants").delete().eq("restaurant_id", admin.restaurant_id);
         //     if (error) console.log(error);
@@ -65,7 +62,7 @@ export default function DeleteUserAccountScreen ({ navigation, route }) {
         //     console.log(err);
         // }
     }
-    let restaurantstodelete = "d90ecd09-266e-4796-be1f-f7a7133c074e"
+    
     async function deleteAllUserRestaurantsInfoFromDataBase () {
         allUserAdmins.forEach(element => {
             console.log(element)
@@ -105,6 +102,7 @@ export default function DeleteUserAccountScreen ({ navigation, route }) {
         }
     }
 
+
     if (!allUserAdmins) {
         return (
             <View>
@@ -123,11 +121,13 @@ export default function DeleteUserAccountScreen ({ navigation, route }) {
                                 Si quieres eliminar tu cuenta, considera la información asociada con ella. Te la recordamos a continuación.
                             </Text>
                         </View>
+
                         {allUserAdmins && (allUserAdmins.length > 0) && allUserAdmins.map((admin, index) => {
                             return (
-                                <ListItem buttonOne={true} key={index} item={admin} index={index} itemClassnames={null} itemElementClassnames={[tw.w4_5, tw.pR5]} navigation={navigation} />
+                                <ListItem buttonOne={"facebook"} buttonOneAction={() => navigation.navigate("Restaurant", { restaurant_id: admin.restaurant_id, user_id: auth.userId })} buttonOneClassnames={tw.w1_5} buttonTwo={false} buttonTwoClassnames={null} key={index} item={admin} index={index} itemClassnames={null} itemElementClassnames={[tw.w4_5, tw.pR5]} listName="restaurants in 'delete user account' screen" navigation={navigation} />
                             )
                         })}
+
                     </View>
                     <View style={[ tw.mT5 ]}>
                         <TouchableHighlight onPress={deleteUserInfoFromDataBase} style={[ t.flex, t.justifyCenter, t.itemsCenter, tw.pX3, tw.pY4, tw.mY3, tw.wFull, tailwind.roundedLg, tailwind.shadow2xl, t.bgRed700]} underlayColor="#f11">
