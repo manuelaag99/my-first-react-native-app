@@ -13,11 +13,17 @@ export default function UserProfileScreen ({ navigation, route }) {
     const [newRestaurantVisibility, setNewRestaurantVisibility] = useState(false);
     const [modalVisibility, setModalVisibility] = useState(false);
     const [user, setUser] = useState();
-    const [restaurants, setRestaurants] = useState();
+    const [userRestaurants, setUserRestaurants] = useState();
     const [allRestaurants, setAllRestaurants] = useState();
+    const [restaurantsThatTheUserIsAnAdminOf, setRestaurantsThatTheUserIsAnAdminOf] = useState();
+    const [restaurantsThatTheUserIsAnAdminOfWithNames, setRestaurantsThatTheUserIsAnAdminOfWithNames] = useState([]);
+    const [restaurantsThatTheUserIsAnAdminOfWithNamesToDisplay, setRestaurantsThatTheUserIsAnAdminOfWithNamesToDisplay] = useState([]);
     const [restaurantsThatTheUserIsAnEmployeeOf, setRestaurantsThatTheUserIsAnEmployeeOf] = useState();
     const [restaurantsThatTheUserIsAnEmployeeOfWithNames, setRestaurantsThatTheUserIsAnEmployeeOfWithNames] = useState([]);
-    const [restaurantsThatTheUserIsAnEmployeeOfWithNamesToDisplay, setRestaurantsThatTheUserIsAnEmployeeOfWithNamesToDisplay] = useState([]);
+    const [restaurantsThatTheUserIsAnEmployeeOfWithNamesToDisplay, setRestaurantsThatTheUserIsAnEmployeeOfWithNamesToDisplay] = useState();
+    const [allRequests, setAllRequests] = useState();
+    const [userRequests, setUserRequests] = useState([]);
+    const [userRequestsToDisplay, setUserRequestsToDisplay] = useState();
 
     async function fetchData () {
         try {
@@ -29,7 +35,7 @@ export default function UserProfileScreen ({ navigation, route }) {
         }
         try {
             const { data, error } = await supabase.from("ALO-restaurants").select("*").eq("creator_id", auth.userId);
-            setRestaurants(data);
+            setUserRestaurants(data);
             if (error) console.log(error);
         } catch (err) {
             console.log(err);
@@ -42,15 +48,52 @@ export default function UserProfileScreen ({ navigation, route }) {
             console.log(err);
         }
         try {
+            const { data, error } = await supabase.from("ALO-admins").select("*").eq("user_id", auth.userId);
+            setRestaurantsThatTheUserIsAnAdminOf(data);
+            if (error) console.log(error);
+        } catch (err) {
+            console.log(err);
+        }
+        try {
             const { data, error } = await supabase.from("ALO-employees").select("*").eq("user_id", auth.userId);
             setRestaurantsThatTheUserIsAnEmployeeOf(data);
             if (error) console.log(error);
         } catch (err) {
             console.log(err);
         }
+        try {
+            const { data, error } = await supabase.from("ALO-requests").select("*");
+            setAllRequests(data);
+            if (error) console.log(error);
+        } catch (err) {
+            console.log(err);
+        }
     }
 
-
+    useEffect(() => {
+        if (restaurantsThatTheUserIsAnAdminOf && allRestaurants) {
+            restaurantsThatTheUserIsAnAdminOf.map((restaurantThatTheUserIsAnAdminOf) => {
+                allRestaurants.map((restaurant) => {
+                    if (restaurantThatTheUserIsAnAdminOf.restaurant_id === restaurant.restaurant_id) {
+                        setRestaurantsThatTheUserIsAnAdminOfWithNames((prevArray) => [...prevArray, { restaurant_id: restaurant.restaurant_id, restaurant_name: restaurant.restaurant_name }])
+                    }
+                })
+            })
+        }
+    }, [restaurantsThatTheUserIsAnAdminOf])
+    useEffect(() => {
+        function removeDuplicates() {
+            const uniqueArray = restaurantsThatTheUserIsAnAdminOfWithNames.reduce((acc, currentObj) => {
+                const isDuplicate = acc.some(existingObj => existingObj.restaurant_id === currentObj.restaurant_id);
+                if (!isDuplicate) {
+                    acc.push(currentObj);
+                }
+                return acc;
+            }, []);
+            setRestaurantsThatTheUserIsAnAdminOfWithNamesToDisplay(uniqueArray);
+        }
+        removeDuplicates();
+    }, [restaurantsThatTheUserIsAnAdminOfWithNames])
 
     useEffect(() => {
         if (restaurantsThatTheUserIsAnEmployeeOf && allRestaurants) {
@@ -62,12 +105,11 @@ export default function UserProfileScreen ({ navigation, route }) {
                 })
             })
         }
-    }, [restaurantsThatTheUserIsAnEmployeeOf, allRestaurants])
-
+    }, [restaurantsThatTheUserIsAnEmployeeOf])
     useEffect(() => {
         function removeDuplicates() {
             const uniqueArray = restaurantsThatTheUserIsAnEmployeeOfWithNames.reduce((acc, currentObj) => {
-                const isDuplicate = acc.some(existingObj => existingObj.user_id === currentObj.user_id);
+                const isDuplicate = acc.some(existingObj => existingObj.restaurant_id === currentObj.restaurant_id);
                 if (!isDuplicate) {
                     acc.push(currentObj);
                 }
@@ -78,9 +120,34 @@ export default function UserProfileScreen ({ navigation, route }) {
         removeDuplicates();
     }, [restaurantsThatTheUserIsAnEmployeeOfWithNames])
 
-    console.log
+    useEffect(() => {
+        if (allRequests) {
+            allRequests.map((request) => {
+                restaurantsThatTheUserIsAnEmployeeOfWithNamesToDisplay.map((restaurant) => {
+                    if (restaurant.restaurant_id === request.restaurant_id) {
+                        setUserRequests((prevArray) => [ ...prevArray, { request } ]);
+                    }
+                })
+            })
+        }
+    }, [allRequests])
+    useEffect(() => {
+        function removeDuplicates() {
+            const uniqueArray = userRequests.reduce((acc, currentObj) => {
+                const isDuplicate = acc.some(existingObj => existingObj.request_id === currentObj.request_id);
+                if (!isDuplicate) {
+                    acc.push(currentObj);
+                }
+                return acc;
+            }, []);
+            setUserRequestsToDisplay(uniqueArray);
+        }
+        removeDuplicates();
+    }, [userRequests])
+
 
     useEffect(() => {
+        console.log("navig")
         fetchData();
     }, [navigation]);
 
@@ -91,7 +158,7 @@ export default function UserProfileScreen ({ navigation, route }) {
     async function refreshHandle () {
         try {
             const { data, error } = await supabase.from("ALO-restaurants").select("*").eq("creator_id", auth.userId);
-            setRestaurants(data);
+            setUserRestaurants(data);
             if (error) console.log(error);
         } catch (err) {
             console.log(err);
@@ -109,17 +176,17 @@ export default function UserProfileScreen ({ navigation, route }) {
         auth.logout()
     }
 
-    if (!user) {
+    if (!user && !restaurantsThatTheUserIsAnAdminOfWithNamesToDisplay && !restaurantsThatTheUserIsAnEmployeeOfWithNamesToDisplay) {
         return (
             <View>
                 <ActivityIndicator style={[ tw.mT10]} size="large" color="#000" />
             </View>
         )
-    } else if (user && restaurants) {
+    } else if (user && restaurantsThatTheUserIsAnAdminOfWithNamesToDisplay && restaurantsThatTheUserIsAnEmployeeOfWithNamesToDisplay) {
         return (
             <ScrollView>
-                <View style={[[ tw.flex, tw.flexCol, t.pX5, t.pB10, tw.hScreen, tw.wScreen, t.bgWhite ], { paddingTop: insets.top }]}>
 
+                <View style={[[ tw.flex, tw.flexCol, t.pX5, t.pB10, tw.hScreen, tw.wScreen, t.bgWhite ], { paddingTop: insets.top }]}>
                     <View style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.hFull, tw.mXAuto ]}>
                         <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull, tw.mY6 ]}>
                             <Text style={[ t.textCenter, tw.mXAuto, tw.wFull, t.fontBold, t.text2xl, t.italic ]}>A LA ORDEN</Text>
@@ -135,7 +202,7 @@ export default function UserProfileScreen ({ navigation, route }) {
                             <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
                                 <Text onPress={refreshHandle} style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold ]}>MIS RESTAURANTES</Text>
                             </View>
-                            {restaurants && restaurants.map((restaurant, index) => {
+                            {restaurantsThatTheUserIsAnAdminOfWithNamesToDisplay && restaurantsThatTheUserIsAnAdminOfWithNamesToDisplay.map((restaurant, index) => {
                                 return (
                                     <TouchableHighlight underlayColor="#ccc" key={index} onPress={() => navigation.navigate("Restaurant", { user_id: auth.userId, restaurant_id: restaurant.restaurant_id, restaurant_name: restaurant.restaurant_name, creator_name: user.user_display_name })} style={[ tw.flex, tw.flexRow, tw.wFull ]}>
                                         <Text style={[ t.textCenter, tw.wFull, tw.mY4, tw.pX4 ]}>
@@ -144,10 +211,10 @@ export default function UserProfileScreen ({ navigation, route }) {
                                     </TouchableHighlight>
                                 )
                             })}
-                            {(restaurants && restaurants.length > 0) && <TouchableHighlight underlayColor="#ccc" onPress={() => setNewRestaurantVisibility(true)} style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull, tailwind.roundedLg ]}>
+                            {(restaurantsThatTheUserIsAnAdminOfWithNamesToDisplay && restaurantsThatTheUserIsAnAdminOfWithNamesToDisplay.length > 0) && <TouchableHighlight underlayColor="#ccc" onPress={() => setNewRestaurantVisibility(true)} style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull, tailwind.roundedLg ]}>
                                 <Text style={[ t.textCenter, tw.mXAuto, tw.mY5, tw.wFull, t.fontBold ]}>Agregar otro restaurante</Text>
                             </TouchableHighlight>}
-                            {(!restaurants || (restaurants && restaurants.length < 1)) && <TouchableHighlight underlayColor="#ccc" onPress={() => setNewRestaurantVisibility(true)} style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull, tailwind.roundedLg ]}>
+                            {(!restaurantsThatTheUserIsAnAdminOfWithNamesToDisplay || (restaurantsThatTheUserIsAnAdminOfWithNamesToDisplay && restaurantsThatTheUserIsAnAdminOfWithNamesToDisplay.length < 1)) && <TouchableHighlight underlayColor="#ccc" onPress={() => setNewRestaurantVisibility(true)} style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull, tailwind.roundedLg ]}>
                                 <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold, t.pX4 ]}>Aún no tienes restaurantes. Haz clic aquí para agregar uno</Text>
                             </TouchableHighlight>}
                         </View>
@@ -156,8 +223,7 @@ export default function UserProfileScreen ({ navigation, route }) {
                             <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
                                 <Text onPress={refreshHandle} style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold ]}>RESTAURANTES DONDE TRABAJO</Text>
                             </View>
-                            {restaurantsThatTheUserIsAnEmployeeOfWithNamesToDisplay && (restaurantsThatTheUserIsAnEmployeeOfWithNamesToDisplay.length > 0) && restaurantsThatTheUserIsAnEmployeeOfWithNames.map((restaurant, index) => {
-                                console.log(restaurant);
+                            {restaurantsThatTheUserIsAnEmployeeOfWithNamesToDisplay && (restaurantsThatTheUserIsAnEmployeeOfWithNamesToDisplay.length > 0) && restaurantsThatTheUserIsAnEmployeeOfWithNamesToDisplay.map((restaurant, index) => {
                                 return (
                                     <TouchableHighlight underlayColor="#ccc" key={index} onPress={() => navigation.navigate("Restaurant", { user_id: auth.userId, restaurant_id: restaurant.restaurant_id })} style={[ tw.flex, tw.flexRow, tw.wFull ]}>
                                         <Text style={[ t.textCenter, tw.wFull, tw.mY4, tw.pX4 ]}>
@@ -174,11 +240,14 @@ export default function UserProfileScreen ({ navigation, route }) {
                             </TouchableHighlight>}
                         </View>
 
-                        <TouchableHighlight underlayColor="#ccc" onPress={() => navigation.navigate("Requests", { user_id: auth.userId })} style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgWhite, tw.border, tw.borderGray300, tailwind.roundedLg, tw.mY5 ]}>
-                            <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
-                                <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold, t.textBlack ]}>Solicitudes</Text>
+                        {userRequestsToDisplay && <TouchableHighlight underlayColor="#ccc" onPress={() => navigation.navigate("Requests", { user_id: auth.userId })} style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.itemsCenter, tw.wFull, tw.bgWhite, tw.border, tw.borderGray300, tailwind.roundedLg, tw.mY5 ]}>
+                            <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.itemsCenter, tw.wFull ]}>
+                                <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.pR2, t.fontBold, t.textBlack ]}>Solicitudes</Text>
+                                <Text style={[ t.textCenter, t.textWhite, tw.fontBold, tw.bgOrange500, tw.roundedFull, tw.h6, tw.w6, tw.itemsCenter, tw.justifyCenter ]}>
+                                    {userRequestsToDisplay.length}
+                                </Text>
                             </View>
-                        </TouchableHighlight>
+                        </TouchableHighlight>}
 
                         <TouchableHighlight underlayColor="#ccc" onPress={() => navigation.navigate("Settings", { user_id: auth.userId })} style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgWhite, tw.border, tw.borderGray300, tailwind.roundedLg, tw.mY5 ]}>
                             <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
