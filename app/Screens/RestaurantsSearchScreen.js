@@ -78,7 +78,7 @@ export default function RestaurantsSearchScreen ({ navigation, route }) {
                             {restaurantsToDisplay && restaurantsToDisplay.map((restaurant, index) => {
                                 if (restaurant.restaurant_name.includes(searchQuery)) {
                                     return (
-                                        <ListItem buttonOne="plus" buttonOneAction={() => openModalAndSendRestaurant(restaurant)} buttonOneClassnames={tw.w1_5} buttonTwo={null} buttonTwoAction={null} buttonTwoClassnames={null} iconSize={20} item={restaurant} itemClassnames={null} itemElementAction={() => navigation.navigate("Restaurant", { restaurant_id: restaurant.restaurant_id, user_id: auth.userId })} itemElementClassnames={[tw.w4_5, tw.pR5, tw.pY4]} index={index} key={index} listName="restaurants in 'restaurant search' screen" />
+                                        <ListItem buttonOne="plus" buttonOneAction={() => openModalAndSendRestaurant(restaurant)} buttonTwo={null} buttonTwoAction={null} iconSize={20} item={restaurant} itemClassnames={null} itemElementAction={() => navigation.navigate("Restaurant", { restaurant_id: restaurant.restaurant_id, user_id: auth.userId })} index={index} key={index} listName="restaurants in 'restaurant search' screen" />
                                     )
                                 }
                             })}
