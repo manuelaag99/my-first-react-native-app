@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { supabase } from "../supabase/client";
 import ModalTemplate from "../Components/ModalTemplate";
 import { AuthContext } from "../Context/AuthContext";
+import ListItem from "../Components/ListItem";
 
 export default function RestaurantsSearchScreen ({ navigation, route }) {
     const auth = useContext(AuthContext);
@@ -77,22 +78,7 @@ export default function RestaurantsSearchScreen ({ navigation, route }) {
                             {restaurantsToDisplay && restaurantsToDisplay.map((restaurant, index) => {
                                 if (restaurant.restaurant_name.includes(searchQuery)) {
                                     return (
-                                        <View key={index} style={[ t.flex, t.flexRow, tw.wFull, t.borderGray400, t.borderT ]}>
-
-                                            <View style={[[ t.flex, t.flexCol, t.justifyCenter, t.itemsCenter ], { width: "90%" }]} >
-                                                <TouchableHighlight onPress={() => navigation.navigate("Restaurant", { user_id: auth.userId, restaurant_id: restaurant.restaurant_id })} style={[ t.flex, t.justifyCenter, tw.wFull, tailwind.roundedLg, tw.pY4 ]} underlayColor="#ccc">
-                                                    <Text style={[ tw.h6, t.textLeft, t.textBlack, t.fontBold, tw.pX4 ]}>{restaurant.restaurant_name} {(auth.userId === restaurant.creator_id) && "(eres administrador)"}</Text>
-                                                </TouchableHighlight>
-                                            </View>
-    
-                                            <View style={[[ t.flex, t.flexCol, t.justifyCenter, t.itemsCenter ], { width: "10%" }]}>
-                                                {(auth.userId !== restaurant.creator_id) &&  <TouchableHighlight style={[[ t.flex, t.justifyCenter, t.itemsCenter, tw.wFull, tailwind.roundedLg, tw.pY4 ]]} onPress={() => openModalAndSendRestaurant(restaurant)} underlayColor="#ffdd88">
-                                                    <Text style={[ tw.h6, t.textCenter, t.textBlack ]}>
-                                                        <Icon name="plus" size={20} />
-                                                    </Text>
-                                                </TouchableHighlight>}
-                                            </View>
-                                        </View>
+                                        <ListItem buttonOne="plus" buttonOneAction={() => openModalAndSendRestaurant(restaurant)} buttonOneClassnames={tw.w1_5} buttonTwo={null} buttonTwoAction={null} buttonTwoClassnames={null} iconSize="" item={restaurant} itemClassnames={null} itemElementAction={() => navigation.navigate("Restaurant", { restaurant_id: restaurant.restaurant_id, user_id: auth.userId })} itemElementClassnames={[tw.w4_5, tw.pR5, tw.pY4]} index={index} key={index} listName="restaurants in 'restaurant search' screen" />
                                     )
                                 }
                             })}
