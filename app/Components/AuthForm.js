@@ -113,6 +113,8 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
         }
     }
 
+    console.log(stateOfForm.isFormValid)
+
     function deleteUserAccount () {
         navigation.navigate("Delete user account");
     }

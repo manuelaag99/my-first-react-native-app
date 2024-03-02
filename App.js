@@ -51,8 +51,6 @@ export default function App() {
 		})
 	}, [])
 
-	console.log(session)
-
 	const [userId, setUserId] = useState();
 	const [token, setToken] = useState();
 	const logIn = useCallback((uId, token) => {

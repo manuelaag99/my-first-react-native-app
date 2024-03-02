@@ -44,13 +44,19 @@ export function isTextAUsername (value, requiredLength) {
 }
 
 export function isTextAPassword (value) {
-    const specialChars = `/[!@#$%^&*()_+\-=\[\]{};':"|,.<>\/?]+/;`
-    const doesItHaveSpecialCharacters = specialChars.split("").some(character => value.includes(character))
+    const specialChars = `/[!@#$%^&*()_+\-=\[\]{};':"|,.<>\/?]+/;`;
+    const doesItHaveSpecialCharacters = specialChars.split("").some(character => value.includes(character));
+    const numbers = '1234567890';
+    const doesItHaveNumbers = numbers.split("").some(character => value.includes(character));
     if (doesItHaveSpecialCharacters) {
         if (value.length > 9) {
-            if (value !== value.toLowerCase()) { //this checks if the string has at least one uppercase letter
+            if (value !== value.toLowerCase()) {
                 if (value !== value.toUpperCase()) {
-                    return true
+                    if (doesItHaveNumbers) {
+                        return true
+                    } else {
+                        return false
+                    }
                 } else {
                     return false
                 }
