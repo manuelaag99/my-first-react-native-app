@@ -9,6 +9,7 @@ import { AuthContext } from "../Context/AuthContext";
 import { supabase } from "../supabase/client";
 import { useForm } from "../Custom-Hooks";
 import ModalTemplate from "./ModalTemplate";
+import ErrorModal from "./ErrorModal";
 
 export default function AuthForm ({ initialAction, isSettingsScreen, justify, navigation, paddingX, route, userId, userInfo }) {
     const auth = useContext(AuthContext);
@@ -83,12 +84,16 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
     }
 
     function submitButtonHandler () {
-        if (stateOfForm.isFormValid && logInAction === "register") {
-            registerUser();
-        } else if (stateOfForm.isFormValid && logInAction === "signIn") {
-            signInUser();
-        } else if (stateOfForm.isFormValid && logInAction === "update") {
-            console.log("update profile")
+        if (stateOfForm.isFormValid) {
+            if (logInAction === "register") {
+                registerUser();
+            } else if (logInAction === "signIn") {
+                signInUser();
+            } else if (logInAction === "update") {
+                console.log("update profile")
+            }
+        } else {
+            setOpenErrorModal(true);
         }
     }
 
@@ -113,11 +118,16 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
         }
     }
 
-    console.log(stateOfForm.isFormValid)
+
+    console.log("the validity is " + stateOfForm.isFormValid)
+    console.log(stateOfForm)
 
     function deleteUserAccount () {
         navigation.navigate("Delete user account");
     }
+
+    const [openErrorModal, setOpenErrorModal] = useState(false);
+
 
     if ((isSettingsScreen && !userInfo) || (!isSettingsScreen && loading)) {
         return (
@@ -136,7 +146,7 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
                             {(logInAction !== "signIn") && <Input isPasswordField={false} errorMessage="Escribe un usuario válido." field="username" individualInputAction={formHandler} initialInputValue={userInfo ? userInfo.user_username : null} instructionMessage="Escribe al menos 6 caracteres, sin espacios." placeholderText={ placeholderText.forUsername } />}
                             <Input isPasswordField={false} errorMessage="Escribe un correo electrónico válido." field="email" individualInputAction={formHandler} initialInputValue={userInfo ? userInfo.user_email : null} instructionMessage={null} placeholderText={placeholderText.forEmail} />
                             <Input isPasswordField={true} errorMessage="Escribe una contraseña válida" field="password" individualInputAction={formHandler} initialInputValue={userInfo ? userInfo.user_password : null} instructionMessage="Escribe al menos 10 caracteres, mayúsculas y minúsculas, y símbolos especiales (@, #, etc.)." placeholderText={placeholderText.forPassword} />
-                            <TouchableHighlight onPress={submitButtonHandler} style={[[ tw.pY4, tw.mY3, tw.pX3, tw.bgBlue400, tailwind.roundedLg, tailwind.shadow2xl ], { width: "95%" }]} underlayColor="#ccddff">
+                            <TouchableHighlight disabled={!stateOfForm.isFormValid} onPress={submitButtonHandler} style={[[ tw.pY4, tw.mY3, tw.pX3, tailwind.roundedLg, tailwind.shadow2xl ], (stateOfForm.isFormValid ? tw.bgBlue400 : tw.bgBlue200 ), { width: "95%" }]} underlayColor="#ccddff">
                                 <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
                                     {(logInAction === "register") && "Registrarse"}
                                     {(logInAction === "signIn") && "Iniciar sesión"}
@@ -188,6 +198,7 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
                         </View>
                     </View>
                 </TouchableWithoutFeedback>
+                <ErrorModal animationForModal="fade" isVisible={openErrorModal} onPressingRedButton={null} onClose={() => setOpenErrorModal(false)} textForButton="Aceptar" textForModal="Revisa que los datos que ingresaste cumplan con los requisitos." />
             </>
         )
     }

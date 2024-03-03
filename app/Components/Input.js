@@ -6,7 +6,7 @@ import { inputReducer } from "../Reducers";
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default function Input ({ autoCapitalize, errorMessage, field, individualInputAction, initialInputValue, instructionMessage, isPasswordField, placeholderText }) {
-    const initialValues = { value: initialInputValue ? initialInputValue : "", isValid: true }
+    const initialValues = { value: initialInputValue ? initialInputValue : "", isValid: false }
     const [individualInputState, dispatch] = useReducer(inputReducer, initialValues);
     const {value, isValid} = individualInputState;
 
