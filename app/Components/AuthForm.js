@@ -1,18 +1,18 @@
 import { useContext, useEffect, useState } from "react";
-import { ActivityIndicator, Alert, Keyboard, KeyboardAvoidingView, Text,TouchableHighlight, TouchableWithoutFeedback, View } from "react-native";
+import { ActivityIndicator, Keyboard, KeyboardAvoidingView, Text,TouchableHighlight, TouchableWithoutFeedback, View } from "react-native";
 import { t, tailwind, tw } from "react-native-tailwindcss";
-import { v4 as uuidv4 } from "uuid";
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import Input from "./Input";
 import { AuthContext } from "../Context/AuthContext";
 import { supabase } from "../supabase/client";
 import { useForm } from "../Custom-Hooks";
-import ModalTemplate from "./ModalTemplate";
 import ErrorModal from "./ErrorModal";
 
 export default function AuthForm ({ initialAction, isSettingsScreen, justify, navigation, paddingX, route, userId, userInfo }) {
     const auth = useContext(AuthContext);
+    const [openErrorModal, setOpenErrorModal] = useState(false);
+    const [textForErrorModal, setTextForErrorModal] = useState("");
     const [logInAction, setLogInAction] = useState(initialAction);
     const [placeholderText, setPlaceholderText] = useState({ forEmail: "Escribe tu e-mail..." , forPassword: "Crea una contraseña..." });
     const [errorWithSignInOrSignUp, setErrorWithSignInOrSignUp] = useState();
@@ -27,6 +27,50 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
     };
 
     const [stateOfForm, formHandler] = useForm(initialFormState);
+
+    const [allUserEmails, setAllUserEmails] = useState();
+    const [allUsernames, setAllUsernames] = useState();
+    async function fetchAllUserEmais () {
+        try {
+            const { data, error } = await supabase.from("ALO-users-db").select("user_email");
+            if (error) console.log(error);
+            setAllUserEmails(data);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    async function fetchAllUsernames () {
+        try {
+            const { data, error } = await supabase.from("ALO-users-db").select("user_username");
+            if (error) console.log(error);
+            setAllUsernames(data);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    useEffect(() => {
+        fetchAllUserEmais();
+        fetchAllUsernames();
+    }, [])
+
+    const [isUsernameTaken, setIsUsernameTaken] = useState(false);
+    const [isEmailTaken, setIsEmailTaken] = useState(false);
+    useEffect(() => {
+        if (allUserEmails && allUserEmails.length > 0) {
+            if (allUserEmails.some((user) => user.user_email === stateOfForm.inputs.email.value)) {
+                setIsEmailTaken(true);
+            } else {
+                setIsEmailTaken(false);
+            }
+        }
+        if (allUsernames && allUsernames.length > 0) {
+            if (allUsernames.some((user) => user.user_username === stateOfForm.inputs.username.value)) {
+                setIsUsernameTaken(true);
+            } else {
+                setIsUsernameTaken(false);
+            }
+        }
+    }, [allUserEmails, allUsernames, stateOfForm])
 
     useEffect(() => {
         if (logInAction === "register") {
@@ -51,7 +95,7 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
         } catch (err) {
             setErrorWithSignInOrSignUp(err);
         }
-        if (errorWithSignInOrSignUp) Alert.alert(errorWithSignInOrSignUp);
+        if (errorWithSignInOrSignUp) console.log(errorWithSignInOrSignUp);
         
     }
 
@@ -80,54 +124,38 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
         } catch (err) {
             setErrorWithSignInOrSignUp(err);
         }
-        if (errorWithSignInOrSignUp) Alert.alert(errorWithSignInOrSignUp);
+        if (errorWithSignInOrSignUp) console.log(errorWithSignInOrSignUp);
     }
 
     function submitButtonHandler () {
-        if (stateOfForm.isFormValid) {
-            if (logInAction === "register") {
-                registerUser();
-            } else if (logInAction === "signIn") {
-                signInUser();
-            } else if (logInAction === "update") {
-                console.log("update profile")
-            }
-        } else {
+        if (isEmailTaken) {
+            setTextForErrorModal("Lo lamentamos, tu correo electrónico ya esta asociado con una cuenta existente. Intenta usar uno diferente.");
             setOpenErrorModal(true);
+        } else {
+            if (isUsernameTaken) {
+                setTextForErrorModal("Lo lamentamos, tu usuario ya esta asociado con una cuenta existente. Intenta usar uno diferente.");
+                setOpenErrorModal(true);
+            } else {
+                if (stateOfForm.isFormValid) {
+                    if (logInAction === "register") {
+                        registerUser();
+                    } else if (logInAction === "signIn") {
+                        signInUser();
+                    } else if (logInAction === "update") {
+                        console.log("update profile")
+                    }
+                } else {
+                    setTextForErrorModal("Revisa que los datos que ingresaste cumplan con los requisitos.");
+                    setOpenErrorModal(true);
+                }
+            }
         }
     }
-
-    async function deleteUserInfoFromDataBase () {
-        try {
-            const { error } = await supabase.from("ALO-users-db").delete().eq("user_id", auth.userId);
-            if (error) console.log(error);
-        } catch (err) {
-            console.log(err);
-        }
-        try {
-            const { error } = await supabase.from("ALO-admins").delete().eq("user_id", auth.userId);
-            if (error) console.log(error);
-        } catch (err) {
-            console.log(err);
-        }
-        try {
-            const { error } = await supabase.from("ALO-employees").delete().eq("user_id", auth.userId);
-            if (error) console.log(error);
-        } catch (err) {
-            console.log(err);
-        }
-    }
-
-
-    console.log("the validity is " + stateOfForm.isFormValid)
-    console.log(stateOfForm)
 
     function deleteUserAccount () {
         navigation.navigate("Delete user account");
     }
-
-    const [openErrorModal, setOpenErrorModal] = useState(false);
-
+    
 
     if ((isSettingsScreen && !userInfo) || (!isSettingsScreen && loading)) {
         return (
@@ -198,7 +226,7 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
                         </View>
                     </View>
                 </TouchableWithoutFeedback>
-                <ErrorModal animationForModal="fade" isVisible={openErrorModal} onPressingRedButton={null} onClose={() => setOpenErrorModal(false)} textForButton="Aceptar" textForModal="Revisa que los datos que ingresaste cumplan con los requisitos." />
+                <ErrorModal animationForModal="fade" isVisible={openErrorModal} onPressingRedButton={null} onClose={() => setOpenErrorModal(false)} textForButton="Aceptar" textForModal={textForErrorModal} />
             </>
         )
     }
