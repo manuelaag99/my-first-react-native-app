@@ -1,15 +1,15 @@
-import { isTextAnEmail, isTextAPassword, isTextAUsername, minLengthText, nonEmptyText } from "./CheckValidity";
+import { doesTextHaveNoSpaces, isTextAnEmail, isTextAPassword, isTextAUsername, minLengthText, nonEmptyText } from "./CheckValidity";
 
 export function inputReducer (state, action) {
     switch (action.type) {
         case "change":
             let checkValidity;
             if (action.field === "email") {
-                checkValidity = isTextAnEmail(action.value);
+                checkValidity = isTextAnEmail(action.value) && doesTextHaveNoSpaces(action.value);
             } else if (action.field === "username") {
-                checkValidity =isTextAUsername(action.value, 6);
+                checkValidity =isTextAUsername(action.value, 6) && doesTextHaveNoSpaces(action.value);
             } else if (action.field === "password") {
-                checkValidity = isTextAPassword(action.value);
+                checkValidity = isTextAPassword(action.value) && doesTextHaveNoSpaces(action.value);
             } else {
                 checkValidity = nonEmptyText(action.value);
             }

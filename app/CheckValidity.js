@@ -43,6 +43,14 @@ export function isTextAUsername (value, requiredLength) {
     }    
 }
 
+export function doesTextHaveNoSpaces (value) {
+    if (value.includes(" ")) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
 export function isTextAPassword (value) {
     const specialChars = `/[!@#$%^&*()_+\-=\[\]{};':"|,.<>\/?]+/;`;
     const doesItHaveSpecialCharacters = specialChars.split("").some(character => value.includes(character));
