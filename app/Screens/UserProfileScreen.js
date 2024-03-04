@@ -243,9 +243,9 @@ export default function UserProfileScreen ({ navigation, route }) {
                         {userRequestsToDisplay && <TouchableHighlight underlayColor="#ccc" onPress={() => navigation.navigate("Requests", { user_id: auth.userId })} style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.itemsCenter, tw.wFull, tw.bgWhite, tw.border, tw.borderGray300, tailwind.roundedLg, tw.mY5 ]}>
                             <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.itemsCenter, tw.wFull ]}>
                                 <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.pR2, t.fontBold, t.textBlack ]}>Solicitudes</Text>
-                                <Text style={[ t.textCenter, t.textWhite, tw.fontBold, tw.bgOrange500, tw.roundedFull, tw.h6, tw.w6, tw.itemsCenter, tw.justifyCenter ]}>
-                                    {userRequestsToDisplay.length}
-                                </Text>
+                                {(userRequestsToDisplay.length) && <Text style={[ t.textCenter, t.textOrange400, tw.fontBold ]}>
+                                    ({userRequestsToDisplay.length})
+                                </Text>}
                             </View>
                         </TouchableHighlight>}
 
