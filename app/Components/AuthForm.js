@@ -142,12 +142,16 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
 
     function submitButtonHandler () {
         if (isEmailTaken) {
-            setTextForErrorModal("Lo lamentamos, tu correo electrónico ya esta asociado con una cuenta existente. Intenta usar uno diferente.");
-            setOpenErrorModal(true);
+            if (logInAction === "register" && logInAction === "update") {
+                setTextForErrorModal("Lo lamentamos, tu correo electrónico ya esta asociado con una cuenta existente. Intenta usar uno diferente.");
+                setOpenErrorModal(true);
+            }
         } else {
             if (isUsernameTaken) {
-                setTextForErrorModal("Lo lamentamos, tu usuario ya esta asociado con una cuenta existente. Intenta usar uno diferente.");
-                setOpenErrorModal(true);
+                if (logInAction === "register" && logInAction === "update") {
+                    setTextForErrorModal("Lo lamentamos, tu usuario ya esta asociado con una cuenta existente. Intenta usar uno diferente.");
+                    setOpenErrorModal(true);
+                }
             } else {
                 if (stateOfForm.isFormValid) {
                     if (logInAction === "register") {

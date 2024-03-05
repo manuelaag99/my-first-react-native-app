@@ -62,7 +62,7 @@ export default function UserProfileScreen ({ navigation, route }) {
             console.log(err);
         }
         try {
-            const { data, error } = await supabase.from("ALO-requests").select("*");
+            const { data, error } = await supabase.from("ALO-requests").select("*").eq("request_status", "pending");
             setAllRequests(data);
             if (error) console.log(error);
         } catch (err) {
@@ -175,6 +175,7 @@ export default function UserProfileScreen ({ navigation, route }) {
         }
         auth.logout()
     }
+    console.log(userRequestsToDisplay)
 
     if (!user && !restaurantsThatTheUserIsAnAdminOfWithNamesToDisplay && !restaurantsThatTheUserIsAnEmployeeOfWithNamesToDisplay) {
         return (
@@ -242,10 +243,9 @@ export default function UserProfileScreen ({ navigation, route }) {
 
                         {userRequestsToDisplay && <TouchableHighlight underlayColor="#ccc" onPress={() => navigation.navigate("Requests", { user_id: auth.userId })} style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.itemsCenter, tw.wFull, tw.bgWhite, tw.border, tw.borderGray300, tailwind.roundedLg, tw.mY5 ]}>
                             <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.itemsCenter, tw.wFull ]}>
-                                <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.pR2, t.fontBold, t.textBlack ]}>Solicitudes</Text>
-                                {(userRequestsToDisplay.length) && <Text style={[ t.textCenter, t.textOrange400, tw.fontBold ]}>
-                                    ({userRequestsToDisplay.length})
-                                </Text>}
+                                <Text style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.pR2, t.fontBold, t.textBlack ]}>
+                                    Solicitudes ({userRequestsToDisplay.length})
+                                </Text>
                             </View>
                         </TouchableHighlight>}
 
