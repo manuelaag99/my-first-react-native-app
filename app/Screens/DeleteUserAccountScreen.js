@@ -22,19 +22,7 @@ export default function DeleteUserAccountScreen ({ navigation, route }) {
         fetchAdmins();
     }, [])
 
-    const [userRestaurants, setUserRestaurants] = useState();
-    async function fetchUserRestaurants () {
-        try {
-            const { data, error } = await supabase.from("ALO-admins").select("restaurant_id").eq("user_id", auth.userId);
-            if (error) console.log(error);
-            setUserRestaurants(data);
-        } catch (err) {
-            console.log(err);
-        }
-    }
-    useEffect(() => {
-        fetchUserRestaurants();
-    }, [])
+    const [adminsWithMoreThanOneAdministrator, setAdminsWithMoreThanOneAdministrator] = useState();
 
     function deleteIndividualRestaurantInfoFromDataBase () {
         // try {
@@ -106,7 +94,7 @@ export default function DeleteUserAccountScreen ({ navigation, route }) {
     if (!allUserAdmins) {
         return (
             <View>
-                <ActivityIndicator style={[ tw.mT10]} size="large" color="#000" />
+                <ActivityIndicator style={[ tw.mT10 ]} size="large" color="#000" />
             </View>
         )
     } else {
@@ -124,13 +112,18 @@ export default function DeleteUserAccountScreen ({ navigation, route }) {
 
                         {allUserAdmins && (allUserAdmins.length > 0) && allUserAdmins.map((admin, index) => {
                             return (
-                                <ListItem buttonOne={"facebook"} buttonOneAction={() => navigation.navigate("Restaurant", { restaurant_id: admin.restaurant_id, user_id: auth.userId })} buttonTwo={false} iconSize={25} item={admin} index={index} itemClassnames={null} itemElementAction={() => navigation.navigate("Restaurant", { user_id: auth.userId, restaurant_id: admin.restaurant_id })} key={index} listName="restaurants in 'delete user account' screen" />
+                                <ListItem buttonOne={"facebook"} buttonOneAction={() => navigation.navigate("Restaurant", { restaurant_id: admin.restaurant_id, user_id: auth.userId })} buttonTwo={"ban"} iconSize={25} item={admin} index={index} itemClassnames={null} itemElementAction={() => navigation.navigate("Restaurant", { user_id: auth.userId, restaurant_id: admin.restaurant_id })} key={index} listName="restaurants in 'delete user account' screen" />
                             )
                         })}
 
                     </View>
+                    <View style={[ tw.flex, tw.mY3, tw.pX4]}>
+                        <Text style={[ t.textCenter, t.textRed500]}>
+                            {!(allUserAdmins && (allUserAdmins.length < 1)) && "No podrás eliminar tu cuenta a menos a que todos tus restaurantes sin otros administradores hayan sido eliminados. Considera nombrar a más administradores o elimina los restaurantes manualmente."}
+                        </Text>
+                    </View>
                     <View style={[ tw.mT5 ]}>
-                        <TouchableHighlight onPress={deleteUserInfoFromDataBase} style={[ t.flex, t.justifyCenter, t.itemsCenter, tw.pX3, tw.pY4, tw.mY3, tw.wFull, tailwind.roundedLg, tailwind.shadow2xl, t.bgRed700]} underlayColor="#f11">
+                        <TouchableHighlight disabled={!(allUserAdmins && (allUserAdmins.length < 1))} onPress={deleteUserInfoFromDataBase} style={[[ t.flex, t.justifyCenter, t.itemsCenter, tw.pX3, tw.pY4, tw.mY3, tw.wFull, tailwind.roundedLg, tailwind.shadow2xl, ((allUserAdmins && (allUserAdmins.length < 1)) ? t.bgRed700 : t.bgRed300 ) ]]} underlayColor="#f11">
                             <Text style={[ t.textWhite ]}>
                                 Borrar mi cuenta permanentemente
                             </Text>
