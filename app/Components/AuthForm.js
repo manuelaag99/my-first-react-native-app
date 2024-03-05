@@ -26,7 +26,7 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
         isFormValid: false
     };
 
-    const [stateOfForm, formHandler] = useForm(initialFormState);
+    const [stateOfForm, formHandler, formSwitcher] = useForm(initialFormState);
 
     const [allUserEmails, setAllUserEmails] = useState();
     const [allUsernames, setAllUsernames] = useState();
@@ -56,28 +56,41 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
     const [isUsernameTaken, setIsUsernameTaken] = useState(false);
     const [isEmailTaken, setIsEmailTaken] = useState(false);
     useEffect(() => {
-        if (allUserEmails && allUserEmails.length > 0) {
-            if (allUserEmails.some((user) => user.user_email === stateOfForm.inputs.email.value)) {
-                setIsEmailTaken(true);
-            } else {
-                setIsEmailTaken(false);
+        if (stateOfForm) {
+            if (stateOfForm.inputs) {
+                if (stateOfForm.inputs.email && stateOfForm.inputs.username) {
+                    if (stateOfForm.inputs.email.value && stateOfForm.inputs.username.value) {
+                        if (allUserEmails && (allUserEmails.length > 0) && stateOfForm.inputs.email.value) {
+                            if (allUserEmails.some((user) => user.user_email === stateOfForm.inputs.email.value)) {
+                                setIsEmailTaken(true);
+                            } else {
+                                setIsEmailTaken(false);
+                            }
+                        }
+                        if (allUsernames && (allUsernames.length > 0) && stateOfForm.inputs.username.value) {
+                            if (allUsernames.some((user) => user.user_username === stateOfForm.inputs.username.value)) {
+                                setIsUsernameTaken(true);
+                            } else {
+                                setIsUsernameTaken(false);
+                            }
+                        }
+                    }
+                }
             }
         }
-        if (allUsernames && allUsernames.length > 0) {
-            if (allUsernames.some((user) => user.user_username === stateOfForm.inputs.username.value)) {
-                setIsUsernameTaken(true);
-            } else {
-                setIsUsernameTaken(false);
-            }
-        }
+
+
     }, [allUserEmails, allUsernames, stateOfForm])
 
     useEffect(() => {
         if (logInAction === "register") {
+            formSwitcher("switch to sign up");
             setPlaceholderText({ forEmail: "Escribe tu e-mail..." , forDisplayName: "Escribe tu nombre...", forPassword: "Crea una contraseña...", forUsername: "Crea un usuario" });
         } else if (logInAction === "signIn") {
+            formSwitcher("switch to sign in");
             setPlaceholderText({ forEmail: "Escribe tu e-mail..." , forDisplayName: null, forPassword: "Escribe tu contraseña...", forUsername: null });
         } else if (logInAction === "update") {
+            formSwitcher("switch to sign up");
             setPlaceholderText({ forEmail: "Actualiza tu e-mail..." , forDisplayName: "Actualiza tu nombre...", forPassword: "Actualiza tu contraseña...", forUsername: "Actualiza tu nombre de usuario..." });
         }
     }, [logInAction]);
@@ -98,6 +111,7 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
         if (errorWithSignInOrSignUp) console.log(errorWithSignInOrSignUp);
         
     }
+    console.log(stateOfForm)
 
     async function createUserInDatabase () {
         try {
