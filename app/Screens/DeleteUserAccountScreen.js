@@ -9,6 +9,7 @@ export default function DeleteUserAccountScreen ({ navigation, route }) {
     const auth = useContext(AuthContext);
     
     const [allUserAdmins, setAllUserAdmins] = useState();
+    const [allOtherAdmins, setAllOtherAdmins] = useState();
     async function fetchAdmins () {
         try {
             const { data, error } = await supabase.from("ALO-admins").select("*").eq("user_id", auth.userId);
@@ -17,12 +18,37 @@ export default function DeleteUserAccountScreen ({ navigation, route }) {
         } catch (err) {
             console.log(err);
         }
+        try {
+            const { data, error } = await supabase.from("ALO-admins").select("*").neq("user_id", auth.userId);
+            if (error) console.log(error);
+            setAllOtherAdmins(data);
+        } catch (err) {
+            console.log(err);
+        }
     }
     useEffect(() => {
         fetchAdmins();
     }, [])
 
-    const [adminsWithMoreThanOneAdministrator, setAdminsWithMoreThanOneAdministrator] = useState();
+    const [adminsWithOnlyOneAdministrator, setAdminsWithOnlyOneAdministrator] = useState([]);
+    const [adminsWithMoreThanOneAdministrator, setAdminsWithMoreThanOneAdministrator] = useState([]);
+    let updatedArray
+    useEffect(() => {
+        if (allUserAdmins && allOtherAdmins) {
+            allUserAdmins.map((userAdmin) => {
+                allOtherAdmins.map((otherAdmin) => {
+                    if (userAdmin.restaurant_id === otherAdmin.restaurant_id) {
+                        setAdminsWithOnlyOneAdministrator((prevArray) => [])
+                        setAdminsWithMoreThanOneAdministrator((prevArray) => [...prevArray, userAdmin ])
+                    }
+                })
+            })
+            allUserAdmins.map((userAdmin) => {
+                updatedArray = allOtherAdmins.filter(otherAdmin => otherAdmin.restaurant_id !== userAdmin.restaurant_id);
+            })
+            setAdminsWithOnlyOneAdministrator(updatedArray);
+        }
+    }, [allOtherAdmins, allUserAdmins])
 
     function deleteIndividualRestaurantInfoFromDataBase () {
         // try {
@@ -119,11 +145,11 @@ export default function DeleteUserAccountScreen ({ navigation, route }) {
                     </View>
                     <View style={[ tw.flex, tw.mY3, tw.pX4]}>
                         <Text style={[ t.textCenter, t.textRed500]}>
-                            {!(allUserAdmins && (allUserAdmins.length < 1)) && "No podrás eliminar tu cuenta a menos a que todos tus restaurantes sin otros administradores hayan sido eliminados. Considera nombrar a más administradores o elimina los restaurantes manualmente."}
+                            {(adminsWithOnlyOneAdministrator && (adminsWithOnlyOneAdministrator.length > 0)) && "No podrás eliminar tu cuenta a menos a que todos tus restaurantes sin otros administradores hayan sido eliminados. Considera nombrar a más administradores o elimina los restaurantes manualmente."}
                         </Text>
                     </View>
                     <View style={[ tw.mT5 ]}>
-                        <TouchableHighlight disabled={!(allUserAdmins && (allUserAdmins.length < 1))} onPress={deleteUserInfoFromDataBase} style={[[ t.flex, t.justifyCenter, t.itemsCenter, tw.pX3, tw.pY4, tw.mY3, tw.wFull, tailwind.roundedLg, tailwind.shadow2xl, ((allUserAdmins && (allUserAdmins.length < 1)) ? t.bgRed700 : t.bgRed300 ) ]]} underlayColor="#f11">
+                        <TouchableHighlight disabled={(adminsWithOnlyOneAdministrator && (adminsWithOnlyOneAdministrator.length > 0))} onPress={deleteUserInfoFromDataBase} style={[[ t.flex, t.justifyCenter, t.itemsCenter, tw.pX3, tw.pY4, tw.mY3, tw.wFull, tailwind.roundedLg, tailwind.shadow2xl, (!(adminsWithOnlyOneAdministrator && (adminsWithOnlyOneAdministrator.length > 0)) ? t.bgRed700 : t.bgRed300 ) ]]} underlayColor="#f11">
                             <Text style={[ t.textWhite ]}>
                                 Borrar mi cuenta permanentemente
                             </Text>
