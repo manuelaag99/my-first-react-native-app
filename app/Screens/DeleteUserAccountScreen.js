@@ -129,18 +129,22 @@ export default function DeleteUserAccountScreen ({ navigation, route }) {
                 <View style={[ tw.flex, tw.flexCol, t.pX5, t.pB10, tw.hScreen, tw.wScreen, t.bgWhite ]}>
                     <View style={[ tw.flex, tw.flexCol, tw.mY3 ]}>
                         <View style={[ tw.mY6, tw.pX5, tw.flex, tw.justifyCenter, tw.itemsCenter ]}>
-                            <Text style={[ t.textCenter, tw.fontBold ]}>
-                                Mis restaurantes
-                            </Text><Text style={[ t.textCenter, tw.mT3 ]}>
+                            <Text style={[ t.textCenter, tw.mT3 ]}>
                                 Si quieres eliminar tu cuenta, considera la información asociada con ella. Te la recordamos a continuación.
                             </Text>
                         </View>
 
-                        {allUserAdmins && (allUserAdmins.length > 0) && allUserAdmins.map((admin, index) => {
-                            return (
-                                <ListItem buttonOne={"facebook"} buttonOneAction={() => navigation.navigate("Restaurant", { restaurant_id: admin.restaurant_id, user_id: auth.userId })} buttonTwo={"ban"} iconSize={25} item={admin} index={index} itemClassnames={null} itemElementAction={() => navigation.navigate("Restaurant", { user_id: auth.userId, restaurant_id: admin.restaurant_id })} key={index} listName="restaurants in 'delete user account' screen" />
-                            )
-                        })}
+                        <View style={[ tw.flex, tw.justifyCenter, tw.itemsCenter, tw.pX4 ]}>
+                            <Text style={[ t.textCenter, tw.fontBold ]}>
+                                Mis restaurantes
+                            </Text>
+                            <View style={[ tw.bgBlack, tw.borderB, tw.h0, tw.wFull, tw.mT2 ]}></View>
+                            {allUserAdmins && (allUserAdmins.length > 0) && allUserAdmins.map((admin, index) => {
+                                return (
+                                    <ListItem buttonOne={"facebook"} buttonOneAction={() => navigation.navigate("Restaurant", { restaurant_id: admin.restaurant_id, user_id: auth.userId })} buttonTwo={"ban"} iconSize={25} item={admin} index={index} itemClassnames={null} itemElementAction={() => navigation.navigate("Restaurant", { user_id: auth.userId, restaurant_id: admin.restaurant_id })} key={index} listName="restaurants in 'delete user account' screen" />
+                                )
+                            })}
+                        </View>                    
 
                     </View>
                     <View style={[ tw.flex, tw.mY3, tw.pX4]}>
