@@ -10,7 +10,6 @@ export default function Input ({ autoCapitalize, errorMessage, field, individual
     const [individualInputState, dispatch] = useReducer(inputReducer, initialValues);
     const {value, isValid} = individualInputState;
 
-    console.log(initialInputValue)
     function individualInputBlurHandler () {
         dispatch({ type: "blur" })
     }

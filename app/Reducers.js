@@ -56,16 +56,16 @@ export function formReducer (state, action) {
         case "switch to sign in":
             return {
                 inputs: {
-                    email: { value: "", isValid: false },
-                    password: { value: "", isValid: false }
+                    email: { value: action.state.inputs.email.value, isValid: action.state.inputs.email.isValid },
+                    password: { value: action.state.inputs.password.value, isValid: action.state.inputs.password.isValid }
                 },
-                isFormValid: false
+                isFormValid: action.state.inputs.email.isValid && action.state.inputs.password.isValid
             };
         case "switch to sign up":
             return {
                 inputs: {
-                    email: { value: "", isValid: false },
-                    password: { value: "", isValid: false },
+                    email: { value: action.state.inputs.email.value, isValid: action.state.inputs.email.isValid },
+                    password: { value: action.state.inputs.password.value, isValid: action.state.inputs.password.isValid },
                     displayName: { value: "", isValid: false },
                     username: { value: "", isValid: false }
                 },

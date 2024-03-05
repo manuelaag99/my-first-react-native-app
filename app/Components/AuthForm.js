@@ -84,13 +84,13 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
 
     useEffect(() => {
         if (logInAction === "register") {
-            formSwitcher("switch to sign up");
+            formSwitcher("switch to sign up", stateOfForm);
             setPlaceholderText({ forEmail: "Escribe tu e-mail..." , forDisplayName: "Escribe tu nombre...", forPassword: "Crea una contraseña...", forUsername: "Crea un usuario" });
         } else if (logInAction === "signIn") {
-            formSwitcher("switch to sign in");
+            formSwitcher("switch to sign in", stateOfForm);
             setPlaceholderText({ forEmail: "Escribe tu e-mail..." , forDisplayName: null, forPassword: "Escribe tu contraseña...", forUsername: null });
         } else if (logInAction === "update") {
-            formSwitcher("switch to sign up");
+            formSwitcher("switch to sign up", stateOfForm);
             setPlaceholderText({ forEmail: "Actualiza tu e-mail..." , forDisplayName: "Actualiza tu nombre...", forPassword: "Actualiza tu contraseña...", forUsername: "Actualiza tu nombre de usuario..." });
         }
     }, [logInAction]);
@@ -111,7 +111,6 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
         if (errorWithSignInOrSignUp) console.log(errorWithSignInOrSignUp);
         
     }
-    console.log(stateOfForm)
 
     async function createUserInDatabase () {
         try {
@@ -184,10 +183,10 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
                             <Text style={[ t.textCenter, tw.mXAuto, tw.wFull, t.fontBold, t.text2xl, t.italic ]}>A LA ORDEN</Text>
                         </View>}
                         <View style={[ t.flex, tw.justifyCenter, tw.itemsCenter, tw.wFull, tw.bgWhite, tw.pX4, tw.pY4, tailwind.roundedLg, (!isSettingsScreen && tailwind.shadow2xl) ]}>
-                            {(logInAction !== "signIn") && <Input isPasswordField={false} autoCapitalize="words" errorMessage="Escribe un nombre válido." field="displayName" individualInputAction={formHandler} initialInputValue={userInfo ? userInfo.user_display_name : null} instructionMessage={null} placeholderText={ placeholderText.forDisplayName } />}
-                            {(logInAction !== "signIn") && <Input isPasswordField={false} errorMessage="Escribe un usuario válido." field="username" individualInputAction={formHandler} initialInputValue={userInfo ? userInfo.user_username : null} instructionMessage="Escribe al menos 6 caracteres, sin espacios." placeholderText={ placeholderText.forUsername } />}
-                            <Input isPasswordField={false} errorMessage="Escribe un correo electrónico válido." field="email" individualInputAction={formHandler} initialInputValue={userInfo ? userInfo.user_email : null} instructionMessage={null} placeholderText={placeholderText.forEmail} />
-                            <Input isPasswordField={true} errorMessage="Escribe una contraseña válida" field="password" individualInputAction={formHandler} initialInputValue={userInfo ? userInfo.user_password : null} instructionMessage="Escribe al menos 10 caracteres, mayúsculas y minúsculas, y símbolos especiales (@, #, etc.), sin espacios." placeholderText={placeholderText.forPassword} />
+                            {(logInAction !== "signIn") && <Input isPasswordField={false} autoCapitalize="words" errorMessage="Escribe un nombre válido." field="displayName" individualInputAction={formHandler} initialInputValue={userInfo ? userInfo.user_display_name : ""} instructionMessage={null} placeholderText={ placeholderText.forDisplayName } />}
+                            {(logInAction !== "signIn") && <Input isPasswordField={false} errorMessage="Escribe un usuario válido." field="username" individualInputAction={formHandler} initialInputValue={userInfo ? userInfo.user_username : ""} instructionMessage="Escribe al menos 6 caracteres, sin espacios." placeholderText={ placeholderText.forUsername } />}
+                            <Input isPasswordField={false} errorMessage="Escribe un correo electrónico válido." field="email" individualInputAction={formHandler} initialInputValue={userInfo ? userInfo.user_email : (stateOfForm.inputs.email.value ? stateOfForm.inputs.email.value : "")} instructionMessage={null} placeholderText={placeholderText.forEmail} />
+                            <Input isPasswordField={true} errorMessage="Escribe una contraseña válida" field="password" individualInputAction={formHandler} initialInputValue={userInfo ? userInfo.user_password : ""} instructionMessage="Escribe al menos 10 caracteres, mayúsculas y minúsculas, y símbolos especiales (@, #, etc.), sin espacios." placeholderText={placeholderText.forPassword} />
                             <TouchableHighlight disabled={!stateOfForm.isFormValid} onPress={submitButtonHandler} style={[[ tw.pY4, tw.mY3, tw.pX3, tailwind.roundedLg, tailwind.shadow2xl ], (stateOfForm.isFormValid ? tw.bgBlue400 : tw.bgBlue200 ), { width: "95%" }]} underlayColor="#ccddff">
                                 <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
                                     {(logInAction === "register") && "Registrarse"}

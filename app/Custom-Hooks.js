@@ -8,8 +8,8 @@ export const useForm = (initialFormState) => {
         dispatch({ type: "form change", value: value, field: field , isValid: isValid });
     }, [dispatch]);
 
-    const formSwitcher = useCallback((form) => {
-        dispatch({ type: form });
+    const formSwitcher = useCallback((form, state) => {
+        dispatch({ type: form, state: state });
     }, [dispatch])
 
     return [ stateOfForm, formHandler, formSwitcher ];
