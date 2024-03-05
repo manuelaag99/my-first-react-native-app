@@ -13,7 +13,6 @@ export default function UserProfileScreen ({ navigation, route }) {
     const [newRestaurantVisibility, setNewRestaurantVisibility] = useState(false);
     const [modalVisibility, setModalVisibility] = useState(false);
     const [user, setUser] = useState();
-    const [userRestaurants, setUserRestaurants] = useState();
     const [allRestaurants, setAllRestaurants] = useState();
     const [restaurantsThatTheUserIsAnAdminOf, setRestaurantsThatTheUserIsAnAdminOf] = useState();
     const [restaurantsThatTheUserIsAnAdminOfWithNames, setRestaurantsThatTheUserIsAnAdminOfWithNames] = useState([]);
@@ -29,13 +28,6 @@ export default function UserProfileScreen ({ navigation, route }) {
         try {
             const { data, error } = await supabase.from("ALO-users-db").select("*").eq("user_id", auth.userId);
             setUser(data[0]);
-            if (error) console.log(error);
-        } catch (err) {
-            console.log(err);
-        }
-        try {
-            const { data, error } = await supabase.from("ALO-restaurants").select("*").eq("creator_id", auth.userId);
-            setUserRestaurants(data);
             if (error) console.log(error);
         } catch (err) {
             console.log(err);
@@ -155,16 +147,6 @@ export default function UserProfileScreen ({ navigation, route }) {
         fetchData();
     }
 
-    async function refreshHandle () {
-        try {
-            const { data, error } = await supabase.from("ALO-restaurants").select("*").eq("creator_id", auth.userId);
-            setUserRestaurants(data);
-            if (error) console.log(error);
-        } catch (err) {
-            console.log(err);
-        }
-    }
-
     const insets = useSafeAreaInsets();
     
     async function logout () {
@@ -175,7 +157,6 @@ export default function UserProfileScreen ({ navigation, route }) {
         }
         auth.logout()
     }
-    console.log(userRequestsToDisplay)
 
     if (!user && !restaurantsThatTheUserIsAnAdminOfWithNamesToDisplay && !restaurantsThatTheUserIsAnEmployeeOfWithNamesToDisplay) {
         return (
@@ -201,7 +182,7 @@ export default function UserProfileScreen ({ navigation, route }) {
 
                         <View style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgWhite, tw.border, tw.borderGray300, tailwind.roundedLg, tw.mY5 ]}>
                             <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
-                                <Text onPress={refreshHandle} style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold ]}>MIS RESTAURANTES</Text>
+                                <Text onPress={fetchAgain} style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold ]}>MIS RESTAURANTES</Text>
                             </View>
                             {restaurantsThatTheUserIsAnAdminOfWithNamesToDisplay && restaurantsThatTheUserIsAnAdminOfWithNamesToDisplay.map((restaurant, index) => {
                                 return (
@@ -222,7 +203,7 @@ export default function UserProfileScreen ({ navigation, route }) {
 
                         <View style={[ tw.flex, tw.flexCol, tw.justifyCenter, tw.wFull, tw.bgWhite, tw.border, tw.borderGray300, tailwind.roundedLg, tw.mY5 ]}>
                             <View style={[ tw.flex, tw.flexRow, tw.justifyCenter, tw.wFull ]}>
-                                <Text onPress={refreshHandle} style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold ]}>RESTAURANTES DONDE TRABAJO</Text>
+                                <Text onPress={fetchAgain} style={[ t.textCenter, tw.mXAuto, tw.mY4, tw.wFull, t.fontBold ]}>RESTAURANTES DONDE TRABAJO</Text>
                             </View>
                             {restaurantsThatTheUserIsAnEmployeeOfWithNamesToDisplay && (restaurantsThatTheUserIsAnEmployeeOfWithNamesToDisplay.length > 0) && restaurantsThatTheUserIsAnEmployeeOfWithNamesToDisplay.map((restaurant, index) => {
                                 return (
