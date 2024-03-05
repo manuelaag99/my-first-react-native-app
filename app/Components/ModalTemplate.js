@@ -26,6 +26,54 @@ export default function ModalTemplate ({ actionButtonBorder, actionButtonColor, 
         } catch (err) {
             console.log(err);
         }
+        try {
+            const { error } = await supabase.from("ALO-admins").delete().eq("restaurant_id", restaurantId);
+            if (error) console.log(error);
+            onClose();
+            onTasksAfterAction();
+        } catch (err) {
+            console.log(err);
+        }
+        try {
+            const { error } = await supabase.from("ALO-employees").delete().eq("restaurant_id", restaurantId);
+            if (error) console.log(error);
+            onClose();
+            onTasksAfterAction();
+        } catch (err) {
+            console.log(err);
+        }
+        try {
+            const { error } = await supabase.from("ALO-requests").delete().eq("restaurant_id", restaurantId);
+            if (error) console.log(error);
+            onClose();
+            onTasksAfterAction();
+        } catch (err) {
+            console.log(err);
+        }
+        try {
+            const { error } = await supabase.from("ALO-restaurant-orders").delete().eq("restaurant_id", restaurantId);
+            if (error) console.log(error);
+            onClose();
+            onTasksAfterAction();
+        } catch (err) {
+            console.log(err);
+        }
+        try {
+            const { error } = await supabase.from("ALO-restaurant-menu-items").delete().eq("restaurant_id", restaurantId);
+            if (error) console.log(error);
+            onClose();
+            onTasksAfterAction();
+        } catch (err) {
+            console.log(err);
+        }
+        try {
+            const { error } = await supabase.from("ALO-orders-dishes").delete().eq("restaurant_id", restaurantId);
+            if (error) console.log(error);
+            onClose();
+            onTasksAfterAction();
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     async function deleteMenu () {
