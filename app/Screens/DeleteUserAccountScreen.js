@@ -8,13 +8,14 @@ import { t, tw, tailwind } from "react-native-tailwindcss";
 export default function DeleteUserAccountScreen ({ navigation, route }) {
     const auth = useContext(AuthContext);
     
-    const [allUserAdmins, setAllUserAdmins] = useState();
+    const [restaurantsThatTheUserIsAnAdminOf, setRestaurantsThatTheUserIsAnAdminOf] = useState();
     const [allOtherAdmins, setAllOtherAdmins] = useState();
+    const [restaurantsThatTheUserIsAnEmployeeOf, setRestaurantsThatTheUserIsAnEmployeeOf] = useState();
     async function fetchAdmins () {
         try {
             const { data, error } = await supabase.from("ALO-admins").select("*").eq("user_id", auth.userId);
             if (error) console.log(error);
-            setAllUserAdmins(data);
+            setRestaurantsThatTheUserIsAnAdminOf(data);
         } catch (err) {
             console.log(err);
         }
@@ -22,6 +23,13 @@ export default function DeleteUserAccountScreen ({ navigation, route }) {
             const { data, error } = await supabase.from("ALO-admins").select("*").neq("user_id", auth.userId);
             if (error) console.log(error);
             setAllOtherAdmins(data);
+        } catch (err) {
+            console.log(err);
+        }
+        try {
+            const { data, error } = await supabase.from("ALO-employees").select("*").eq("user_id", auth.userId);
+            setRestaurantsThatTheUserIsAnEmployeeOf(data);
+            if (error) console.log(error);
         } catch (err) {
             console.log(err);
         }
@@ -34,8 +42,8 @@ export default function DeleteUserAccountScreen ({ navigation, route }) {
     const [adminsWithMoreThanOneAdministrator, setAdminsWithMoreThanOneAdministrator] = useState([]);
     let updatedArray
     useEffect(() => {
-        if (allUserAdmins && allOtherAdmins) {
-            allUserAdmins.map((userAdmin) => {
+        if (restaurantsThatTheUserIsAnAdminOf && allOtherAdmins) {
+            restaurantsThatTheUserIsAnAdminOf.map((userAdmin) => {
                 allOtherAdmins.map((otherAdmin) => {
                     if (userAdmin.restaurant_id === otherAdmin.restaurant_id) {
                         setAdminsWithOnlyOneAdministrator((prevArray) => [])
@@ -43,12 +51,18 @@ export default function DeleteUserAccountScreen ({ navigation, route }) {
                     }
                 })
             })
-            allUserAdmins.map((userAdmin) => {
+            restaurantsThatTheUserIsAnAdminOf.map((userAdmin) => {
                 updatedArray = allOtherAdmins.filter(otherAdmin => otherAdmin.restaurant_id !== userAdmin.restaurant_id);
             })
             setAdminsWithOnlyOneAdministrator(updatedArray);
         }
-    }, [allOtherAdmins, allUserAdmins])
+    }, [allOtherAdmins, restaurantsThatTheUserIsAnAdminOf])
+
+
+    
+
+
+
 
     function deleteIndividualRestaurantInfoFromDataBase () {
         // try {
@@ -75,18 +89,6 @@ export default function DeleteUserAccountScreen ({ navigation, route }) {
         // } catch (err) {
         //     console.log(err);
         // }
-    }
-    
-    async function deleteAllUserRestaurantsInfoFromDataBase () {
-        allUserAdmins.forEach(element => {
-            console.log(element)
-        });
-        try {
-            const { error } = await supabase.from("ALO-restaurants").delete().eq("restaurant_id", restaurantstodelete);
-            if (error) console.log(error);
-        } catch (err) {
-            console.log(err);
-        }
     }
 
     async function deleteUserInfoFromDataBase () {
@@ -117,7 +119,7 @@ export default function DeleteUserAccountScreen ({ navigation, route }) {
     }
 
 
-    if (!allUserAdmins) {
+    if (!restaurantsThatTheUserIsAnAdminOf) {
         return (
             <View>
                 <ActivityIndicator style={[ tw.mT10 ]} size="large" color="#000" />
@@ -134,17 +136,29 @@ export default function DeleteUserAccountScreen ({ navigation, route }) {
                             </Text>
                         </View>
 
-                        <View style={[ tw.flex, tw.justifyCenter, tw.itemsCenter, tw.pX4 ]}>
+                        <View style={[ tw.flex, tw.justifyCenter, tw.itemsCenter, tw.pX4, tw.mY4 ]}>
                             <Text style={[ t.textCenter, tw.fontBold ]}>
                                 Mis restaurantes
                             </Text>
                             <View style={[ tw.bgBlack, tw.borderB, tw.h0, tw.wFull, tw.mT2 ]}></View>
-                            {allUserAdmins && (allUserAdmins.length > 0) && allUserAdmins.map((admin, index) => {
+                            {restaurantsThatTheUserIsAnAdminOf && (restaurantsThatTheUserIsAnAdminOf.length > 0) && restaurantsThatTheUserIsAnAdminOf.map((admin, index) => {
                                 return (
-                                    <ListItem buttonOne={"facebook"} buttonOneAction={() => navigation.navigate("Restaurant", { restaurant_id: admin.restaurant_id, user_id: auth.userId })} buttonTwo={"ban"} iconSize={25} item={admin} index={index} itemClassnames={null} itemElementAction={() => navigation.navigate("Restaurant", { user_id: auth.userId, restaurant_id: admin.restaurant_id })} key={index} listName="restaurants in 'delete user account' screen" />
+                                    <ListItem buttonOne={"facebook"} buttonOneAction={() => navigation.navigate("Restaurant", { restaurant_id: admin.restaurant_id, user_id: auth.userId })} buttonTwo={"ban"} iconSize={25} item={admin} index={index} itemClassnames={null} itemElementAction={() => navigation.navigate("Restaurant", { user_id: auth.userId, restaurant_id: admin.restaurant_id })} key={index} listName="restaurants that the user is an admin of in 'delete user account' screen" />
                                 )
                             })}
-                        </View>                    
+                        </View>
+
+                        <View style={[ tw.flex, tw.justifyCenter, tw.itemsCenter, tw.pX4, tw.mY4 ]}>
+                            <Text style={[ t.textCenter, tw.fontBold ]}>
+                                Restaurantes en los que trabajo
+                            </Text>
+                            <View style={[ tw.bgBlack, tw.borderB, tw.h0, tw.wFull, tw.mT2 ]}></View>
+                            {restaurantsThatTheUserIsAnEmployeeOf && (restaurantsThatTheUserIsAnEmployeeOf.length > 0) && restaurantsThatTheUserIsAnEmployeeOf.map((employee, index) => {
+                                return (
+                                    <ListItem buttonOne={"facebook"} buttonOneAction={() => navigation.navigate("Restaurant", { restaurant_id: employee.restaurant_id, user_id: auth.userId })} buttonTwo={null} iconSize={25} item={employee} index={index} itemClassnames={null} itemElementAction={() => navigation.navigate("Restaurant", { user_id: auth.userId, restaurant_id: employee.restaurant_id })} key={index} listName="restaurants that the user is an employee of in 'delete user account' screen" />
+                                )
+                            })}
+                        </View> 
 
                     </View>
                     <View style={[ tw.flex, tw.mY3, tw.pX4]}>

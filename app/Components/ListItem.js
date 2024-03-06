@@ -14,7 +14,7 @@ export default function ListItem ({ buttonOne, buttonOneAction, buttonTwo, butto
     const [isButtonTwoVisible, setIsButtonTwoVisible] = useState(true);
     const [classnames, setClassnames] = useState({ itemElementClassnames: [], buttonOneClassnames: [], buttonTwoClassnames: [] });
 
-    // this section is for the list of restaurants for deleting user account 
+    // this section is for the list of restaurants that the user is an admin of, for deleting user account 
     const [restaurantInfo, setRestaurantInfo] = useState();
     const [restaurantAdmins, setRestaurantAdmins] = useState();
     async function fetchRestaurantAdminsAndInfo () {
@@ -34,7 +34,7 @@ export default function ListItem ({ buttonOne, buttonOneAction, buttonTwo, butto
         }
     }
     useEffect(() => {
-        if (listName === "restaurants in 'delete user account' screen") {
+        if (listName === "restaurants that the user is an admin of in 'delete user account' screen") {
             fetchRestaurantAdminsAndInfo();
         }
     }, [])
@@ -51,14 +51,33 @@ export default function ListItem ({ buttonOne, buttonOneAction, buttonTwo, butto
             } else {
                 setThirdText({ content: "Si no nombras a otro administrador, toda la información de este restaurante y lo asociado a él se eliminará permanentemente.", style: [t.textRed500] });
             }
-
-            // restaurantAdmins && (restaurantAdmins.length = 1) && setSecondText({ content: restaurantAdmins.length + " administrador, eres tú.", style: [ t.textLeft, t.fontNormal, t.textGray600 ]});
-            // restaurantAdmins && (restaurantAdmins.length > 1) && setSecondText({ content: restaurantAdmins.length + " administradores.", style: [ t.textLeft, t.fontNormal, t.textGray600 ]});
-            // restaurantAdmins && (restaurantAdmins.length = 1) && setThirdText({ content: "Si no nombras a otro administrador, toda la información de este restaurante y lo asociado a él se eliminará permanentemente.", style: [t.textRed500] });
-            // restaurantAdmins && (restaurantAdmins.length > 1) && setThirdText({ content: "Si eliminas tu cuenta, aún existirá información de este restaurante porque hay al menos 1 administrador más.", style: [t.textGreen500] });
             setClassnames({ itemElementClassnames: [ tw.w4_6, tw.pX4 ], buttonOneClassnames: [ tw.w1_6 ], buttonTwoClassnames: [ tw.w1_6 ] });
         }
     }, [restaurantAdmins, restaurantInfo])
+
+    // this section is for the list of restaurants that the user is an employee of, for deleting user account 
+    async function fetchRestaurantInfo () {
+        try {
+            const { data, error } = await supabase.from("ALO-restaurants").select("*").eq("restaurant_id", item.restaurant_id);
+            if (error) console.log(error);
+            setRestaurantInfo(data[0]);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    useEffect(() => {
+        if (listName === "restaurants that the user is an employee of in 'delete user account' screen") {
+            fetchRestaurantInfo();
+        }
+    }, [])
+    useEffect(() => {
+        if (item && restaurantInfo) {
+            console.log("works")
+            console.log(restaurantInfo)
+            setFirstText({ content: restaurantInfo.restaurant_name, style: [  t.textLeft, t.fontBold, t.textBlack ]});
+            setClassnames({ itemElementClassnames: [ tw.w4_5, tw.pX4, tw.pY8 ], buttonOneClassnames: [ tw.w1_5 ]});
+        }
+    }, [restaurantInfo])
 
 
     // this section is for the list of requests
@@ -172,7 +191,7 @@ export default function ListItem ({ buttonOne, buttonOneAction, buttonTwo, butto
     }, [item])
 
 
-    if ((listName === "restaurants in 'delete user account' screen" && restaurantAdmins && restaurantInfo) || ((listName === "restaurants in 'restaurant search' screen") && userRequests) || ((listName === "users in 'requests' screen") && userRequests) || (listName === "admin users in 'restaurant team' screen") || (listName === "employee users in 'restaurant team' screen"))  {
+    if ((listName === "restaurants that the user is an admin of in 'delete user account' screen" && restaurantAdmins && restaurantInfo) || (listName === "restaurants that the user is an employee of in 'delete user account' screen" && restaurantInfo) || ((listName === "restaurants in 'restaurant search' screen") && userRequests) || ((listName === "users in 'requests' screen") && userRequests) || (listName === "admin users in 'restaurant team' screen") || (listName === "employee users in 'restaurant team' screen"))  {
         return (<View key={index} style={[[ tw.flex, tw.flexRow, tw.wFull ], itemClassnames]}>
             <TouchableHighlight onPress={itemElementAction} style={[[ tw.flex, tw.flexCol, tw.pY2, tw.pX2 ], classnames.itemElementClassnames]} underlayColor="#ccc" >
                 <View>
