@@ -26,7 +26,7 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
         isFormValid: false
     };
 
-    const [stateOfForm, formHandler, formSwitcher] = useForm(initialFormState);
+    const [stateOfForm, formHandler, formSwitcher, formFiller] = useForm(initialFormState);
 
     const [allUserEmails, setAllUserEmails] = useState();
     const [allUsernames, setAllUsernames] = useState();
@@ -52,6 +52,12 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
         fetchAllUserEmais();
         fetchAllUsernames();
     }, [])
+
+    useEffect(() => {
+        if (userInfo) {
+            formFiller("fill with existing info", userInfo);
+        }
+    }, [userInfo])
 
     const [isUsernameTaken, setIsUsernameTaken] = useState(false);
     const [isEmailTaken, setIsEmailTaken] = useState(false);
@@ -90,7 +96,6 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
             formSwitcher("switch to sign in", stateOfForm);
             setPlaceholderText({ forEmail: "Escribe tu e-mail..." , forDisplayName: null, forPassword: "Escribe tu contraseña...", forUsername: null });
         } else if (logInAction === "update") {
-            formSwitcher("switch to sign up", stateOfForm);
             setPlaceholderText({ forEmail: "Actualiza tu e-mail..." , forDisplayName: "Actualiza tu nombre...", forPassword: "Actualiza tu contraseña...", forUsername: "Actualiza tu nombre de usuario..." });
         }
     }, [logInAction]);
@@ -172,7 +177,8 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
     function deleteUserAccount () {
         navigation.navigate("Delete user account");
     }
-    
+
+    console.log(stateOfForm)
 
     if ((isSettingsScreen && !userInfo) || (!isSettingsScreen && loading)) {
         return (
@@ -189,7 +195,7 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
                         <View style={[ t.flex, tw.justifyCenter, tw.itemsCenter, tw.wFull, tw.bgWhite, tw.pX4, tw.pY4, tailwind.roundedLg, (!isSettingsScreen && tailwind.shadow2xl) ]}>
                             {(logInAction !== "signIn") && <Input isPasswordField={false} autoCapitalize="words" errorMessage="Escribe un nombre válido." field="displayName" individualInputAction={formHandler} initialInputValue={userInfo ? userInfo.user_display_name : ""} instructionMessage={null} placeholderText={ placeholderText.forDisplayName } />}
                             {(logInAction !== "signIn") && <Input isPasswordField={false} errorMessage="Escribe un usuario válido." field="username" individualInputAction={formHandler} initialInputValue={userInfo ? userInfo.user_username : ""} instructionMessage="Escribe al menos 6 caracteres, sin espacios." placeholderText={ placeholderText.forUsername } />}
-                            <Input isPasswordField={false} errorMessage="Escribe un correo electrónico válido." field="email" individualInputAction={formHandler} initialInputValue={userInfo ? userInfo.user_email : (stateOfForm.inputs.email.value ? stateOfForm.inputs.email.value : "")} instructionMessage={null} placeholderText={placeholderText.forEmail} />
+                            <Input isPasswordField={false} errorMessage="Escribe un correo electrónico válido." field="email" individualInputAction={formHandler} initialInputValue={userInfo ? userInfo.user_email : ""} instructionMessage={null} placeholderText={placeholderText.forEmail} />
                             <Input isPasswordField={true} errorMessage="Escribe una contraseña válida" field="password" individualInputAction={formHandler} initialInputValue={userInfo ? userInfo.user_password : ""} instructionMessage="Escribe al menos 10 caracteres, mayúsculas y minúsculas, y símbolos especiales (@, #, etc.), sin espacios." placeholderText={placeholderText.forPassword} />
                             <TouchableHighlight disabled={!stateOfForm.isFormValid} onPress={submitButtonHandler} style={[[ tw.pY4, tw.mY3, tw.pX3, tailwind.roundedLg, tailwind.shadow2xl ], (stateOfForm.isFormValid ? tw.bgBlue400 : tw.bgBlue200 ), { width: "95%" }]} underlayColor="#ccddff">
                                 <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
@@ -198,7 +204,7 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
                                     {(logInAction === "update") && "Actualizar"}
                                 </Text>
                             </TouchableHighlight>
-                            {isSettingsScreen && <TouchableHighlight onPress={deleteUserAccount} style={[[ tw.pY4, tw.mY3, tw.pX3, tw.bgRed400, tailwind.roundedLg, tailwind.shadow2xl ], { width: "95%" }]} underlayColor="#f11">
+                            {isSettingsScreen && <TouchableHighlight onPress={deleteUserAccount} style={[[ tw.pY4, tw.mY3, tw.pX3, tw.bgRed600, tailwind.roundedLg, tailwind.shadow2xl ], { width: "95%" }]} underlayColor="#f11">
                                 <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
                                     Borrar mi cuenta
                                 </Text>

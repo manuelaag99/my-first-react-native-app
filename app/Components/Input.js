@@ -23,9 +23,13 @@ export default function Input ({ autoCapitalize, errorMessage, field, individual
     }
 
     useEffect(() => individualInputAction(value, isValid, field), [value, isValid, field]);
+    useEffect(() => individualInputAction(initialInputValue, isValid, field), []);
 
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
+    console.log(initialInputValue)
+    console.log(value)
+    
     return (
         <>
             {isPasswordField && <View style={[ tw.w5_6, tw.mY2, tw.h12 ]}>

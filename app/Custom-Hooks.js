@@ -12,5 +12,9 @@ export const useForm = (initialFormState) => {
         dispatch({ type: form, state: state });
     }, [dispatch])
 
-    return [ stateOfForm, formHandler, formSwitcher ];
+    const formFiller = useCallback((form, existingInfo) => {
+        dispatch({ type: form, existingInfo: existingInfo });
+    }, [dispatch])
+
+    return [ stateOfForm, formHandler, formSwitcher, formFiller ];
 }

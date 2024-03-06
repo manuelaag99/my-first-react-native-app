@@ -71,6 +71,17 @@ export function formReducer (state, action) {
                 },
                 isFormValid: false
             };
+        case "fill with existing info":
+            console.log(action.existingInfo)
+            return {
+                inputs: {
+                    email: { value: action.existingInfo.user_email, isValid: true },
+                    password: { value: action.existingInfo.user_password, isValid: true },
+                    displayName: { value: action.existingInfo.user_display_name, isValid: true },
+                    username: { value: action.existingInfo.user_username, isValid: true }
+                },
+                isFormValid: true
+            };
         default:
             return state
     }
