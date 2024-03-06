@@ -53,12 +53,6 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
         fetchAllUsernames();
     }, [])
 
-    useEffect(() => {
-        if (userInfo) {
-            formFiller("fill with existing info", userInfo);
-        }
-    }, [userInfo])
-
     const [isUsernameTaken, setIsUsernameTaken] = useState(false);
     const [isEmailTaken, setIsEmailTaken] = useState(false);
     useEffect(() => {
@@ -95,8 +89,9 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
         } else if (logInAction === "signIn") {
             formSwitcher("switch to sign in", stateOfForm);
             setPlaceholderText({ forEmail: "Escribe tu e-mail..." , forDisplayName: null, forPassword: "Escribe tu contraseña...", forUsername: null });
-        } else if (logInAction === "update") {
+        } else if (logInAction === "update" && userInfo) {
             setPlaceholderText({ forEmail: "Actualiza tu e-mail..." , forDisplayName: "Actualiza tu nombre...", forPassword: "Actualiza tu contraseña...", forUsername: "Actualiza tu nombre de usuario..." });
+            formFiller("fill with existing info", userInfo);
         }
     }, [logInAction]);
 
@@ -145,15 +140,24 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
         if (errorWithSignInOrSignUp) console.log(errorWithSignInOrSignUp);
     }
 
-    function submitButtonHandler () {
+    async function updateUser () {
+        try {
+            const { error } = await supabase.from("ALO-users-db").update({ user_display_name: stateOfForm.inputs.displayName.value, user_email: stateOfForm.inputs.email.value, user_password: stateOfForm.inputs.password.value, user_username: stateOfForm.inputs.username.value }).eq("user_id", auth.userId);
+            if (error) console.log(error);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    function submitButtonHandler () {   
         if (isEmailTaken) {
-            if (logInAction === "register" && logInAction === "update") {
+            if (logInAction === "register") {
                 setTextForErrorModal("Lo lamentamos, tu correo electrónico ya esta asociado con una cuenta existente. Intenta usar uno diferente.");
                 setOpenErrorModal(true);
             }
         } else {
             if (isUsernameTaken) {
-                if (logInAction === "register" && logInAction === "update") {
+                if (logInAction === "register") {
                     setTextForErrorModal("Lo lamentamos, tu usuario ya esta asociado con una cuenta existente. Intenta usar uno diferente.");
                     setOpenErrorModal(true);
                 }
@@ -164,7 +168,7 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
                     } else if (logInAction === "signIn") {
                         signInUser();
                     } else if (logInAction === "update") {
-                        console.log("update profile")
+                        updateUser();
                     }
                 } else {
                     setTextForErrorModal("Revisa que los datos que ingresaste cumplan con los requisitos.");
@@ -178,7 +182,7 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
         navigation.navigate("Delete user account");
     }
 
-    console.log(stateOfForm)
+    console.log(isEmailTaken)
 
     if ((isSettingsScreen && !userInfo) || (!isSettingsScreen && loading)) {
         return (

@@ -148,7 +148,7 @@ export default function RestaurantTeamScreen ({ navigation, route }) {
                     </View>
                     {restaurantAdministratorsWithNamesArray.map((administrator, index) => {
                         return (
-                            <ListItem buttonOne="clipboard" buttonOneAction={() => makeAdministratorAnEmployee(administrator)} buttonTwo="user" buttonTwoAction={() => deleteAdmin(administrator)} iconSize={25} index={index} item={administrator} itemClassnames={[ tw.borderT, tw.borderGray400 ]} itemElementAction={() => console.log("yeah")} key={index} listName="admin users in 'restaurant team' screen" />
+                            <ListItem buttonOne="clipboard" buttonOneAction={() => makeAdministratorAnEmployee(administrator)} buttonTwo="ban" buttonTwoAction={() => deleteAdmin(administrator)} iconSize={25} index={index} item={administrator} itemClassnames={[ tw.borderT, tw.borderGray400 ]} itemElementAction={() => console.log("yeah")} key={index} listName="admin users in 'restaurant team' screen" />
                         )
                     })}
 
@@ -159,7 +159,7 @@ export default function RestaurantTeamScreen ({ navigation, route }) {
                     </View>
                     {restaurantEmployeesWithNamesArray.map((employee, index) => {
                         return (
-                            <ListItem buttonOne="clipboard" buttonOneAction={() => makeEmployeeAnAdministrator(employee)} buttonTwo="user" buttonTwoAction={() => deleteEmployee(employee)} iconSize={25} index={index} item={employee} itemClassnames={[ tw.borderT, tw.borderGray400 ]} itemElementAction={() => console.log("yeah")} key={index} listName="employee users in 'restaurant team' screen" />
+                            <ListItem buttonOne="clipboard" buttonOneAction={() => makeEmployeeAnAdministrator(employee)} buttonTwo="ban" buttonTwoAction={() => deleteEmployee(employee)} iconSize={25} index={index} item={employee} itemClassnames={[ tw.borderT, tw.borderGray400 ]} itemElementAction={() => console.log("yeah")} key={index} listName="employee users in 'restaurant team' screen" />
                         )
                     })}
                 </View>
