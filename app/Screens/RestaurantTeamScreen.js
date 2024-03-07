@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { AuthContext } from "../Context/AuthContext";
 import ListItem from "../Components/ListItem";
 import { v4 as uuidv4 } from "uuid";
+import ErrorModal from "../Components/ErrorModal";
 
 export default function RestaurantTeamScreen ({ navigation, route }) {
     const auth = useContext(AuthContext);
@@ -14,6 +15,7 @@ export default function RestaurantTeamScreen ({ navigation, route }) {
     const [restaurantEmployeesArray, setRestaurantEmployeesArray] = useState();
     const [restaurantEmployeesWithNamesArray, setRestaurantEmployeesWithNamesArray] = useState();
     const [allUsers, setAllUsers] = useState();
+    const [modalVisibility, setModalVisibility] = useState(false);
 
     const { restaurant_id } = route.params;
 
@@ -113,25 +115,34 @@ export default function RestaurantTeamScreen ({ navigation, route }) {
     let newEmployeeId;
     async function makeAdministratorAnEmployee (administrator) {
         newEmployeeId = uuidv4();
-        try {
-            const { error } = await supabase.from("ALO-employees").insert({ employee_id: newEmployeeId, restaurant_id: restaurant_id, user_id: administrator.user_id });
-            if (error) console.log(error);
-        } catch (err) {
-            console.log(err);
-        }
-        try {
-            const { error } = await supabase.from("ALO-admins").delete().eq("user_id", administrator.user_id).eq("restaurant_id", administrator.restaurant_id);
-            if (error) console.log(error);
-        } catch (err) {
-            console.log(err);
+        if (restaurantAdministratorsWithNamesArray && (restaurantAdministratorsWithNamesArray.length > 1)) {
+            try {
+                const { error } = await supabase.from("ALO-employees").insert({ employee_id: newEmployeeId, restaurant_id: restaurant_id, user_id: administrator.user_id });
+                if (error) console.log(error);
+            } catch (err) {
+                console.log(err);
+            }
+            try {
+                const { error } = await supabase.from("ALO-admins").delete().eq("user_id", administrator.user_id).eq("restaurant_id", administrator.restaurant_id);
+                if (error) console.log(error);
+            } catch (err) {
+                console.log(err);
+            }
+        } else {
+            setModalVisibility(true);
         }
     }
+    
     async function deleteAdmin (administrator) {
-        try {
-            const { error } = await supabase.from("ALO-admins").delete().eq("user_id", administrator.user_id).eq("restaurant_id", administrator.restaurant_id);
-            if (error) console.log(error);
-        } catch {
-            console.log(err);
+        if (restaurantAdministratorsWithNamesArray && (restaurantAdministratorsWithNamesArray.length > 1)) {
+            try {
+                const { error } = await supabase.from("ALO-admins").delete().eq("user_id", administrator.user_id).eq("restaurant_id", administrator.restaurant_id);
+                if (error) console.log(error);
+            } catch {
+                console.log(err);
+            }
+        } else {
+            setModalVisibility(true);
         }
     }
 
@@ -174,6 +185,7 @@ export default function RestaurantTeamScreen ({ navigation, route }) {
                         </Text>
                     </View>}
                 </View>
+                <ErrorModal animationForModal="fade" onClose={() => setModalVisibility(false)} isVisible={modalVisibility} onPressingRedButton={() => setModalVisibility(false)} textForButton="Aceptar" textForModal="Un restaurante no puede quedarse sin administradores." />
             </ScrollView>
         )
     }
