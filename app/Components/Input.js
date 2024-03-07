@@ -26,9 +26,6 @@ export default function Input ({ autoCapitalize, errorMessage, field, individual
     useEffect(() => individualInputAction(initialInputValue, isValid, field), []);
 
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-
-    console.log(initialInputValue)
-    console.log(value)
     
     return (
         <>

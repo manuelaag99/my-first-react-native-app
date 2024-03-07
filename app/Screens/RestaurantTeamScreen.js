@@ -142,26 +142,37 @@ export default function RestaurantTeamScreen ({ navigation, route }) {
             <ScrollView>
                 <View style={[ t.flex, t.flexCol, tw.mY2, tw.pX6, tw.wFull ]}>
                     <View style={[ tw.flex, tw.justifyCenter, tw.mY4 ]}>
-                        <Text style={[ t.textGray600, t.textCenter ]}>
+                        <Text style={[ t.textGray700, t.textCenter ]}>
                             Administradores
                         </Text>
                     </View>
-                    {restaurantAdministratorsWithNamesArray.map((administrator, index) => {
+
+                    {restaurantAdministratorsWithNamesArray && (restaurantAdministratorsWithNamesArray.length > 0) && restaurantAdministratorsWithNamesArray.map((administrator, index) => {
                         return (
                             <ListItem buttonOne="clipboard" buttonOneAction={() => makeAdministratorAnEmployee(administrator)} buttonTwo="ban" buttonTwoAction={() => deleteAdmin(administrator)} iconSize={25} index={index} item={administrator} itemClassnames={[ tw.borderT, tw.borderGray400 ]} itemElementAction={() => console.log("yeah")} key={index} listName="admin users in 'restaurant team' screen" />
                         )
                     })}
+                    {restaurantAdministratorsWithNamesArray && (restaurantAdministratorsWithNamesArray.length < 1) && <View style={[ tw.mY2 ]}>
+                        <Text style={[ t.textCenter, t.textGray500 ]}>
+                            No hay administradores en este restaurante.
+                        </Text>
+                    </View>}
 
                     <View style={[ tw.flex, tw.justifyCenter, tw.mY4 ]}>
-                        <Text style={[ t.textGray600, t.textCenter ]}>
+                        <Text style={[ t.textGray700, t.textCenter ]}>
                             Empleados
                         </Text>
                     </View>
-                    {restaurantEmployeesWithNamesArray.map((employee, index) => {
+                    {restaurantEmployeesWithNamesArray && (restaurantEmployeesWithNamesArray.length > 0) && restaurantEmployeesWithNamesArray.map((employee, index) => {
                         return (
                             <ListItem buttonOne="clipboard" buttonOneAction={() => makeEmployeeAnAdministrator(employee)} buttonTwo="ban" buttonTwoAction={() => deleteEmployee(employee)} iconSize={25} index={index} item={employee} itemClassnames={[ tw.borderT, tw.borderGray400 ]} itemElementAction={() => console.log("yeah")} key={index} listName="employee users in 'restaurant team' screen" />
                         )
                     })}
+                    {restaurantEmployeesWithNamesArray && (restaurantEmployeesWithNamesArray.length < 1) && <View style={[ tw.mY2 ]}>
+                        <Text style={[ t.textCenter, t.textGray500 ]}>
+                            No hay empleados en este restaurante.
+                        </Text>
+                    </View>}
                 </View>
             </ScrollView>
         )
