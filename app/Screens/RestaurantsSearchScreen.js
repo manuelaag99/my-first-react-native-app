@@ -39,7 +39,7 @@ export default function RestaurantsSearchScreen ({ navigation, route }) {
             setRestaurantsToDisplay(allRestaurantsArray);
         } else if (searchQuery) {
             setRestaurantsToDisplay(allRestaurantsArray.filter((restaurant) => {
-                return restaurant.restaurant_name.includes(searchQuery);
+                return restaurant.restaurant_name.toLowerCase().includes(searchQuery.toLowerCase());
             }))
         }
     }, [searchQuery])
@@ -49,7 +49,6 @@ export default function RestaurantsSearchScreen ({ navigation, route }) {
     const [modalVisibility, setModalVisibility] = useState(false);
     const [restaurantIdToSendRequestTo, setRestaurantIdToSendRequestTo] = useState();
     function openModalAndSendRestaurant (restaurant) {
-        console.log(restaurant)
         setRestaurantIdToSendRequestTo(restaurant.restaurant_id);
         setModalVisibility();
     }
@@ -76,11 +75,9 @@ export default function RestaurantsSearchScreen ({ navigation, route }) {
                         </View>}
                         {searchQuery && <View style={[ t.flex, t.flexCol, tw.wFull ]}>
                             {restaurantsToDisplay && restaurantsToDisplay.map((restaurant, index) => {
-                                if (restaurant.restaurant_name.includes(searchQuery)) {
-                                    return (
-                                        <ListItem buttonOne="plus" buttonOneAction={() => openModalAndSendRestaurant(restaurant)} buttonTwo={null} buttonTwoAction={null} iconSize={20} item={restaurant} itemClassnames={null} itemElementAction={() => navigation.navigate("Restaurant", { restaurant_id: restaurant.restaurant_id, user_id: auth.userId })} index={index} key={index} listName="restaurants in 'restaurant search' screen" />
-                                    )
-                                }
+                                return (
+                                    <ListItem buttonOne="plus" buttonOneAction={() => openModalAndSendRestaurant(restaurant)} buttonTwo={null} buttonTwoAction={null} iconSize={20} item={restaurant} itemClassnames={null} itemElementAction={() => navigation.navigate("Restaurant", { restaurant_id: restaurant.restaurant_id, user_id: auth.userId })} index={index} key={index} listName="restaurants in 'restaurant search' screen" />
+                                )
                             })}
                             {!restaurantsToDisplay || (restaurantsToDisplay.length == 0) && <View>
                                 <Text style={[ t.textGray500, t.textCenter, tw.mY3 ]}>
