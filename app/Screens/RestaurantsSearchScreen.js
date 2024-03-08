@@ -76,7 +76,7 @@ export default function RestaurantsSearchScreen ({ navigation, route }) {
                         {searchQuery && <View style={[ t.flex, t.flexCol, tw.wFull ]}>
                             {restaurantsToDisplay && restaurantsToDisplay.map((restaurant, index) => {
                                 return (
-                                    <ListItem buttonOne="plus" buttonOneAction={() => openModalAndSendRestaurant(restaurant)} buttonTwo={null} buttonTwoAction={null} iconSize={20} item={restaurant} itemClassnames={null} itemElementAction={() => navigation.navigate("Restaurant", { restaurant_id: restaurant.restaurant_id, user_id: auth.userId })} index={index} key={index} listName="restaurants in 'restaurant search' screen" />
+                                    <ListItem buttonOne="plus" buttonOneAction={() => openModalAndSendRestaurant(restaurant)} buttonTwo={null} buttonTwoAction={null} iconSize={20} item={restaurant} itemClassnames={null} itemElementAction={() => navigation.navigate("Restaurant", { restaurant_id: restaurant.restaurant_id, user_id: auth.userId })} index={index} key={index} listName="restaurants in 'restaurant search' screen" searchQuery={searchQuery} />
                                 )
                             })}
                             {!restaurantsToDisplay || (restaurantsToDisplay.length == 0) && <View>
