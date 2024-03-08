@@ -12,7 +12,7 @@ export default function DeleteUserAccountScreen ({ navigation, route }) {
     const [restaurantsThatTheUserIsAnAdminOf, setRestaurantsThatTheUserIsAnAdminOf] = useState();
     const [allOtherAdmins, setAllOtherAdmins] = useState();
     const [restaurantsThatTheUserIsAnEmployeeOf, setRestaurantsThatTheUserIsAnEmployeeOf] = useState();
-    async function fetchAdmins () {
+    async function fetchData () {
         try {
             const { data, error } = await supabase.from("ALO-admins").select("*").eq("user_id", auth.userId);
             if (error) console.log(error);
@@ -36,7 +36,7 @@ export default function DeleteUserAccountScreen ({ navigation, route }) {
         }
     }
     useEffect(() => {
-        fetchAdmins();
+        fetchData();
     }, [])
 
     const [adminsWithOnlyOneAdministrator, setAdminsWithOnlyOneAdministrator] = useState([]);
@@ -94,6 +94,9 @@ export default function DeleteUserAccountScreen ({ navigation, route }) {
         }
     }
 
+    function fetchAgain () {
+        fetchData();
+    }
 
     if (!restaurantsThatTheUserIsAnAdminOf || !restaurantsThatTheUserIsAnEmployeeOf) {
         return (
@@ -156,7 +159,7 @@ export default function DeleteUserAccountScreen ({ navigation, route }) {
                         </TouchableHighlight>
                     </View>
                 </View>
-                <ModalTemplate actionButtonBorder={tw.borderRed700} actionButtonColor={tw.bgRed700} animationForModal="fade" isVisible={deleteRestaurantModalVisibility} onClose={() => setDeleteRestaurantModalVisibility(false)} onTasksAfterAction={null} restaurantId={idOfRestaurantToDelete} textForButton="Eliminar" textForModal="¿Quieres eliminar este restaurante? Esto es permanente y borrará todo el menu, todas las ordenes, todos los empleados y administradores, y las solicitudes." userId={auth.userId} />
+                <ModalTemplate actionButtonBorder={tw.borderRed700} actionButtonColor={tw.bgRed700} animationForModal="fade" isVisible={deleteRestaurantModalVisibility} onClose={() => setDeleteRestaurantModalVisibility(false)} onTasksAfterAction={fetchAgain} restaurantId={idOfRestaurantToDelete} textForButton="Eliminar" textForModal="¿Quieres eliminar este restaurante? Esto es permanente y borrará todo el menu, todas las ordenes, todos los empleados y administradores, y las solicitudes." userId={auth.userId} />
             </ScrollView>
         )
     }
