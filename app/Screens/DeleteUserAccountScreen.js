@@ -4,6 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import ListItem from "../Components/ListItem";
 import { t, tw, tailwind } from "react-native-tailwindcss";
+import ModalTemplate from "../Components/ModalTemplate";
 
 export default function DeleteUserAccountScreen ({ navigation, route }) {
     const auth = useContext(AuthContext);
@@ -58,37 +59,12 @@ export default function DeleteUserAccountScreen ({ navigation, route }) {
         }
     }, [allOtherAdmins, restaurantsThatTheUserIsAnAdminOf])
 
-
-    
-
-
-
-
-    function deleteIndividualRestaurantInfoFromDataBase () {
-        // try {
-        //     const { error } = await supabase.from("ALO-restaurants").delete().eq("restaurant_id", admin.restaurant_id);
-        //     if (error) console.log(error);
-        // } catch (err) {
-        //     console.log(err);
-        // }
-        // try {
-        //     const { error } = await supabase.from("ALO-restaurant-orders").delete().eq("restaurant_id", admin.restaurant_id);
-        //     if (error) console.log(error);
-        // } catch (err) {
-        //     console.log(err);
-        // }
-        // try {
-        //     const { error } = await supabase.from("ALO-restaurant-menu-items").delete().eq("restaurant_id", admin.restaurant_id);
-        //     if (error) console.log(error);
-        // } catch (err) {
-        //     console.log(err);
-        // }
-        // try {
-        //     const { error } = await supabase.from("ALO-orders-dishes").delete().eq("restaurant_id", admin.restaurant_id);
-        //     if (error) console.log(error);
-        // } catch (err) {
-        //     console.log(err);
-        // }
+    const [deleteRestaurantModalVisibility, setDeleteRestaurantModalVisibility] = useState(false);
+    const [idOfRestaurantToDelete, setIdOfRestaurantToDelete] = useState();
+    function openModalToDeleteRestaurant (admin) {
+        console.log(admin);
+        setIdOfRestaurantToDelete(admin.restaurant_id)
+        setDeleteRestaurantModalVisibility(true);
     }
 
     async function deleteUserInfoFromDataBase () {
@@ -143,7 +119,7 @@ export default function DeleteUserAccountScreen ({ navigation, route }) {
                             <View style={[ tw.bgBlack, tw.borderB, tw.h0, tw.wFull, tw.mT2 ]}></View>
                             {restaurantsThatTheUserIsAnAdminOf && (restaurantsThatTheUserIsAnAdminOf.length > 0) && restaurantsThatTheUserIsAnAdminOf.map((admin, index) => {
                                 return (
-                                    <ListItem buttonOne={"facebook"} buttonOneAction={() => navigation.navigate("Restaurant", { restaurant_id: admin.restaurant_id, user_id: auth.userId })} buttonTwo={"ban"} iconSize={25} item={admin} index={index} itemClassnames={null} itemElementAction={() => navigation.navigate("Restaurant", { user_id: auth.userId, restaurant_id: admin.restaurant_id })} key={index} listName="restaurants that the user is an admin of in 'delete user account' screen" />
+                                    <ListItem buttonOne={"facebook"} buttonOneAction={() => navigation.navigate("Restaurant", { restaurant_id: admin.restaurant_id, user_id: auth.userId })} buttonTwo={"ban"} buttonTwoAction={() => openModalToDeleteRestaurant(admin)} iconSize={25} item={admin} index={index} itemClassnames={null} itemElementAction={() => navigation.navigate("Restaurant", { user_id: auth.userId, restaurant_id: admin.restaurant_id })} key={index} listName="restaurants that the user is an admin of in 'delete user account' screen" />
                                 )
                             })}
                             {restaurantsThatTheUserIsAnAdminOf && (restaurantsThatTheUserIsAnAdminOf.length < 1) && <Text style={[ tw.wFull, t.textCenter, tw.mT4, tw.pX4 ]}>
@@ -158,7 +134,7 @@ export default function DeleteUserAccountScreen ({ navigation, route }) {
                             <View style={[ tw.bgBlack, tw.borderB, tw.h0, tw.wFull, tw.mT2 ]}></View>
                             {restaurantsThatTheUserIsAnEmployeeOf && (restaurantsThatTheUserIsAnEmployeeOf.length > 0) && restaurantsThatTheUserIsAnEmployeeOf.map((employee, index) => {
                                 return (
-                                    <ListItem buttonOne={"facebook"} buttonOneAction={() => navigation.navigate("Restaurant", { restaurant_id: employee.restaurant_id, user_id: auth.userId })} buttonTwo={null} iconSize={25} item={employee} index={index} itemClassnames={null} itemElementAction={() => navigation.navigate("Restaurant", { user_id: auth.userId, restaurant_id: employee.restaurant_id })} key={index} listName="restaurants that the user is an employee of in 'delete user account' screen" />
+                                    <ListItem buttonOne={"facebook"} buttonOneAction={() => navigation.navigate("Restaurant", { restaurant_id: employee.restaurant_id, user_id: auth.userId })} buttonTwo={null} buttonTwoAction={null} iconSize={25} item={employee} index={index} itemClassnames={null} itemElementAction={() => navigation.navigate("Restaurant", { user_id: auth.userId, restaurant_id: employee.restaurant_id })} key={index} listName="restaurants that the user is an employee of in 'delete user account' screen" />
                                 )
                             })}
                             {restaurantsThatTheUserIsAnEmployeeOf && (restaurantsThatTheUserIsAnEmployeeOf.length < 1) && <Text style={[ tw.wFull, t.textCenter, tw.mT4, tw.pX4 ]}>
@@ -180,6 +156,7 @@ export default function DeleteUserAccountScreen ({ navigation, route }) {
                         </TouchableHighlight>
                     </View>
                 </View>
+                <ModalTemplate actionButtonBorder={tw.borderRed700} actionButtonColor={tw.bgRed700} animationForModal="fade" isVisible={deleteRestaurantModalVisibility} onClose={() => setDeleteRestaurantModalVisibility(false)} onTasksAfterAction={null} restaurantId={idOfRestaurantToDelete} textForButton="Eliminar" textForModal="¿Quieres eliminar este restaurante? Esto es permanente y borrará todo el menu, todas las ordenes, todos los empleados y administradores, y las solicitudes." userId={auth.userId} />
             </ScrollView>
         )
     }

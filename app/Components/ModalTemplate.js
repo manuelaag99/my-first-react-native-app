@@ -128,7 +128,7 @@ export default function ModalTemplate ({ actionButtonBorder, actionButtonColor, 
     function actionButtonHandle () {
         if (textForModal === "¿Quieres solicitar unirte a este restaurante?") {
             sendRequest();
-        } else if (textForModal === "¿Quieres eliminar este restaurante? Esto es permanente.") {
+        } else if (textForModal === "¿Quieres eliminar este restaurante? Esto es permanente y borrará todo el menu, todas las ordenes, todos los empleados y administradores, y las solicitudes.") {
             deleteRestaurant();
         } else if (textForModal === "¿Quieres borrar el menú? Esto es permanente.") {
             deleteMenu();
@@ -146,12 +146,12 @@ export default function ModalTemplate ({ actionButtonBorder, actionButtonColor, 
         <Modal animationType={animationForModal || "fade"} onRequestClose={onClose} transparent={true} visible={isVisible}>
             <View style={[[ t.flex, t.flexCol, tw.justifyCenter, tw.pX6, tw.wFull, tw.hFull ], { backgroundColor: "#00000075"}]}>
                 <View style={[ t.flex, t.flexCol, tw.h50, tw.wFull, tw.bgWhite, tw.border, tw.borderGray300, tw.pT4, tw.pB8, tailwind.roundedLg, t.shadow2xl ]}>
-                    <View style={[ t.flex, t.flexCol, tw.wFull, tw.h16, tw.justifyCenter ]}>
+                    <View style={[ t.flex, t.flexCol, tw.wFull, tw.hAuto, tw.justifyCenter ]}>
                         <Text style={[ t.textCenter, tw.pX4, tw.wFull, t.flex, t.flexCol, tw.justifyCenter ]}>
                             {textForModal}
                         </Text>
                     </View>
-                    <View style={[ t.flex, t.flexRow, tw.wFull, tw.h12, tw.justifyAround, tw.mT3 ]}>
+                    <View style={[ t.flex, t.flexRow, tw.wFull, tw.h12, tw.justifyAround, tw.mT4 ]}>
                         <TouchableHighlight underlayColor={underlayColor || "#ff6666"} style={[ tw.w1_3, t.flex, t.flexCol, tw.justifyCenter, tw.border, tailwind.roundedLg, actionButtonColor, actionButtonBorder ]} onPress={actionButtonHandle}>
                             <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>{textForButton}</Text>
                         </TouchableHighlight>
