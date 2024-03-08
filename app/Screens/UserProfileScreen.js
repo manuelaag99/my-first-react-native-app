@@ -139,7 +139,6 @@ export default function UserProfileScreen ({ navigation, route }) {
 
 
     useEffect(() => {
-        console.log("navig")
         fetchData();
     }, [navigation]);
 
@@ -158,7 +157,7 @@ export default function UserProfileScreen ({ navigation, route }) {
         auth.logout()
     }
 
-    if (!user && !restaurantsThatTheUserIsAnAdminOfWithNamesToDisplay && !restaurantsThatTheUserIsAnEmployeeOfWithNamesToDisplay) {
+    if (!user || !restaurantsThatTheUserIsAnAdminOfWithNamesToDisplay || !restaurantsThatTheUserIsAnEmployeeOfWithNamesToDisplay) {
         return (
             <View>
                 <ActivityIndicator style={[ tw.mT10]} size="large" color="#000" />

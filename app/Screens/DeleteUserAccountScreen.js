@@ -119,7 +119,7 @@ export default function DeleteUserAccountScreen ({ navigation, route }) {
     }
 
 
-    if (!restaurantsThatTheUserIsAnAdminOf) {
+    if (!restaurantsThatTheUserIsAnAdminOf || !restaurantsThatTheUserIsAnEmployeeOf) {
         return (
             <View>
                 <ActivityIndicator style={[ tw.mT10 ]} size="large" color="#000" />
@@ -146,6 +146,9 @@ export default function DeleteUserAccountScreen ({ navigation, route }) {
                                     <ListItem buttonOne={"facebook"} buttonOneAction={() => navigation.navigate("Restaurant", { restaurant_id: admin.restaurant_id, user_id: auth.userId })} buttonTwo={"ban"} iconSize={25} item={admin} index={index} itemClassnames={null} itemElementAction={() => navigation.navigate("Restaurant", { user_id: auth.userId, restaurant_id: admin.restaurant_id })} key={index} listName="restaurants that the user is an admin of in 'delete user account' screen" />
                                 )
                             })}
+                            {restaurantsThatTheUserIsAnAdminOf && (restaurantsThatTheUserIsAnAdminOf.length < 1) && <Text style={[ tw.wFull, t.textCenter, tw.mT4, tw.pX4 ]}>
+                                No hay restaurantes.
+                            </Text>}
                         </View>
 
                         <View style={[ tw.flex, tw.justifyCenter, tw.itemsCenter, tw.pX4, tw.mY4 ]}>
@@ -158,15 +161,18 @@ export default function DeleteUserAccountScreen ({ navigation, route }) {
                                     <ListItem buttonOne={"facebook"} buttonOneAction={() => navigation.navigate("Restaurant", { restaurant_id: employee.restaurant_id, user_id: auth.userId })} buttonTwo={null} iconSize={25} item={employee} index={index} itemClassnames={null} itemElementAction={() => navigation.navigate("Restaurant", { user_id: auth.userId, restaurant_id: employee.restaurant_id })} key={index} listName="restaurants that the user is an employee of in 'delete user account' screen" />
                                 )
                             })}
+                            {restaurantsThatTheUserIsAnEmployeeOf && (restaurantsThatTheUserIsAnEmployeeOf.length < 1) && <Text style={[ tw.wFull, t.textCenter, tw.mT4, tw.pX4 ]}>
+                                No hay restaurantes.
+                            </Text>}
                         </View> 
 
                     </View>
-                    <View style={[ tw.flex, tw.mY3, tw.pX4]}>
+                    {(adminsWithOnlyOneAdministrator && (adminsWithOnlyOneAdministrator.length > 0)) && <View style={[ tw.flex, tw.mY3, tw.pX4]}>
                         <Text style={[ t.textCenter, t.textRed500]}>
-                            {(adminsWithOnlyOneAdministrator && (adminsWithOnlyOneAdministrator.length > 0)) && "No podrás eliminar tu cuenta a menos a que todos tus restaurantes sin otros administradores hayan sido eliminados. Considera nombrar a más administradores o elimina los restaurantes manualmente."}
+                            No podrás eliminar tu cuenta a menos a que todos tus restaurantes sin otros administradores hayan sido eliminados. Considera nombrar a más administradores o elimina los restaurantes manualmente.
                         </Text>
-                    </View>
-                    <View style={[ tw.mT5 ]}>
+                    </View>}
+                    <View style={[ tw.mY3 ]}>
                         <TouchableHighlight disabled={(adminsWithOnlyOneAdministrator && (adminsWithOnlyOneAdministrator.length > 0))} onPress={deleteUserInfoFromDataBase} style={[[ t.flex, t.justifyCenter, t.itemsCenter, tw.pX3, tw.pY4, tw.mY3, tw.wFull, tailwind.roundedLg, tailwind.shadow2xl, (!(adminsWithOnlyOneAdministrator && (adminsWithOnlyOneAdministrator.length > 0)) ? t.bgRed700 : t.bgRed300 ) ]]} underlayColor="#f11">
                             <Text style={[ t.textWhite ]}>
                                 Borrar mi cuenta permanentemente
