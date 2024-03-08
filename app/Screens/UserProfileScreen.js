@@ -115,7 +115,7 @@ export default function UserProfileScreen ({ navigation, route }) {
     useEffect(() => {
         if (allRequests) {
             allRequests.map((request) => {
-                restaurantsThatTheUserIsAnEmployeeOfWithNamesToDisplay.map((restaurant) => {
+                restaurantsThatTheUserIsAnAdminOfWithNamesToDisplay.map((restaurant) => {
                     if (restaurant.restaurant_id === request.restaurant_id) {
                         setUserRequests((prevArray) => [ ...prevArray, { request } ]);
                     }
