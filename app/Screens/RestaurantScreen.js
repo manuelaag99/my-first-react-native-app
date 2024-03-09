@@ -158,7 +158,7 @@ export default function RestaurantScreen ({ route, navigation }) {
     
                     {(!isUserAnAdministrator) && (!isUserAnEmployee) && (!hasUserSentRequest) && <TouchableHighlight underlayColor="#ffdd88" onPress={() => openModalToSendRequest(restaurant_id)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgOrange400, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
-                            Soy empleado
+                            Enviar solicitud a este restaurante
                         </Text>
                     </TouchableHighlight>}
 
