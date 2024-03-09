@@ -7,6 +7,7 @@ import { AuthContext } from "../Context/AuthContext";
 import ListItem from "../Components/ListItem";
 import { v4 as uuidv4 } from "uuid";
 import ErrorModal from "../Components/ErrorModal";
+import ModalTemplate from "../Components/ModalTemplate";
 
 export default function RestaurantTeamScreen ({ navigation, route }) {
     const auth = useContext(AuthContext);
@@ -83,67 +84,51 @@ export default function RestaurantTeamScreen ({ navigation, route }) {
         fetchRestaurantTeam();
     }, [])
 
+    function fetchAgain () {
+        fetchRestaurantTeam();
+    }
+
     useEffect(() => {
         populateEmployeesAndAdministratorsArray();
     }, [allUsers])
 
-    let newAdminId;
-    async function makeEmployeeAnAdministrator (employee) {
-        newAdminId = uuidv4();
-        try {
-            const { error } = await supabase.from("ALO-admins").insert({ administrator_id: newAdminId, restaurant_id: restaurant_id, user_id: employee.user_id });
-            if (error) console.log(error);
-        } catch (err) {
-            console.log(err);
-        }
-        try {
-            const { error } = await supabase.from("ALO-employees").delete().eq("user_id", employee.user_id).eq("restaurant_id", employee.restaurant_id);
-            if (error) console.log(error);
-        } catch (err) {
-            console.log(err);
-        }
-    }
-    async function deleteEmployee (employee) {
-        try {
-            const { error } = await supabase.from("ALO-employees").delete().eq("user_id", employee.user_id).eq("restaurant_id", employee.restaurant_id);
-            if (error) console.log(error);
-        } catch {
-            console.log(err);
+
+    const [isModalTemplateVisible, setIsModalTemplateVisible] = useState(false);
+    const [itemToSend, setItemToSend] = useState();
+    const [textForModalTemplate, setTextForModalTemplate] = useState();
+    const [textForModalTemplateButton, setTextForModalTemplateButton] = useState();
+
+    function openModalToDeleteAdmin (administrator) {
+        if (restaurantAdministratorsWithNamesArray && (restaurantAdministratorsWithNamesArray.length > 1)) {
+            setItemToSend(administrator);
+            setTextForModalTemplate("¿Quieres eliminar a este administrador?");
+            setTextForModalTemplateButton("Si, eliminar")
+            setIsModalTemplateVisible(true);
         }
     }
 
-    let newEmployeeId;
-    async function makeAdministratorAnEmployee (administrator) {
-        newEmployeeId = uuidv4();
+    function openModalToDeleteEmployee (employee) {
+        setItemToSend(employee);
+        setTextForModalTemplate("¿Quieres eliminar a este empleado?");
+        setTextForModalTemplateButton("Si, eliminar")
+        setIsModalTemplateVisible(true);
+    }
+
+    function openModalToMakeAdministratorAnEmployee (administrator) {
         if (restaurantAdministratorsWithNamesArray && (restaurantAdministratorsWithNamesArray.length > 1)) {
-            try {
-                const { error } = await supabase.from("ALO-employees").insert({ employee_id: newEmployeeId, restaurant_id: restaurant_id, user_id: administrator.user_id });
-                if (error) console.log(error);
-            } catch (err) {
-                console.log(err);
-            }
-            try {
-                const { error } = await supabase.from("ALO-admins").delete().eq("user_id", administrator.user_id).eq("restaurant_id", administrator.restaurant_id);
-                if (error) console.log(error);
-            } catch (err) {
-                console.log(err);
-            }
-        } else {
-            setModalVisibility(true);
+            setItemToSend(administrator);
+            setTextForModalTemplate("¿Quieres convertir a este administrador en empleado?");
+            setTextForModalTemplateButton("Sí, convertir");
+            setIsModalTemplateVisible(true)
         }
     }
-    
-    async function deleteAdmin (administrator) {
-        if (restaurantAdministratorsWithNamesArray && (restaurantAdministratorsWithNamesArray.length > 1)) {
-            try {
-                const { error } = await supabase.from("ALO-admins").delete().eq("user_id", administrator.user_id).eq("restaurant_id", administrator.restaurant_id);
-                if (error) console.log(error);
-            } catch {
-                console.log(err);
-            }
-        } else {
-            setModalVisibility(true);
-        }
+
+    function openModalToMakeEmployeeAnAdministrator (employee) {
+        console.log(employee)
+        setItemToSend(employee);
+        setTextForModalTemplate("¿Quieres convertir a este empleado en administrador?");
+        setTextForModalTemplateButton("Sí, convertir");
+        setIsModalTemplateVisible(true)
     }
 
     if (!restaurantEmployeesWithNamesArray || !restaurantEmployeesWithNamesArray) {
@@ -160,7 +145,7 @@ export default function RestaurantTeamScreen ({ navigation, route }) {
 
                     {restaurantAdministratorsWithNamesArray && (restaurantAdministratorsWithNamesArray.length > 0) && restaurantAdministratorsWithNamesArray.map((administrator, index) => {
                         return (
-                            <ListItem buttonOne="clipboard" buttonOneAction={() => makeAdministratorAnEmployee(administrator)} buttonTwo="ban" buttonTwoAction={() => deleteAdmin(administrator)} iconSize={25} index={index} item={administrator} itemClassnames={[ tw.borderT, tw.borderGray400 ]} itemElementAction={() => console.log("yeah")} key={index} listName="admin users in 'restaurant team' screen" />
+                            <ListItem buttonOne="clipboard" buttonOneAction={() => openModalToMakeAdministratorAnEmployee(administrator)} buttonTwo="ban" buttonTwoAction={() => openModalToDeleteAdmin(administrator)} iconSize={25} index={index} item={administrator} itemClassnames={[ tw.borderT, tw.borderGray400 ]} itemElementAction={() => console.log("yeah")} key={index} listName="admin users in 'restaurant team' screen" />
                         )
                     })}
                     {restaurantAdministratorsWithNamesArray && (restaurantAdministratorsWithNamesArray.length < 1) && <View style={[ tw.mY2 ]}>
@@ -176,7 +161,7 @@ export default function RestaurantTeamScreen ({ navigation, route }) {
                     </View>
                     {restaurantEmployeesWithNamesArray && (restaurantEmployeesWithNamesArray.length > 0) && restaurantEmployeesWithNamesArray.map((employee, index) => {
                         return (
-                            <ListItem buttonOne="clipboard" buttonOneAction={() => makeEmployeeAnAdministrator(employee)} buttonTwo="ban" buttonTwoAction={() => deleteEmployee(employee)} iconSize={25} index={index} item={employee} itemClassnames={[ tw.borderT, tw.borderGray400 ]} itemElementAction={() => console.log("yeah")} key={index} listName="employee users in 'restaurant team' screen" />
+                            <ListItem buttonOne="clipboard" buttonOneAction={() => openModalToMakeEmployeeAnAdministrator(employee)} buttonTwo="ban" buttonTwoAction={() => openModalToDeleteEmployee(employee)} iconSize={25} index={index} item={employee} itemClassnames={[ tw.borderT, tw.borderGray400 ]} itemElementAction={() => console.log("yeah")} key={index} listName="employee users in 'restaurant team' screen" />
                         )
                     })}
                     {restaurantEmployeesWithNamesArray && (restaurantEmployeesWithNamesArray.length < 1) && <View style={[ tw.mY2 ]}>
@@ -186,6 +171,7 @@ export default function RestaurantTeamScreen ({ navigation, route }) {
                     </View>}
                 </View>
                 <ErrorModal animationForModal="fade" onClose={() => setModalVisibility(false)} isVisible={modalVisibility} onPressingRedButton={() => setModalVisibility(false)} textForButton="Aceptar" textForModal="Un restaurante no puede quedarse sin administradores." />
+                <ModalTemplate actionButtonBorder={tw.borderOrange400} actionButtonColor={tw.bgOrange400} animationForModal="fade" isVisible={isModalTemplateVisible} item={itemToSend} onClose={() => setIsModalTemplateVisible(false)} onTasksAfterAction={fetchAgain} orderToDelete={null} restaurantId={null} textForButton={textForModalTemplateButton} textForModal={textForModalTemplate} underlayColor="#fc5" userId={auth.userId} />
             </ScrollView>
         )
     }

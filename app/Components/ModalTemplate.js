@@ -3,7 +3,7 @@ import { t, tailwind, tw } from "react-native-tailwindcss";
 import { supabase } from "../supabase/client";
 import { v4 as uuidv4 } from "uuid";
 
-export default function ModalTemplate ({ actionButtonBorder, actionButtonColor, animationForModal, isVisible, onClose, onTasksAfterAction, orderToDelete, restaurantId, textForButton, textForModal, underlayColor, userId }) {
+export default function ModalTemplate ({ actionButtonBorder, actionButtonColor, animationForModal, isVisible, item, onClose, onTasksAfterAction, orderToDelete, restaurantId, textForButton, textForModal, underlayColor, userId }) {
 
     let request_id;
     async function sendRequest () {
@@ -109,7 +109,6 @@ export default function ModalTemplate ({ actionButtonBorder, actionButtonColor, 
     }
 
     async function deleteSpecificOrder () {
-        console.log(orderToDelete)
         try {
             const { error } = await supabase.from("ALO-orders-dishes").delete("*").eq("order_id", orderToDelete.order_id);
             if (error) console.log(error);
@@ -122,6 +121,65 @@ export default function ModalTemplate ({ actionButtonBorder, actionButtonColor, 
             onClose();
             onTasksAfterAction();
         } catch (err) {
+            console.log(err);
+        }
+    }
+
+    let newAdminId;
+    async function makeEmployeeAnAdministrator () {
+        newAdminId = uuidv4();
+        try {
+            const { error } = await supabase.from("ALO-admins").insert({ administrator_id: newAdminId, restaurant_id: item.restaurant_id, user_id: item.user_id });
+            if (error) console.log(error);
+        } catch (err) {
+            console.log(err);
+        }
+        try {
+            const { error } = await supabase.from("ALO-employees").delete().eq("user_id", item.user_id).eq("restaurant_id", item.restaurant_id);
+            if (error) console.log(error);
+            onClose();
+            onTasksAfterAction();
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    async function deleteEmployee () {
+        try {
+            const { error } = await supabase.from("ALO-employees").delete().eq("user_id", item.user_id).eq("restaurant_id", item.restaurant_id);
+            if (error) console.log(error);
+            onClose();
+            onTasksAfterAction();
+        } catch {
+            console.log(err);
+        }
+    }
+
+    let newEmployeeId;
+    async function makeAdministratorAnEmployee () {
+        newEmployeeId = uuidv4();
+        try {
+            const { error } = await supabase.from("ALO-employees").insert({ employee_id: newEmployeeId, restaurant_id: item.restaurant_id, user_id: item.user_id });
+            if (error) console.log(error);
+        } catch (err) {
+            console.log(err);
+        }
+        try {
+            const { error } = await supabase.from("ALO-admins").delete().eq("user_id", item.user_id).eq("restaurant_id", item.restaurant_id);
+            if (error) console.log(error);
+            onClose();
+            onTasksAfterAction();
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    
+    async function deleteAdmin () {
+        try {
+            const { error } = await supabase.from("ALO-admins").delete().eq("user_id", item.user_id).eq("restaurant_id", item.restaurant_id);
+            if (error) console.log(error);
+            onClose();
+            onTasksAfterAction();
+        } catch {
             console.log(err);
         }
     }
@@ -140,6 +198,14 @@ export default function ModalTemplate ({ actionButtonBorder, actionButtonColor, 
             deleteSpecificOrder();
         } else if (textForModal === "¿Quieres eliminar tu cuenta? Esto es permanente.") {
             console.log("delete account")
+        } else if (textForModal === "¿Quieres eliminar a este administrador?") {
+            deleteAdmin();
+        } else if (textForModal === "¿Quieres eliminar a este empleado?") {
+            deleteEmployee();
+        } else if (textForModal === "¿Quieres convertir a este empleado en administrador?") {
+            makeEmployeeAnAdministrator();
+        } else if (textForModal === "¿Quieres convertir a este administrador en empleado?") {
+            makeAdministratorAnEmployee();
         }
     }
 
