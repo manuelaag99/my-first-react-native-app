@@ -3,13 +3,13 @@ import { t, tailwind, tw } from "react-native-tailwindcss";
 import { supabase } from "../supabase/client";
 import { v4 as uuidv4 } from "uuid";
 
-export default function ModalTemplate ({ actionButtonBorder, actionButtonColor, animationForModal, isVisible, item, onClose, onTasksAfterAction, orderToDelete, restaurantId, textForButton, textForModal, underlayColor, userId }) {
+export default function ModalTemplate ({ actionButtonBorder, actionButtonColor, animationForModal, isVisible, item, onClose, onTasksAfterAction, restaurantId, textForButton, textForModal, underlayColor, userId }) {
 
-    let request_id;
+    let newRequestId;
     async function sendRequest () {
-        request_id = uuidv4();
+        newRequestId = uuidv4();
         try {
-            const { data, error } = await supabase.from("ALO-requests").insert({ user_id: userId, restaurant_id: restaurantId, request_id: request_id, request_status: "pending" });
+            const { data, error } = await supabase.from("ALO-requests").insert({ user_id: userId, restaurant_id: restaurantId, request_id: newRequestId, request_status: "pending" });
             if (error) console.log(error)
             onClose();
             onTasksAfterAction();
@@ -110,13 +110,13 @@ export default function ModalTemplate ({ actionButtonBorder, actionButtonColor, 
 
     async function deleteSpecificOrder () {
         try {
-            const { error } = await supabase.from("ALO-orders-dishes").delete("*").eq("order_id", orderToDelete.order_id);
+            const { error } = await supabase.from("ALO-orders-dishes").delete("*").eq("order_id", item.order_id);
             if (error) console.log(error);
         } catch (err) {
             console.log(err);
         }
         try {
-            const { error } = await supabase.from("ALO-restaurant-orders").delete("*").eq("order_id", orderToDelete.order_id);
+            const { error } = await supabase.from("ALO-restaurant-orders").delete("*").eq("order_id", item.order_id);
             if (error) console.log(error);
             onClose();
             onTasksAfterAction();

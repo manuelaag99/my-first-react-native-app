@@ -174,7 +174,7 @@ export default function RestaurantTeamScreen ({ navigation, route }) {
                     </View>}
                 </View>
                 <ErrorModal animationForModal="fade" onClose={() => setIsErrorModalVisible(false)} isVisible={isErrorModalVisible} onPressingRedButton={() => setIsErrorModalVisible(false)} textForButton="Aceptar" textForModal={errorModalText} />
-                <ModalTemplate actionButtonBorder={tw.borderOrange400} actionButtonColor={tw.bgOrange400} animationForModal="fade" isVisible={isModalTemplateVisible} item={itemToSend} onClose={() => setIsModalTemplateVisible(false)} onTasksAfterAction={fetchAgain} orderToDelete={null} restaurantId={null} textForButton={textForModalTemplateButton} textForModal={textForModalTemplate} underlayColor="#fc5" userId={auth.userId} />
+                <ModalTemplate actionButtonBorder={tw.borderOrange400} actionButtonColor={tw.bgOrange400} animationForModal="fade" isVisible={isModalTemplateVisible} item={itemToSend} onClose={() => setIsModalTemplateVisible(false)} onTasksAfterAction={fetchAgain} restaurantId={null} textForButton={textForModalTemplateButton} textForModal={textForModalTemplate} underlayColor="#fc5" userId={auth.userId} />
             </ScrollView>
         )
     }

@@ -51,7 +51,7 @@ export default function OrdersScreen ({ navigation, route }) {
         setActionForModal("¿Quieres borrar la lista de órdenes? Esto es permanente.");
         setModalVisibility(true);
     }
-    function clearOrdersArray () { 
+    function fetchAgain () { 
         fetchAgain();
     }
 
@@ -61,18 +61,6 @@ export default function OrdersScreen ({ navigation, route }) {
         setOrderToDelete(order);
         setActionForModal("¿Quieres borrar esta orden? Esto es permanente.");
         setModalVisibility(true);
-        // try {
-        //     const { error } = await supabase.from("ALO-orders-dishes").delete("*").eq("order_id", order.order_id);
-        //     if (error) console.log(error);
-        // } catch (err) {
-        //     console.log(err);
-        // }
-        // try {
-        //     const { error } = await supabase.from("ALO-restaurant-orders").delete("*").eq("order_id", order.order_id);
-        //     if (error) console.log(error);
-        // } catch (err) {
-        //     console.log(err);
-        // }
     }
 
 
@@ -154,7 +142,7 @@ export default function OrdersScreen ({ navigation, route }) {
                 
                 <NewItem dishesToUpdate={orderToUpdateDishes} isUpdating={true} isVisible={updateOrderVisibility} itemToAdd="order" itemToUpdate={orderToUpdate} onClose={() => setUpdateOrderVisibility(false)} restaurantId={restaurant_id} textForAddButton="ACTUALIZAR" topText="Actualizar orden" updateFetchedData={fetchAgain} userId={user_id} />
                 <NewItem dishesToUpdate={null} isUpdating={false} isVisible={newOrderVisibility} itemToAdd="order" itemToUpdate={null} onClose={() => setNewOrderVisibility(false)} restaurantId={restaurant_id} textForAddButton="AGREGAR" topText="Nueva orden" updateFetchedData={fetchAgain} userId={user_id} />
-                <ModalTemplate actionButtonBorder={tw.borderRed700} actionButtonColor={tw.bgRed700} isVisible={modalVisibility} onClose={() => setModalVisibility(false)} onTasksAfterAction={clearOrdersArray} orderToDelete={orderToDelete} restaurantId={restaurant_id} textForButton="Borrar" textForModal={actionForModal} userId={user_id} />
+                <ModalTemplate actionButtonBorder={tw.borderRed700} actionButtonColor={tw.bgRed700} isVisible={modalVisibility} item={orderToDelete} onClose={() => setModalVisibility(false)} onTasksAfterAction={fetchAgain} restaurantId={restaurant_id} textForButton="Borrar" textForModal={actionForModal} userId={user_id} />
             </View>
         </ScrollView>
     )
