@@ -8,8 +8,6 @@ import { AuthContext } from "../Context/AuthContext";
 
 export default function RestaurantScreen ({ route, navigation }) {
     const auth = useContext(AuthContext);
-    const [addRestaurantModalVisibility, setAddRestaurantModalVisibility] = useState(false);
-    const [deleteRestaurantModalVisibility, setDeleteRestaurantModalVisibility] = useState(false);
     const [newItemVisibility, setNewItemVisibility] = useState(false);
     const [updateRestaurantVisibility, setUpdateRestaurantVisibility] = useState(false);
 
@@ -113,14 +111,25 @@ export default function RestaurantScreen ({ route, navigation }) {
     }
 
     function fetchAgain () {
-        console.log("fetch again")
         fetchData();
     }
 
+    const [isModalTemplateVisible, setIsModalTemplateVisible] = useState(false);
     const [restaurantIdToSendRequestTo, setRestaurantIdToSendRequestTo] = useState();
-    function openModalAndSendRequest (restaurant_id) {
+    const [textForModalTemplate, setTextForModalTemplate] = useState();
+    const [textForModalTemplateButton, setTextForModalTemplateButton] = useState();
+    function openModalToSendRequest (restaurant_id) {
         setRestaurantIdToSendRequestTo(restaurant_id);
-        setAddRestaurantModalVisibility(true);
+        setTextForModalTemplate("¿Quieres solicitar unirte a este restaurante?");
+        setTextForModalTemplateButton("Sí, enviar");
+        setIsModalTemplateVisible(true);
+    }
+    
+    function openModalToDeleteRestaurant (restaurant_id) {
+        setRestaurantIdToSendRequestTo(restaurant_id);
+        setTextForModalTemplate("¿Quieres eliminar este restaurante? Esto es permanente y borrará todo el menu, todas las ordenes, todos los empleados y administradores, y las solicitudes.");
+        setTextForModalTemplateButton("Sí, eliminar");
+        setIsModalTemplateVisible(true);
     }
 
     if (!restaurantInfo || !restaurantCreatorInfo || !restaurantEmployeesArray || !restaurantAdministratorsArray || !userRequests) {
@@ -147,7 +156,7 @@ export default function RestaurantScreen ({ route, navigation }) {
                         </Text>
                     </View>
     
-                    {(!isUserAnAdministrator) && (!isUserAnEmployee) && (!hasUserSentRequest) && <TouchableHighlight underlayColor="#ffdd88" onPress={() => openModalAndSendRequest(restaurant_id)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgOrange400, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tailwind.roundedLg ]}>
+                    {(!isUserAnAdministrator) && (!isUserAnEmployee) && (!hasUserSentRequest) && <TouchableHighlight underlayColor="#ffdd88" onPress={() => openModalToSendRequest(restaurant_id)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgOrange400, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
                             Soy empleado
                         </Text>
@@ -195,7 +204,7 @@ export default function RestaurantScreen ({ route, navigation }) {
                         </Text>
                     </TouchableHighlight>}
                     
-                    {(isUserAnAdministrator) && <TouchableHighlight underlayColor="#ff6666" onPress={() => setDeleteRestaurantModalVisibility(true)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgRed700, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
+                    {(isUserAnAdministrator) && <TouchableHighlight underlayColor="#ff6666" onPress={() => openModalToDeleteRestaurant(restaurant_id)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgRed700, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
                             Eliminar restaurante
                         </Text>
@@ -203,8 +212,8 @@ export default function RestaurantScreen ({ route, navigation }) {
     
                     <NewItem dishesToUpdate={null} isUpdating={false} isVisible={newItemVisibility} itemId={null} itemToAdd="order" itemToUpdate={null} onClose={() => setNewItemVisibility(false)} restaurantId={restaurant_id} textForAddButton="AGREGAR" topText="Nueva orden" updateFetchedData={fetchAgain} userId={auth.userId} />
                     <NewItem dishesToUpdate={null} isUpdating={true} isVisible={updateRestaurantVisibility} itemId={restaurant_id} itemToAdd="restaurant" itemToUpdate={restaurantInfo} onClose={() => setUpdateRestaurantVisibility(false)} restaurantId={restaurant_id} textForAddButton="ACTUALIZAR" topText="Modificar restaurante" updateFetchedData={fetchAgain} userId={auth.userId} />
-                    <ModalTemplate actionButtonBorder={tw.borderRed700} actionButtonColor={tw.bgRed700} animationForModal="fade" isVisible={deleteRestaurantModalVisibility} onClose={() => setDeleteRestaurantModalVisibility(false)} onTasksAfterAction={navigateAfterDeletingRestaurant} restaurantId={restaurant_id} textForButton="Eliminar" textForModal="¿Quieres eliminar este restaurante? Esto es permanente y borrará todo el menu, todas las ordenes, todos los empleados y administradores, y las solicitudes." userId={auth.userId} />
-                    <ModalTemplate actionButtonBorder={tw.borderOrange400} actionButtonColor={tw.bgOrange400} animationForModal="fade" isVisible={addRestaurantModalVisibility} onClose={() => setAddRestaurantModalVisibility(false)} onTasksAfterAction={fetchAgain} restaurantId={restaurantIdToSendRequestTo} textForButton="Enviar" textForModal="¿Quieres solicitar unirte a este restaurante?" underlayColor="#fc5" userId={auth.userId} />
+                    <ModalTemplate actionButtonBorder={tw.borderRed700} actionButtonColor={tw.bgRed700} animationForModal="fade" isVisible={isModalTemplateVisible} onClose={() => setIsModalTemplateVisible(false)} onTasksAfterAction={navigateAfterDeletingRestaurant} restaurantId={restaurant_id} textForButton={textForModalTemplateButton} textForModal={textForModalTemplate} underlayColor="#f00" userId={auth.userId} />
+                    <ModalTemplate actionButtonBorder={tw.borderOrange400} actionButtonColor={tw.bgOrange400} animationForModal="fade" isVisible={isModalTemplateVisible} onClose={() => setIsModalTemplateVisible(false)} onTasksAfterAction={fetchAgain} restaurantId={restaurantIdToSendRequestTo} textForButton={textForModalTemplateButton} textForModal={textForModalTemplate} underlayColor="#fc5" userId={auth.userId} />
                 </View>
             </ScrollView>
         )

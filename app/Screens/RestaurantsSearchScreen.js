@@ -34,6 +34,10 @@ export default function RestaurantsSearchScreen ({ navigation, route }) {
         fetchAllRestaurants();
     }, [])
 
+    function fetchAgain () {
+        fetchAllRestaurants();
+    }
+
     useEffect(() => {
         if (!searchQuery) {
             setRestaurantsToDisplay(allRestaurantsArray);
@@ -42,15 +46,19 @@ export default function RestaurantsSearchScreen ({ navigation, route }) {
                 return restaurant.restaurant_name.toLowerCase().includes(searchQuery.toLowerCase());
             }))
         }
-    }, [searchQuery])
+    }, [searchQuery, allRestaurantsArray])
 
     const [searchButtonPressStatus, setSearchButtonPressStatus] = useState(false);
 
-    const [modalVisibility, setModalVisibility] = useState(false);
+    const [isModalTemplateVisible, setIsModalTemplateVisible] = useState(false);
     const [restaurantIdToSendRequestTo, setRestaurantIdToSendRequestTo] = useState();
-    function openModalAndSendRestaurant (restaurant) {
-        setRestaurantIdToSendRequestTo(restaurant.restaurant_id);
-        setModalVisibility();
+    const [textForModalTemplate, setTextForModalTemplate] = useState();
+    const [textForModalTemplateButton, setTextForModalTemplateButton] = useState();
+    function openModalToSendRequest (restaurant_id) {
+        setRestaurantIdToSendRequestTo(restaurant_id);
+        setTextForModalTemplate("¿Quieres solicitar unirte a este restaurante?");
+        setTextForModalTemplateButton("Sí, enviar");
+        setIsModalTemplateVisible(true);
     }
     
     if (!allRestaurantsArray) {
@@ -76,7 +84,7 @@ export default function RestaurantsSearchScreen ({ navigation, route }) {
                         {searchQuery && <View style={[ t.flex, t.flexCol, tw.wFull ]}>
                             {restaurantsToDisplay && restaurantsToDisplay.map((restaurant, index) => {
                                 return (
-                                    <ListItem buttonOne="plus" buttonOneAction={() => openModalAndSendRestaurant(restaurant)} buttonTwo={null} buttonTwoAction={null} iconSize={20} item={restaurant} itemClassnames={null} itemElementAction={() => navigation.navigate("Restaurant", { restaurant_id: restaurant.restaurant_id, user_id: auth.userId })} index={index} key={index} listName="restaurants in 'restaurant search' screen" searchQuery={searchQuery} />
+                                    <ListItem buttonOne="plus" buttonOneAction={() => openModalToSendRequest(restaurant.restaurant_id)} buttonTwo={null} buttonTwoAction={null} iconSize={20} item={restaurant} itemClassnames={null} itemElementAction={() => navigation.navigate("Restaurant", { restaurant_id: restaurant.restaurant_id, user_id: auth.userId })} index={index} key={index} listName="restaurants in 'restaurant search' screen" searchQuery={searchQuery} />
                                 )
                             })}
                             {!restaurantsToDisplay || (restaurantsToDisplay.length == 0) && <View>
@@ -87,7 +95,7 @@ export default function RestaurantsSearchScreen ({ navigation, route }) {
                         </View>}
                     </View>
 
-                    <ModalTemplate actionButtonBorder={tw.borderOrange400} actionButtonColor={tw.bgOrange400} animationForModal="fade" isVisible={modalVisibility} onClose={() => setModalVisibility(false)} onTasksAfterAction={null} restaurantId={restaurantIdToSendRequestTo} textForButton="Enviar" textForModal="¿Quieres solicitar unirte a este restaurante?" underlayColor="#fc5" userId={auth.userId} />
+                    <ModalTemplate actionButtonBorder={tw.borderOrange400} actionButtonColor={tw.bgOrange400} animationForModal="fade" isVisible={isModalTemplateVisible} item={null} onClose={() => setIsModalTemplateVisible(false)} onTasksAfterAction={fetchAgain} restaurantId={restaurantIdToSendRequestTo} textForButton={textForModalTemplateButton} textForModal={textForModalTemplate} underlayColor="#fc5" userId={auth.userId} />
             </ScrollView>
         )
     }

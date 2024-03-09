@@ -100,7 +100,7 @@ export default function ListItem ({ buttonOne, buttonOneAction, buttonTwo, butto
         if (listName === "users in 'requests' screen" || listName === "restaurants in 'restaurant search' screen") {
             fetchUserRequests();
         }
-    }, [])
+    }, [item])
 
     
     // this section is for the list of restaurants when searching
