@@ -6,6 +6,7 @@ import { t, tw } from "react-native-tailwindcss";
 import { v4 as uuidv4 } from "uuid";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ListItem from "../Components/ListItem";
+import ModalTemplate from "../Components/ModalTemplate";
 
 export default function RequestsScreen ({ navigation, route }) {
     const auth = useContext(AuthContext);
@@ -15,7 +16,7 @@ export default function RequestsScreen ({ navigation, route }) {
     const [userRequests, setUserRequests] = useState([]);
     const [userRequestsToDisplay, setUserRequestsToDisplay] = useState([]);
 
-    async function fetchAllUsers () {
+    async function fetchData () {
         try {
             const { data, error } = await supabase.from("ALO-users-db").select("*");
             if (error) console.log(error);
@@ -23,8 +24,6 @@ export default function RequestsScreen ({ navigation, route }) {
         } catch (err) {
             console.log(err);
         }
-    }
-    async function fetchRestaurants () {
         try {
             const { data, error } = await supabase.from("ALO-restaurants").select("*").eq("creator_id", auth.userId);
             if (error) console.log(error);
@@ -32,8 +31,6 @@ export default function RequestsScreen ({ navigation, route }) {
         } catch (err) {
             console.log(err);
         }
-    }
-    async function fetchAllRequests () {
         try {
             const { data, error } = await supabase.from("ALO-requests").select("*").eq("request_status", "pending");
             if (error) console.log(error);
@@ -42,18 +39,14 @@ export default function RequestsScreen ({ navigation, route }) {
             console.log(err);
         }
     }
-
     useEffect(() => {
-        fetchAllUsers();
-        fetchRestaurants();
-        fetchAllRequests();
+        fetchData();
     }, [])
 
     function fetchAgain () {
         setRequests();
         setUserRequests([])
-        fetchAllRequests();
-        filterUserRequests();
+        fetchData();
     }
 
     function filterUserRequests () {
@@ -90,36 +83,33 @@ export default function RequestsScreen ({ navigation, route }) {
         removeDuplicates();
     }, [userRequests])
 
-    let newEmployeeId;
-    async function makeUserAnEmployee (request) {
-        newEmployeeId = uuidv4();
-        try {
-            const { error } = await supabase.from("ALO-employees").insert({ employee_id: newEmployeeId, restaurant_id: request.restaurant_id, user_id: request.user_id })
-            if (error) console.log(error);
-        } catch (err) {
-            console.log(err);
-        }
-        try {
-            const { error } = await supabase.from("ALO-requests").update({ request_status: "Approved" }).eq("request_id", request.request_id);
-            if (error) console.log(error);
-        } catch (err) {
-            console.log(err);
-        }
+    const [isModalTemplateVisible, setIsModalTemplateVisible] = useState(false);
+    const [itemToSend, setItemToSend] = useState();
+    const [textForModalTemplate, setTextForModalTemplate] = useState();
+    const [textForModalTemplateButton, setTextForModalTemplateButton] = useState();
+
+    function openModalToMakeUserAnEmployee (request) {
+        setItemToSend(request);
+        setTextForModalTemplate("¿Quieres agregar a este usuario a tu restaurante?");
+        setTextForModalTemplateButton("Sí, confirmo");
+        setIsModalTemplateVisible(true);
     }
 
-    function addEmployee (request) {
-        makeUserAnEmployee(request);
-        fetchAgain();
+    function openModalToRejectUser (request) {
+        setItemToSend(request);
+        setTextForModalTemplate("¿Quieres rechazar la solicitud de este usuario?");
+        setTextForModalTemplateButton("Sí, confirmo");
+        setIsModalTemplateVisible(true);
     }
 
-    if (!userRequests) {
+    if (!userRequestsToDisplay) {
         return (
             <View>
                 <ActivityIndicator style={[ tw.mT10]} size="large" color="#000" />
             </View>
         )
-    } else if (userRequests) {
-        if (userRequests.length < 1) {
+    } else if (userRequestsToDisplay) {
+        if (userRequestsToDisplay.length < 1) {
             return (
                 <View style={[ tw.mY6, tw.pX5, tw.flex, tw.justifyCenter, tw.itemsCenter ]}>
                     <Text style={[ t.textCenter ]}>
@@ -127,15 +117,18 @@ export default function RequestsScreen ({ navigation, route }) {
                     </Text>
                 </View>
             )
-        } else if (userRequests.length > 0) {
+        } else if (userRequestsToDisplay.length > 0) {
             return (
-                <View style={[ tw.mY3, tw.pX5 ]}>
-                    {userRequestsToDisplay.map((request, index) => {
-                        return (
-                            <ListItem buttonOne="check" buttonOneAction={() => addEmployee(request)} buttonTwo="ban" buttonTwoAction={() => console.log("delete")} iconSize={20} index={index} item={request} itemClassnames={[ tw.borderT, tw.borderGray400 ]} itemElementAction={null} key={index} listName="users in 'requests' screen" />
-                        )
-                    })}
-                </View>
+                <>
+                    <View style={[ tw.mY3, tw.pX5 ]}>
+                        {userRequestsToDisplay.map((request, index) => {
+                            return (
+                                <ListItem buttonOne="check" buttonOneAction={() => openModalToMakeUserAnEmployee(request)} buttonTwo="ban" buttonTwoAction={() => openModalToRejectUser(request)} iconSize={20} index={index} item={request} itemClassnames={[ tw.borderT, tw.borderGray400 ]} itemElementAction={null} key={index} listName="users in 'requests' screen" />
+                            )
+                        })}
+                    </View>
+                    <ModalTemplate actionButtonBorder={tw.borderOrange400} actionButtonColor={tw.bgOrange400} animationForModal="fade" isVisible={isModalTemplateVisible} item={itemToSend} onClose={() => setIsModalTemplateVisible(false)} onTasksAfterAction={fetchAgain} restaurantId={null} textForButton={textForModalTemplateButton} textForModal={textForModalTemplate} underlayColor="#fc5" userId={auth.userId} />
+                </>
             )
         }
     }

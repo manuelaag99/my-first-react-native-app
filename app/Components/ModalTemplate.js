@@ -18,6 +18,36 @@ export default function ModalTemplate ({ actionButtonBorder, actionButtonColor, 
         }
     }
 
+    let newEmployeeId;
+    async function makeUserAnEmployee () {
+        newEmployeeId = uuidv4();
+        try {
+            const { error } = await supabase.from("ALO-employees").insert({ employee_id: newEmployeeId, restaurant_id: item.restaurant_id, user_id: item.user_id })
+            if (error) console.log(error);
+        } catch (err) {
+            console.log(err);
+        }
+        try {
+            const { error } = await supabase.from("ALO-requests").update({ request_status: "Approved" }).eq("request_id", item.request_id);
+            if (error) console.log(error);
+            onClose();
+            onTasksAfterAction();
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    async function rejectUserRequest () {
+        try {
+            const { error } = await supabase.from("ALO-requests").update({ request_status: "Rejected" }).eq("request_id", item.request_id);
+            if (error) console.log(error);
+            onClose();
+            onTasksAfterAction();
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     async function deleteRestaurant () {
         try {
             const { error } = await supabase.from("ALO-restaurants").delete().eq("restaurant_id", restaurantId);
@@ -154,7 +184,6 @@ export default function ModalTemplate ({ actionButtonBorder, actionButtonColor, 
         }
     }
 
-    let newEmployeeId;
     async function makeAdministratorAnEmployee () {
         newEmployeeId = uuidv4();
         try {
@@ -186,6 +215,10 @@ export default function ModalTemplate ({ actionButtonBorder, actionButtonColor, 
     function actionButtonHandle () {
         if (textForModal === "¿Quieres solicitar unirte a este restaurante?") {
             sendRequest();
+        } else if (textForModal === "¿Quieres agregar a este usuario a tu restaurante?") {
+            makeUserAnEmployee();
+        } else if (textForModal === "¿Quieres rechazar la solicitud de este usuario?") {
+            rejectUserRequest();  
         } else if (textForModal === "¿Quieres eliminar este restaurante? Esto es permanente y borrará todo el menu, todas las ordenes, todos los empleados y administradores, y las solicitudes.") {
             deleteRestaurant();
         } else if (textForModal === "¿Quieres borrar el menú? Esto es permanente.") {
@@ -211,13 +244,13 @@ export default function ModalTemplate ({ actionButtonBorder, actionButtonColor, 
     return (
         <Modal animationType={animationForModal || "fade"} onRequestClose={onClose} transparent={true} visible={isVisible}>
             <View style={[[ t.flex, t.flexCol, tw.justifyCenter, tw.pX6, tw.wFull, tw.hFull ], { backgroundColor: "#00000075"}]}>
-                <View style={[ t.flex, t.flexCol, tw.h50, tw.wFull, tw.bgWhite, tw.border, tw.borderGray300, tw.pT4, tw.pB8, tailwind.roundedLg, t.shadow2xl ]}>
-                    <View style={[ t.flex, t.flexCol, tw.wFull, tw.hAuto, tw.justifyCenter ]}>
+                <View style={[ t.flex, t.flexCol, tw.h50, tw.wFull, tw.bgWhite, tw.border, tw.borderGray300, tw.pT5, tw.pB8, tailwind.roundedLg, t.shadow2xl ]}>
+                    <View style={[ t.flex, t.flexCol, tw.wFull, tw.hAuto, tw.justifyCenter, tw.pX6 ]}>
                         <Text style={[ t.textCenter, tw.pX4, tw.wFull, t.flex, t.flexCol, tw.justifyCenter ]}>
                             {textForModal}
                         </Text>
                     </View>
-                    <View style={[ t.flex, t.flexRow, tw.wFull, tw.h12, tw.justifyAround, tw.mT4 ]}>
+                    <View style={[ t.flex, t.flexRow, tw.wFull, tw.h12, tw.justifyAround, tw.mT5 ]}>
                         <TouchableHighlight underlayColor={underlayColor || "#ff6666"} style={[ tw.w1_3, t.flex, t.flexCol, tw.justifyCenter, tw.border, tailwind.roundedLg, actionButtonColor, actionButtonBorder ]} onPress={actionButtonHandle}>
                             <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>{textForButton}</Text>
                         </TouchableHighlight>
