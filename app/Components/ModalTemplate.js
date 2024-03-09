@@ -172,7 +172,6 @@ export default function ModalTemplate ({ actionButtonBorder, actionButtonColor, 
             console.log(err);
         }
     }
-    
     async function deleteAdmin () {
         try {
             const { error } = await supabase.from("ALO-admins").delete().eq("user_id", item.user_id).eq("restaurant_id", item.restaurant_id);

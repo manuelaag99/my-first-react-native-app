@@ -1,11 +1,9 @@
 import { useContext, useEffect, useState } from "react";
-import { ActivityIndicator, ScrollView, Text, TouchableHighlight, View } from "react-native";
+import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 import { t, tw } from "react-native-tailwindcss";
 import { supabase } from "../supabase/client";
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { AuthContext } from "../Context/AuthContext";
 import ListItem from "../Components/ListItem";
-import { v4 as uuidv4 } from "uuid";
 import ErrorModal from "../Components/ErrorModal";
 import ModalTemplate from "../Components/ModalTemplate";
 
@@ -16,7 +14,8 @@ export default function RestaurantTeamScreen ({ navigation, route }) {
     const [restaurantEmployeesArray, setRestaurantEmployeesArray] = useState();
     const [restaurantEmployeesWithNamesArray, setRestaurantEmployeesWithNamesArray] = useState();
     const [allUsers, setAllUsers] = useState();
-    const [modalVisibility, setModalVisibility] = useState(false);
+    const [isErrorModalVisible, setIsErrorModalVisible] = useState(false);
+    const [errorModalText, setErrorModalText] = useState();
 
     const { restaurant_id } = route.params;
 
@@ -98,37 +97,41 @@ export default function RestaurantTeamScreen ({ navigation, route }) {
     const [textForModalTemplate, setTextForModalTemplate] = useState();
     const [textForModalTemplateButton, setTextForModalTemplateButton] = useState();
 
-    function openModalToDeleteAdmin (administrator) {
-        if (restaurantAdministratorsWithNamesArray && (restaurantAdministratorsWithNamesArray.length > 1)) {
-            setItemToSend(administrator);
-            setTextForModalTemplate("¿Quieres eliminar a este administrador?");
-            setTextForModalTemplateButton("Si, eliminar")
-            setIsModalTemplateVisible(true);
-        }
-    }
-
-    function openModalToDeleteEmployee (employee) {
-        setItemToSend(employee);
-        setTextForModalTemplate("¿Quieres eliminar a este empleado?");
-        setTextForModalTemplateButton("Si, eliminar")
-        setIsModalTemplateVisible(true);
-    }
-
-    function openModalToMakeAdministratorAnEmployee (administrator) {
-        if (restaurantAdministratorsWithNamesArray && (restaurantAdministratorsWithNamesArray.length > 1)) {
-            setItemToSend(administrator);
-            setTextForModalTemplate("¿Quieres convertir a este administrador en empleado?");
-            setTextForModalTemplateButton("Sí, convertir");
-            setIsModalTemplateVisible(true)
-        }
-    }
-
     function openModalToMakeEmployeeAnAdministrator (employee) {
         console.log(employee)
         setItemToSend(employee);
         setTextForModalTemplate("¿Quieres convertir a este empleado en administrador?");
         setTextForModalTemplateButton("Sí, convertir");
         setIsModalTemplateVisible(true)
+    }
+    function openModalToDeleteEmployee (employee) {
+        setItemToSend(employee);
+        setTextForModalTemplate("¿Quieres eliminar a este empleado?");
+        setTextForModalTemplateButton("Si, eliminar")
+        setIsModalTemplateVisible(true);
+    }
+    
+    function openModalToMakeAdministratorAnEmployee (administrator) {
+        if (restaurantAdministratorsWithNamesArray && (restaurantAdministratorsWithNamesArray.length > 1)) {
+            setItemToSend(administrator);
+            setTextForModalTemplate("¿Quieres convertir a este administrador en empleado?");
+            setTextForModalTemplateButton("Sí, convertir");
+            setIsModalTemplateVisible(true)
+        } else {
+            setErrorModalText("Un restaurante no puede quedarse sin administradores.");
+            setIsErrorModalVisible(true);
+        }
+    }
+    function openModalToDeleteAdmin (administrator) {
+        if (restaurantAdministratorsWithNamesArray && (restaurantAdministratorsWithNamesArray.length > 1)) {
+            setItemToSend(administrator);
+            setTextForModalTemplate("¿Quieres eliminar a este administrador?");
+            setTextForModalTemplateButton("Si, eliminar")
+            setIsModalTemplateVisible(true);
+        } else {
+            setErrorModalText("Un restaurante no puede quedarse sin administradores.");
+            setIsErrorModalVisible(true);
+        }
     }
 
     if (!restaurantEmployeesWithNamesArray || !restaurantEmployeesWithNamesArray) {
@@ -170,7 +173,7 @@ export default function RestaurantTeamScreen ({ navigation, route }) {
                         </Text>
                     </View>}
                 </View>
-                <ErrorModal animationForModal="fade" onClose={() => setModalVisibility(false)} isVisible={modalVisibility} onPressingRedButton={() => setModalVisibility(false)} textForButton="Aceptar" textForModal="Un restaurante no puede quedarse sin administradores." />
+                <ErrorModal animationForModal="fade" onClose={() => setIsErrorModalVisible(false)} isVisible={isErrorModalVisible} onPressingRedButton={() => setIsErrorModalVisible(false)} textForButton="Aceptar" textForModal={errorModalText} />
                 <ModalTemplate actionButtonBorder={tw.borderOrange400} actionButtonColor={tw.bgOrange400} animationForModal="fade" isVisible={isModalTemplateVisible} item={itemToSend} onClose={() => setIsModalTemplateVisible(false)} onTasksAfterAction={fetchAgain} orderToDelete={null} restaurantId={null} textForButton={textForModalTemplateButton} textForModal={textForModalTemplate} underlayColor="#fc5" userId={auth.userId} />
             </ScrollView>
         )
