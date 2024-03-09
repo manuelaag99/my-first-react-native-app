@@ -16,7 +16,10 @@ export default function RestaurantScreen ({ route, navigation }) {
     const { user_id, restaurant_id } = route.params
 
     const [restaurantInfo, setRestaurantInfo] = useState();
-    async function fetchRestaurantInfo () {
+    const [restaurantEmployeesArray, setRestaurantEmployeesArray] = useState();
+    const [restaurantAdministratorsArray, setRestaurantAdministratorsArray] = useState();
+    const [userRequests, setUserRequests] = useState();
+    async function fetchData () {
         try {
             const { data, error } = await supabase.from("ALO-restaurants").select("*").eq("restaurant_id", restaurant_id);
             if (error) console.log(error);
@@ -25,22 +28,7 @@ export default function RestaurantScreen ({ route, navigation }) {
         } catch (err) {
             console.log(err);
         }
-    }
-    const [restaurantCreatorInfo, setRestaurantCreatorInfo] = useState();
-    async function fetchRestaurantCreatorInfo() {
-        try {
-            const { data, error } = await supabase.from("ALO-users-db").select("*").eq("user_id", restaurantInfo.creator_id);
-            if (error) console.log(error);
-            console.log(data)
-            setRestaurantCreatorInfo(data[0]);
-        } catch (err) {
-            console.log(err);
-        }
-    }
-
-    const [restaurantEmployees, setRestaurantEmployees] = useState();
-    const [restaurantAdministratorsArray, setRestaurantAdministratorsArray] = useState();
-    async function fetchRestaurantEmployeesAndAdministrators() {
+        
         try {
             const { data, error } = await supabase.from("ALO-admins").select("*").eq("restaurant_id", restaurant_id);
             if (error) console.log(error);
@@ -52,13 +40,10 @@ export default function RestaurantScreen ({ route, navigation }) {
             const { data, error } = await supabase.from("ALO-employees").select("*").eq("restaurant_id", restaurant_id);
             if (error) console.log(error);
             console.log(data)
-            setRestaurantEmployees(data);
+            setRestaurantEmployeesArray(data);
         } catch (err) {
             console.log(err);
         }
-    }
-    const [userRequests, setUserRequests] = useState();
-    async function fetchUserRequests () {
         try {
             const { data, error } = await supabase.from("ALO-requests").select("*").eq("user_id", auth.userId).eq("request_status", "pending");
             if (error) console.log(error);
@@ -67,6 +52,20 @@ export default function RestaurantScreen ({ route, navigation }) {
             console.log(err);
         }
     }
+
+    const [restaurantCreatorInfo, setRestaurantCreatorInfo] = useState();
+    async function fetchRestaurantCreatorInfo () {
+        try {
+            const { data, error } = await supabase.from("ALO-users-db").select("*").eq("user_id", restaurantInfo.creator_id);
+            if (error) console.log(error);
+            console.log(data)
+            setRestaurantCreatorInfo(data[0]);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+
     const [hasUserSentRequest, setHasUserSentRequest] = useState(false);
     useEffect(() => {
         if (userRequests && userRequests.length > 0) {
@@ -76,30 +75,18 @@ export default function RestaurantScreen ({ route, navigation }) {
                 }
             })
         }
-    }, [])
+    }, [userRequests])
 
     useEffect(() => {
-        fetchRestaurantInfo();
-        fetchUserRequests();
+        fetchData();
     }, [])
 
     useEffect(() => {
         if (restaurantInfo) {
             fetchRestaurantCreatorInfo();
-            fetchRestaurantEmployeesAndAdministrators();
         }
     }, [restaurantInfo])
 
-    const [isUserEmployee, setIsUserEmployee] = useState()
-    useEffect(() => {
-        if (restaurantEmployees && restaurantEmployees.length > 0) {
-            restaurantEmployees.map((employee) => {
-                if (employee.user_id === auth.userId) {
-                    setIsUserEmployee(true);
-                }
-            })
-        }
-    }, [restaurantEmployees])
     const [isUserAnAdministrator, setIsUserAnAdministrator] = useState();
     useEffect(() => {
         if (restaurantAdministratorsArray && restaurantAdministratorsArray.length > 0) {
@@ -110,31 +97,41 @@ export default function RestaurantScreen ({ route, navigation }) {
             })
         }
     }, [restaurantAdministratorsArray])
+    const [isUserAnEmployee, setisUserAnEmployee] = useState()
+    useEffect(() => {
+        if (restaurantEmployeesArray && restaurantEmployeesArray.length > 0) {
+            restaurantEmployeesArray.map((employee) => {
+                if (employee.user_id === auth.userId) {
+                    setisUserAnEmployee(true);
+                }
+            })
+        }
+    }, [restaurantEmployeesArray])
 
     function navigateAfterDeletingRestaurant () {
         navigation.navigate("User");
     }
 
     function fetchAgain () {
-        fetchRestaurantInfo();
+        console.log("fetch again")
+        fetchData();
     }
 
     const [restaurantIdToSendRequestTo, setRestaurantIdToSendRequestTo] = useState();
     function openModalAndSendRequest (restaurant_id) {
-        console.log(restaurant_id)
         setRestaurantIdToSendRequestTo(restaurant_id);
         setAddRestaurantModalVisibility(true);
     }
 
-    if (!restaurantInfo || !restaurantCreatorInfo || !restaurantEmployees) {
+    if (!restaurantInfo || !restaurantCreatorInfo || !restaurantEmployeesArray || !restaurantAdministratorsArray || !userRequests) {
         return (
             <ActivityIndicator style={[ tw.mT10]} size="large" color="#000" />
         )
-    } else if (restaurantInfo && restaurantCreatorInfo && restaurantEmployees) {
+    } else if (restaurantInfo && restaurantCreatorInfo && restaurantEmployeesArray && restaurantAdministratorsArray && userRequests) {
         return (
             <ScrollView style={[ t.bgGray200 ]}>
                 <View style={[ t.flex, t.flexCol, tw.justifyStart, t.pX5, tw.hFull, tw.wFull, tw.overflowHidden, tw.pT5, tw.pB20 ]}>
-                    <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.mXAuto, tw.pY4, tw.mY4, tw.pX6 ]}>
+                    <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.mXAuto, tw.pY4, tw.pX6 ]}>
                         <Text style={[ tw.wFull, t.textCenter, t.fontBold, t.text5xl, tw.pY4 ]}>
                             {restaurantInfo.restaurant_name}
                         </Text>
@@ -146,35 +143,35 @@ export default function RestaurantScreen ({ route, navigation }) {
                         </Text>
                         <Text style={[ tw.wFull, t.textCenter, t.fontBold, t.textGray500, t.textBase, tw.mY2 ]}>
                             {isUserAnAdministrator && "Eres administrador."}
-                            {isUserEmployee && "Eres empleado."}
+                            {isUserAnEmployee && "Eres empleado."}
                         </Text>
                     </View>
     
-                    {(!isUserAnAdministrator) && (!isUserEmployee) && (!hasUserSentRequest) && <TouchableHighlight underlayColor="#ffdd88" onPress={() => openModalAndSendRequest(restaurant_id)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgOrange400, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
+                    {(!isUserAnAdministrator) && (!isUserAnEmployee) && (!hasUserSentRequest) && <TouchableHighlight underlayColor="#ffdd88" onPress={() => openModalAndSendRequest(restaurant_id)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgOrange400, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
                             Soy empleado
                         </Text>
                     </TouchableHighlight>}
 
-                    {(hasUserSentRequest) && <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.mXAuto, tw.pY6, tw.mY6 ]}>
+                    {(!isUserAnAdministrator) && (!isUserAnEmployee) && (hasUserSentRequest) && <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.mXAuto ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textBlack ]}>
                             Ya enviaste solicitud para trabajar aquí.
                         </Text>
                     </View>}
 
-                    {((isUserAnAdministrator) || (isUserEmployee)) && <TouchableHighlight underlayColor="#ccc" onPress={() => setNewItemVisibility(true)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgWhite, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
+                    {((isUserAnAdministrator) || (isUserAnEmployee)) && <TouchableHighlight underlayColor="#ccc" onPress={() => setNewItemVisibility(true)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgWhite, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textBlack ]}>
                             + Agregar orden
                         </Text>
                     </TouchableHighlight>}
     
-                    {((isUserAnAdministrator) || (isUserEmployee)) && <TouchableHighlight underlayColor="#ffeebb" onPress={() => navigation.navigate("Orders", { user_id: auth.userId, restaurant_id: restaurant_id })} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgYellow500, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
+                    {((isUserAnAdministrator) || (isUserAnEmployee)) && <TouchableHighlight underlayColor="#ffeebb" onPress={() => navigation.navigate("Orders", { user_id: auth.userId, restaurant_id: restaurant_id })} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgYellow500, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
                             Ver órdenes
                         </Text>
                     </TouchableHighlight>}
     
-                    {((isUserAnAdministrator) || (isUserEmployee)) && <TouchableHighlight underlayColor="#CCE5FF" onPress={() => navigation.navigate("Menu", { user_id: auth.userId, restaurant_id: restaurant_id })} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgBlue400, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
+                    {((isUserAnAdministrator) || (isUserAnEmployee)) && <TouchableHighlight underlayColor="#CCE5FF" onPress={() => navigation.navigate("Menu", { user_id: auth.userId, restaurant_id: restaurant_id })} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgBlue400, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textWhite ]}>
                             Ver Menú
                         </Text>
@@ -186,11 +183,11 @@ export default function RestaurantScreen ({ route, navigation }) {
                         </Text>
                     </TouchableHighlight>}
 
-                    <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.mXAuto, tw.pY4, tw.mY4, tw.pX6 ]}>
+                    {(isUserAnAdministrator) && <View style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, tw.mXAuto, tw.pY4, tw.mY4, tw.pX6 ]}>
                         <Text style={[ tw.wFull, t.textCenter, t.fontBold, t.textGray500, t.textBase ]}>
                             -- Opciones de restaurante --
                         </Text>
-                    </View>
+                    </View>}
     
                     {(isUserAnAdministrator) && <TouchableHighlight underlayColor="#ccc" onPress={() => setUpdateRestaurantVisibility(true)} style={[ t.flex, t.flexCol, tw.justifyCenter, tw.wFull, t.bgWhite, tw.border, tw.borderGray200, tw.mXAuto, tw.pY6, tw.mY6, tailwind.roundedLg ]}>
                         <Text style={[ t.textCenter, t.fontBold, t.textBlack ]}>
@@ -207,7 +204,7 @@ export default function RestaurantScreen ({ route, navigation }) {
                     <NewItem dishesToUpdate={null} isUpdating={false} isVisible={newItemVisibility} itemId={null} itemToAdd="order" itemToUpdate={null} onClose={() => setNewItemVisibility(false)} restaurantId={restaurant_id} textForAddButton="AGREGAR" topText="Nueva orden" updateFetchedData={fetchAgain} userId={auth.userId} />
                     <NewItem dishesToUpdate={null} isUpdating={true} isVisible={updateRestaurantVisibility} itemId={restaurant_id} itemToAdd="restaurant" itemToUpdate={restaurantInfo} onClose={() => setUpdateRestaurantVisibility(false)} restaurantId={restaurant_id} textForAddButton="ACTUALIZAR" topText="Modificar restaurante" updateFetchedData={fetchAgain} userId={auth.userId} />
                     <ModalTemplate actionButtonBorder={tw.borderRed700} actionButtonColor={tw.bgRed700} animationForModal="fade" isVisible={deleteRestaurantModalVisibility} onClose={() => setDeleteRestaurantModalVisibility(false)} onTasksAfterAction={navigateAfterDeletingRestaurant} restaurantId={restaurant_id} textForButton="Eliminar" textForModal="¿Quieres eliminar este restaurante? Esto es permanente y borrará todo el menu, todas las ordenes, todos los empleados y administradores, y las solicitudes." userId={auth.userId} />
-                    <ModalTemplate actionButtonBorder={tw.borderOrange400} actionButtonColor={tw.bgOrange400} animationForModal="fade" isVisible={addRestaurantModalVisibility} onClose={() => setAddRestaurantModalVisibility(false)} onTasksAfterAction={null} restaurantId={restaurantIdToSendRequestTo} textForButton="Enviar" textForModal="¿Quieres solicitar unirte a este restaurante?" underlayColor="#fc5" userId={auth.userId} />
+                    <ModalTemplate actionButtonBorder={tw.borderOrange400} actionButtonColor={tw.bgOrange400} animationForModal="fade" isVisible={addRestaurantModalVisibility} onClose={() => setAddRestaurantModalVisibility(false)} onTasksAfterAction={fetchAgain} restaurantId={restaurantIdToSendRequestTo} textForButton="Enviar" textForModal="¿Quieres solicitar unirte a este restaurante?" underlayColor="#fc5" userId={auth.userId} />
                 </View>
             </ScrollView>
         )

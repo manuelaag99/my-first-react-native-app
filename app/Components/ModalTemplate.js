@@ -12,6 +12,7 @@ export default function ModalTemplate ({ actionButtonBorder, actionButtonColor, 
             const { data, error } = await supabase.from("ALO-requests").insert({ user_id: userId, restaurant_id: restaurantId, request_id: request_id, request_status: "pending" });
             if (error) console.log(error)
             onClose();
+            onTasksAfterAction();
         } catch (err) {
             console.log(err);
         }
