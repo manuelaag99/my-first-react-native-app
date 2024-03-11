@@ -184,6 +184,26 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
 
     console.log(isEmailTaken)
 
+    async function signInWithFacebook () {
+        try {
+            const { error } = await supabase.auth.signInWithOAuth({
+                provider: "facebook"
+            })
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    async function signInWithGoogle () {
+        try {
+            const { error } = await supabase.auth.signInWithOAuth({
+                provider: "google"
+            })
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     if ((isSettingsScreen && !userInfo) || (!isSettingsScreen && loading)) {
         return (
             <ActivityIndicator style={[ tw.mT10]} size="large" color="#000" />
@@ -215,7 +235,7 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
                             </TouchableHighlight>}
         
         
-                            {!isSettingsScreen && <TouchableHighlight onPress={() => console.log("click")} style={[[ t.flex, t.justifyCenter, tw.pX3, tw.pY4, tw.mY3, tailwind.roundedLg, tailwind.shadow2xl, t.bgRed500], { width: "95%" }]} underlayColor="#ffdddd" >
+                            {!isSettingsScreen && <TouchableHighlight onPress={() => signInWithGoogle} style={[[ t.flex, t.justifyCenter, tw.pX3, tw.pY4, tw.mY3, tailwind.roundedLg, tailwind.shadow2xl, t.bgRed500], { width: "95%" }]} underlayColor="#ffdddd" >
                                 <View style={[ t.flex, t.flexRow, t.justifyCenter, t.itemsCenter]}>
                                     <View style={[ tw.mR4 ]}>
                                         <Icon name="google" style={[ t.textWhite, tw.m0]} size={20} color="#000" />
@@ -229,7 +249,7 @@ export default function AuthForm ({ initialAction, isSettingsScreen, justify, na
                                 </View>
                             </TouchableHighlight>}
         
-                            {!isSettingsScreen && <TouchableHighlight onPress={() => console.log("click")} style={[[ t.flex, t.justifyCenter, t.itemsCenter, tw.pX3, tw.pY4, tw.mY3, tailwind.roundedLg, tailwind.shadow2xl, t.bgBlue700], { width: "95%" }]} underlayColor="#ddddff" >
+                            {!isSettingsScreen && <TouchableHighlight onPress={() => signInWithFacebook} style={[[ t.flex, t.justifyCenter, t.itemsCenter, tw.pX3, tw.pY4, tw.mY3, tailwind.roundedLg, tailwind.shadow2xl, t.bgBlue700], { width: "95%" }]} underlayColor="#ddddff" >
                                 <View style={[ t.flex, t.flexRow, t.justifyCenter, t.itemsCenter]}>
                                     <View style={[ tw.mR4 ]}>
                                         <Icon name="facebook" style={[ t.textWhite, tw.m0]} size={20} color="#000" />
